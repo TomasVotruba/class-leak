@@ -12,6 +12,7 @@
         "nette/utils": "^3.2",
         "nikic/php-parser": "^4.16",
         "symfony/console": "^6.3",
+        "symfony/finder": "^6.3",
         "tomasvotruba/punchcard": "^0.2.7"
     },
     "require-dev": {

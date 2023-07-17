@@ -68,11 +68,10 @@ final class CheckCommand extends Command
     private function resolveUsedClassNames(array $phpFilePaths, \Closure $progressClosure): array
     {
         $usedNames = [];
+
         foreach ($phpFilePaths as $phpFilePath) {
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
             $usedNames = array_merge($usedNames, $currentUsedNames);
-
-            dump($usedNames);
 
             $progressClosure();
         }

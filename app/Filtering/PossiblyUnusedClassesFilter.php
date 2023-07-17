@@ -35,18 +35,19 @@ final class PossiblyUnusedClassesFilter
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
         // laravel
         'Illuminate\Support\ServiceProvider',
+        'Illuminate\Contracts\Console\Kernel',
     ];
 
     /**
      * @param FileWithClass[] $filesWithClasses
-     * @param string[] $usedNames
+     * @param string[] $usedClassNames
      * @param string[] $typesToSkip
      *
      * @return FileWithClass[]
      */
-    public function filter(array $filesWithClasses, array $usedNames, array $typesToSkip): array
+    public function filter(array $filesWithClasses, array $usedClassNames, array $typesToSkip): array
     {
-        Assert::allString($usedNames);
+        Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
 
         $possiblyUnusedFilesWithClasses = [];
@@ -54,7 +55,10 @@ final class PossiblyUnusedClassesFilter
         $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
 
         foreach ($filesWithClasses as $fileWithClass) {
-            if (in_array($fileWithClass->getClassName(), $usedNames, true)) {
+            dump($fileWithClass->getClassName());
+            dump(in_array($fileWithClass->getClassName(), $usedClassNames, true));
+
+            if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;
             }
 

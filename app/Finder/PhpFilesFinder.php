@@ -26,13 +26,14 @@ final class PhpFilesFinder
             if (is_file($path)) {
                 $filePaths[] = $path;
             } else {
-                // @see https://stackoverflow.com/a/36034646/1348344
-                $directoryFilePaths = glob($path . '/{**/*,*}.php', GLOB_BRACE);
-                if ($directoryFilePaths === false) {
-                    continue;
-                }
+                $phpFilesFinder = \Symfony\Component\Finder\Finder::create()
+                    ->files()
+                    ->in($path)
+                    ->name('*.php');
 
-                $filePaths = array_merge($filePaths, $directoryFilePaths);
+                foreach ($phpFilesFinder->getIterator() as $fileInfo) {
+                    $filePaths[] = $fileInfo->getPathname();
+                }
             }
         }
 
