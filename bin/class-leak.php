@@ -2,28 +2,20 @@
 
 declare(strict_types=1);
 
-use TomasVotruba\ClassLeak\Kernel\EasyCIKernel;
+use Illuminate\Contracts\Console\Kernel;
 
-$possibleAutoloadPaths = [
-    // dependency
-    __DIR__ . '/../../../autoload.php',
-    // after split package
-    __DIR__ . '/../vendor/autoload.php',
-    // monorepo
-    __DIR__ . '/../../../vendor/autoload.php',
-];
+require_once __DIR__ . '/../vendor/autoload.php';
 
-foreach ($possibleAutoloadPaths as $possibleAutoloadPath) {
-    if (file_exists($possibleAutoloadPath)) {
-        require_once $possibleAutoloadPath;
-        break;
-    }
-}
+/** @var \Illuminate\Foundation\Application $application */
+$application = require_once __DIR__ . '/../bootstrap/app.php';
 
-$scoperAutoloadFilepath = __DIR__ . '/../vendor/scoper-autoload.php';
-if (file_exists($scoperAutoloadFilepath)) {
-    require_once $scoperAutoloadFilepath;
-}
+/** @var Kernel $kernel */
+$kernel = $application->make(Kernel::class);
 
-$kernelBootAndApplicationRun = new KernelBootAndApplicationRun(EasyCIKernel::class);
-$kernelBootAndApplicationRun->run();
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput(),
+    new Symfony\Component\Console\Output\ConsoleOutput()
+);
+
+$kernel->terminate($input, $status);
+exit($status);

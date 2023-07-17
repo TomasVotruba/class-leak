@@ -2,3 +2,9 @@ composer.lock
 /vendor
 
 .phpunit.result.cache
+
+
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+
+storage/*

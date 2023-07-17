@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Command;
+namespace TomasVotruba\ClassLeak\Console\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +16,7 @@ use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 use TomasVotruba\ClassLeak\ValueObject\Option;
 
-final class CheckActiveClassCommand extends Command
+final class CheckCommand extends Command
 {
     public function __construct(
         private readonly ClassNamesFinder $classNamesFinder,
@@ -31,7 +31,8 @@ final class CheckActiveClassCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName('check-active-class');
+        $this->setName('check');
+
         $this->setDescription('Check classes that are not used in any config and in the code');
 
         $this->addArgument(
