@@ -1,0 +1,21 @@
+parameters:
+    level: 8
+
+    paths:
+        - src
+        - config
+        - tests
+
+    cognitive_complexity:
+        class: 30
+        function: 10
+
+    excludePaths:
+        - */Fixture/*
+        - */Source/*
+
+    # ignore errors
+    ignoreErrors:
+        -
+            message: '#Strict comparison using \!\=\= between null and null will always evaluate to false#'
+            path: packages/Psr4/Utils/SymplifyStrings.php
