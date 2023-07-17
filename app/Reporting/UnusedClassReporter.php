@@ -18,10 +18,11 @@ final class UnusedClassReporter
     /**
      * @param FileWithClass[] $unusedFilesWithClasses
      * @param FileWithClass[] $existingFilesWithClasses
+     * @return Command::*
      */
     public function reportResult(array $unusedFilesWithClasses, array $existingFilesWithClasses): int
     {
-        $this->symfonyStyle->newLine();
+        $this->symfonyStyle->newLine(2);
 
         if ($unusedFilesWithClasses === []) {
             $successMessage = sprintf(

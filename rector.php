@@ -21,11 +21,9 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->paths([
+        __DIR__ . '/app',
         __DIR__ . '/config',
-        __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/packages',
-        __DIR__ . '/packages-tests',
     ]);
 
     $rectorConfig->importNames();

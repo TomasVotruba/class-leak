@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
+use Symfony\Component\Finder\Finder;
 use Webmozart\Assert\Assert;
 
 /**
@@ -26,7 +27,7 @@ final class PhpFilesFinder
             if (is_file($path)) {
                 $filePaths[] = $path;
             } else {
-                $phpFilesFinder = \Symfony\Component\Finder\Finder::create()
+                $phpFilesFinder = Finder::create()
                     ->files()
                     ->in($path)
                     ->name('*.php');

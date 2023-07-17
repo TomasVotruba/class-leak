@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Providers;
+namespace TomasVotruba\ClassLeak\DependencyInjection;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Container\Container;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -12,16 +12,18 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class AppServiceProvider extends ServiceProvider
+final class ContainerFactory
 {
-    public function register(): void
+    public function create(): Container
     {
-        $this->app->singleton(Parser::class, function (): Parser {
+        $container = new Container();
+
+        $container->singleton(Parser::class, static function (): Parser {
             $parserFactory = new ParserFactory();
             return $parserFactory->create(ParserFactory::PREFER_PHP7);
         });
 
-        $this->app->singleton(
+        $container->singleton(
             SymfonyStyle::class,
             static function (): SymfonyStyle {
                 // use null output ofr tests to avoid printing
@@ -29,5 +31,7 @@ final class AppServiceProvider extends ServiceProvider
                 return new SymfonyStyle(new ArrayInput([]), $consoleOutput);
             }
         );
+
+        return $container;
     }
 }

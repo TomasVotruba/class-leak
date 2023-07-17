@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Console\Commands;
 
-use Illuminate\Console\Command;
+use Closure;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
@@ -14,17 +19,6 @@ use TomasVotruba\ClassLeak\UseImportsResolver;
 
 final class CheckCommand extends Command
 {
-    /**
-     * @var string
-     * @see https://laravel.com/docs/10.x/artisan#command-structure
-     */
-    protected $signature = 'check {paths*} {--skip-type=*}';
-
-    /**
-     * @var string
-     */
-    protected $description = 'Check classes that are not used in any config and in the code';
-
     public function __construct(
         private readonly ClassNamesFinder $classNamesFinder,
         private readonly UseImportsResolver $useImportsResolver,
@@ -36,17 +30,35 @@ final class CheckCommand extends Command
         parent::__construct();
     }
 
-    public function handle(): int
+    protected function configure(): void
     {
-        $paths = (array) $this->argument('paths');
-        $typesToSkip = (array) $this->option('skip-type');
+        $this->setName('check');
+        $this->setDescription('Check classes that are not used in any config and in the code');
+
+        $this->addArgument(
+            'paths',
+            InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+            'Files and directories to analyze'
+        );
+        $this->addOption(
+            'skip-type',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+            'Class types that should be skipped'
+        );
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $paths = (array) $input->getArgument('paths');
+        $typesToSkip = (array) $input->getOption('skip-type');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 
         $this->symfonyStyle->progressStart(count($phpFilePaths));
-        $this->newLine();
+        $this->symfonyStyle->newLine();
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () {
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function (): void {
             $this->symfonyStyle->progressAdvance();
         });
 
@@ -58,14 +70,17 @@ final class CheckCommand extends Command
             $typesToSkip
         );
 
-        return $this->unusedClassReporter->reportResult($possiblyUnusedFilesWithClasses, $existingFilesWithClasses);
+        return $this->unusedClassReporter->reportResult(
+            $possiblyUnusedFilesWithClasses,
+            $existingFilesWithClasses
+        );
     }
 
     /**
      * @param string[] $phpFilePaths
      * @return string[]
      */
-    private function resolveUsedClassNames(array $phpFilePaths, \Closure $progressClosure): array
+    private function resolveUsedClassNames(array $phpFilePaths, Closure $progressClosure): array
     {
         $usedNames = [];
 

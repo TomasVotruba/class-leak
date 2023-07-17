@@ -17,6 +17,7 @@ final class PossiblyUnusedClassesFilter
      */
     private const DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
+        'Symfony\Component\Console\Application',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         // events
@@ -55,9 +56,6 @@ final class PossiblyUnusedClassesFilter
         $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
 
         foreach ($filesWithClasses as $fileWithClass) {
-            dump($fileWithClass->getClassName());
-            dump(in_array($fileWithClass->getClassName(), $usedClassNames, true));
-
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;
             }

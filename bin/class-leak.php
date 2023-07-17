@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-use Illuminate\Contracts\Console\Kernel;
+use TomasVotruba\ClassLeak\Console\ClassLeakApplication;
+use TomasVotruba\ClassLeak\DependencyInjection\ContainerFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/** @var \Illuminate\Foundation\Application $application */
-$application = require_once __DIR__ . '/../bootstrap/app.php';
+$containerFactory = new ContainerFactory();
+$container = $containerFactory->create();
 
-/** @var Kernel $kernel */
-$kernel = $application->make(Kernel::class);
+$application = $container->make(ClassLeakApplication::class);
 
-$status = $kernel->handle(
-    $input = new Symfony\Component\Console\Input\ArgvInput(),
-    new Symfony\Component\Console\Output\ConsoleOutput()
-);
+$input = new Symfony\Component\Console\Input\ArgvInput();
+$output = new Symfony\Component\Console\Output\ConsoleOutput();
 
-$kernel->terminate($input, $status);
-exit($status);
+$exitCode = $application->run($input, $output);
+exit($exitCode);

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\NodeVisitor;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -31,11 +33,11 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node): Node|null|int
     {
-        if ($node instanceof Node\Expr\FuncCall) {
+        if ($node instanceof FuncCall) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
-        if ($node instanceof Node\Expr\ConstFetch) {
+        if ($node instanceof ConstFetch) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
 
