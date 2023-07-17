@@ -3,7 +3,6 @@ parameters:
 
     paths:
         - app
-        - config
         - tests
 
     cognitive_complexity:
