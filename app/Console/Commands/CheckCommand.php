@@ -38,7 +38,7 @@ final class CheckCommand extends Command
 
     public function handle(): int
     {
-        $paths = $this->argument('paths');
+        $paths = (array) $this->argument('paths');
         $typesToSkip = (array) $this->option('skip-type');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
