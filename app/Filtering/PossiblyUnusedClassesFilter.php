@@ -49,7 +49,6 @@ final class PossiblyUnusedClassesFilter
         Assert::allString($usedNames);
         Assert::allString($typesToSkip);
 
-
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
