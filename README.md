@@ -7,7 +7,7 @@ Find leaking classes that you never use... and get rif of them.
 ## Install
 
 ```bash
-composer require tomas-votruba/class-leak --dev
+composer require tomasvotruba/class-leak --dev
 ```
 
 ## Usage
@@ -15,5 +15,5 @@ composer require tomas-votruba/class-leak --dev
 How to avoid it? Add check to your CI:
 
 ```bash
-vendor/bin/class-leak .
+vendor/bin/class-leak bin src
 ```
