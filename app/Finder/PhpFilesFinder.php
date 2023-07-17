@@ -6,9 +6,9 @@ namespace TomasVotruba\ClassLeak\Finder;
 
 use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
-use TomasVotruba\ClassLeak\ValueObject\Option;
 use Symplify\PackageBuilder\Parameter\ParameterProvider;
 use Symplify\SmartFileSystem\Finder\SmartFinder;
+use TomasVotruba\ClassLeak\ValueObject\Option;
 use Webmozart\Assert\Assert;
 
 final class PhpFilesFinder

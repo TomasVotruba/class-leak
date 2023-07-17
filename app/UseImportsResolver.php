@@ -9,7 +9,6 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 /**
  * @see \TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\UseImportsResolverTest

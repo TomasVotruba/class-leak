@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\ValueObject;
 
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 final class FileWithClass
 {

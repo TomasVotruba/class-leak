@@ -7,10 +7,8 @@ namespace TomasVotruba\ClassLeak;
 use Nette\Utils\FileSystem;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
-use Symfony\Component\Finder\SplFileInfo;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\ClassNameNodeVisitor;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 /**
  * @see \TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver\ClassNameResolverTest

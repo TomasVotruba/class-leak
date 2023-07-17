@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Filtering;
 
+use Symplify\PackageBuilder\Parameter\ParameterProvider;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use TomasVotruba\ClassLeak\ValueObject\Option;
-use Symplify\PackageBuilder\Parameter\ParameterProvider;
 
 final class PossiblyUnusedClassesFilter
 {

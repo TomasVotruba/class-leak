@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver;
 
 use Iterator;
+use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Kernel\EasyCIKernel;
 use TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver\Fixture\SomeClass;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 final class ClassNameResolverTest extends AbstractKernelTestCase
 {

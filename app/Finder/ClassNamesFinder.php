@@ -6,7 +6,6 @@ namespace TomasVotruba\ClassLeak\Finder;
 
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
-use Symplify\SmartFileSystem\SmartFileInfo;
 
 final class ClassNamesFinder
 {

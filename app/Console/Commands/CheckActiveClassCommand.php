@@ -15,10 +15,6 @@ use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 use TomasVotruba\ClassLeak\ValueObject\Option;
-use Symplify\PackageBuilder\Parameter\ParameterProvider;
-use Symplify\SmartFileSystem\Finder\SmartFinder;
-use Symplify\SmartFileSystem\SmartFileInfo;
-use Webmozart\Assert\Assert;
 
 final class CheckActiveClassCommand extends Command
 {

@@ -12,7 +12,8 @@
         "nikic/php-parser": "^4.16",
         "symfony/console": "^6.2",
         "symfony/dependency-injection": "6.1.*",
-        "symplify/package-builder": "^11.2"
+        "symplify/package-builder": "^11.2",
+        "tomasvotruba/punchcard": "^0.2.7"
     },
     "require-dev": {
         "cweagans/composer-patches": "^1.7",

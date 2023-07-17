@@ -6,5 +6,4 @@ namespace TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\Source;
 
 final class SecondUsedClass
 {
-
 }
