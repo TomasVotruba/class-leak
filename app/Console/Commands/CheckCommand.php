@@ -42,18 +42,13 @@ final class CheckCommand extends Command
         $typesToSkip = (array) $this->option('skip-type');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
+
         $this->symfonyStyle->progressStart(count($phpFilePaths));
+        $this->newLine();
 
-        $usedNames = [];
-        foreach ($phpFilePaths as $phpFilePath) {
-            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
-            $usedNames = array_merge($usedNames, $currentUsedNames);
-
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () {
             $this->symfonyStyle->progressAdvance();
-        }
-
-        $usedNames = array_unique($usedNames);
-        sort($usedNames);
+        });
 
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
 
@@ -64,5 +59,27 @@ final class CheckCommand extends Command
         );
 
         return $this->unusedClassReporter->reportResult($possiblyUnusedFilesWithClasses, $existingFilesWithClasses);
+    }
+
+    /**
+     * @param string[] $phpFilePaths
+     * @return string[]
+     */
+    private function resolveUsedClassNames(array $phpFilePaths, \Closure $progressClosure): array
+    {
+        $usedNames = [];
+        foreach ($phpFilePaths as $phpFilePath) {
+            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
+            $usedNames = array_merge($usedNames, $currentUsedNames);
+
+            dump($usedNames);
+
+            $progressClosure();
+        }
+
+        $usedNames = array_unique($usedNames);
+        sort($usedNames);
+
+        return $usedNames;
     }
 }

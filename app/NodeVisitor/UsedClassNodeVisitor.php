@@ -9,6 +9,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
 final class UsedClassNodeVisitor extends NodeVisitorAbstract
@@ -28,8 +29,16 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
-    public function enterNode(Node $node): ?Node
+    public function enterNode(Node $node): Node|null|int
     {
+        if ($node instanceof Node\Expr\FuncCall) {
+            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+        }
+
+        if ($node instanceof Node\Expr\ConstFetch) {
+            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+        }
+
         if (! $node instanceof Name) {
             return null;
         }
