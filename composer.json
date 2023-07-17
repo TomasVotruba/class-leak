@@ -1,5 +1,5 @@
 {
-    "name": "tomas-votruba/class-leak",
+    "name": "tomasvotruba/class-leak",
     "description": "Detect leaking classes",
     "license": "MIT",
     "bin": [
