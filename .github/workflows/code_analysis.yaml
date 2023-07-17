@@ -38,7 +38,7 @@ jobs:
 
                     -
                         name: 'Check Active Classes'
-                        run: bin/class-leak check app --ansi
+                        run: bin/class-leak check app bin --ansi
 
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest

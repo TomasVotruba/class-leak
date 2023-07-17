@@ -44,15 +44,9 @@ final class PhpFilesFinder
      */
     private function findFilesUsingGlob(string $directory): array
     {
-        $phpFiles = [];
-
         // Search for php files in the current directory
         /** @var string[] $files */
-        $files = glob($directory . '/*.php');
-
-        foreach ($files as $file) {
-            $phpFiles[] = $file;
-        }
+        $phpFiles = glob($directory . '/*.php');
 
         // recursively search in subdirectories
 
