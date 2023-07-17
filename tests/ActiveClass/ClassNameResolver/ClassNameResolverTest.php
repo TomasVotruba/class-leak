@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver;
 
 use Iterator;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
-use TomasVotruba\ClassLeak\Kernel\EasyCIKernel;
+use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver\Fixture\SomeClass;
 
-final class ClassNameResolverTest extends AbstractKernelTestCase
+final class ClassNameResolverTest extends AbstractTestCase
 {
     private ClassNameResolver $classNameResolver;
 
     protected function setUp(): void
     {
-        $this->bootKernel(EasyCIKernel::class);
-        $this->classNameResolver = $this->getService(ClassNameResolver::class);
+        parent::setUp();
+
+        $this->classNameResolver = $this->make(ClassNameResolver::class);
     }
 
     /**
-     * @dataProvider provideData()
-     *
      * @param class-string $expectedClassName
      */
+    #[DataProvider('provideData')]
     public function test(string $filePath, string $expectedClassName): void
     {
         $resolvedClassName = $this->classNameResolver->resolveFromFromFilePath($filePath);

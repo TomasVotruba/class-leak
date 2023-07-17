@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Console\Commands;
 
-use Symfony\Component\Console\Command\Command;
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
@@ -29,22 +27,21 @@ final class CheckCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    /**
+     * @var string
+     * @see https://laravel.com/docs/10.x/artisan#command-structure
+     */
+    protected $signature = 'check {paths*}';
+
+    /**
+     * @var string
+     */
+    protected $description = 'Check classes that are not used in any config and in the code';
+
+    protected function handle(): int
     {
-        $this->setName('check');
-
-        $this->setDescription('Check classes that are not used in any config and in the code');
-
-        $this->addArgument(
-            Option::SOURCES,
-            InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
-            'One or more paths with templates'
-        );
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($input);
+        $paths = $this->argument('paths');
+        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 
         $this->symfonyStyle->progressStart(count($phpFilePaths));
 

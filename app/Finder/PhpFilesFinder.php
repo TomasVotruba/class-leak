@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
+use TomasVotruba\ClassLeak\Exception\ShouldNotHappenException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -12,6 +13,7 @@ use Webmozart\Assert\Assert;
 final class PhpFilesFinder
 {
     /**
+     * @param string[] $paths
      * @return string[]
      */
     public function findPhpFiles(array $paths): array
@@ -25,6 +27,10 @@ final class PhpFilesFinder
             } else {
                 // @see https://stackoverflow.com/a/36034646/1348344
                 $directoryFilePaths = glob($path . '/{**/*,*}.php', GLOB_BRACE);
+                if ($directoryFilePaths === false) {
+                    continue;
+                }
+
                 $filePaths = array_merge($filePaths, $directoryFilePaths);
             }
         }

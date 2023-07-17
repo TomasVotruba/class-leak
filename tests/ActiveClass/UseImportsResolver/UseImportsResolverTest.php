@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver;
 
 use Iterator;
-use Symplify\PackageBuilder\Testing\AbstractKernelTestCase;
-use TomasVotruba\ClassLeak\Kernel\EasyCIKernel;
+use PHPUnit\Framework\Attributes\DataProvider;
+use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\Source\FirstUsedClass;
 use TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\Source\SecondUsedClass;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
-final class UseImportsResolverTest extends AbstractKernelTestCase
+final class UseImportsResolverTest extends AbstractTestCase
 {
     private UseImportsResolver $useImportsResolver;
 
     protected function setUp(): void
     {
-        $this->bootKernel(EasyCIKernel::class);
-        $this->useImportsResolver = $this->getService(UseImportsResolver::class);
+        parent::setUp();
+
+        $this->useImportsResolver = $this->make(UseImportsResolver::class);
     }
 
     /**
-     * @dataProvider provideData()
-     *
      * @param string[] $filePaths
      * @param string[] $expectedClassUsages
      */
+    #[DataProvider('provideData')]
     public function test(array $filePaths, array $expectedClassUsages): void
     {
         $resolvedClassUsages = $this->useImportsResolver->resolveFromFilePaths($filePaths);

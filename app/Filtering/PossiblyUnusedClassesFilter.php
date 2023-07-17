@@ -51,7 +51,6 @@ final class PossiblyUnusedClassesFilter
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = $this->parameterProvider->provideArrayParameter(Option::TYPES_TO_SKIP);
-
         $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
 
         foreach ($filesWithClasses as $fileWithClass) {
