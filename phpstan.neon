@@ -1,8 +1,9 @@
 parameters:
-    level: 8
+    level: max
 
     paths:
         - app
+        - bin
         - tests
 
     cognitive_complexity:

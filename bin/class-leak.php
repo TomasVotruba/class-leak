@@ -10,6 +10,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $containerFactory = new ContainerFactory();
 $container = $containerFactory->create();
 
+/** @var ClassLeakApplication $application */
 $application = $container->make(ClassLeakApplication::class);
 
 $input = new Symfony\Component\Console\Input\ArgvInput();

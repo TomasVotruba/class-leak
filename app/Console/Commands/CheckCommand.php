@@ -50,7 +50,10 @@ final class CheckCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var string[] $paths */
         $paths = (array) $input->getArgument('paths');
+
+        /** @var string[] $typesToSkip */
         $typesToSkip = (array) $input->getOption('skip-type');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
