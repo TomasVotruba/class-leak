@@ -5,28 +5,15 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Console\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
-use TomasVotruba\ClassLeak\ValueObject\Option;
 
 final class CheckCommand extends Command
 {
-    public function __construct(
-        private readonly ClassNamesFinder $classNamesFinder,
-        private readonly UseImportsResolver $useImportsResolver,
-        private readonly PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
-        private readonly UnusedClassReporter $unusedClassReporter,
-        private readonly SymfonyStyle $symfonyStyle,
-        private readonly PhpFilesFinder $phpFilesFinder,
-    ) {
-        parent::__construct();
-    }
-
     /**
      * @var string
      * @see https://laravel.com/docs/10.x/artisan#command-structure
@@ -37,6 +24,17 @@ final class CheckCommand extends Command
      * @var string
      */
     protected $description = 'Check classes that are not used in any config and in the code';
+
+    public function __construct(
+        private readonly ClassNamesFinder $classNamesFinder,
+        private readonly UseImportsResolver $useImportsResolver,
+        private readonly PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
+        private readonly UnusedClassReporter $unusedClassReporter,
+        private readonly SymfonyStyle $symfonyStyle,
+        private readonly PhpFilesFinder $phpFilesFinder,
+    ) {
+        parent::__construct();
+    }
 
     protected function handle(): int
     {

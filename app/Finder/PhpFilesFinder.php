@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
-use TomasVotruba\ClassLeak\Exception\ShouldNotHappenException;
 use Webmozart\Assert\Assert;
 
 /**
