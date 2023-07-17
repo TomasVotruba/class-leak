@@ -37,12 +37,8 @@ jobs:
                         run: vendor/bin/parallel-lint src tests
 
                     -
-                        name: 'Check Commented Code'
-                        run: bin/easy-ci check-commented-code src tests --ansi
-
-                    -
                         name: 'Check Active Classes'
-                        run: bin/easy-ci check-active-class --ansi
+                        run: bin/class-leak check app --ansi
 
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest

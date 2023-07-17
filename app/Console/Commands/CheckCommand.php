@@ -18,7 +18,7 @@ final class CheckCommand extends Command
      * @var string
      * @see https://laravel.com/docs/10.x/artisan#command-structure
      */
-    protected $signature = 'check {paths*}';
+    protected $signature = 'check {paths*} {--skip-type=*}';
 
     /**
      * @var string
@@ -36,11 +36,12 @@ final class CheckCommand extends Command
         parent::__construct();
     }
 
-    protected function handle(): int
+    public function handle(): int
     {
         $paths = $this->argument('paths');
-        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
+        $typesToSkip = (array) $this->option('skip-type');
 
+        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
         $this->symfonyStyle->progressStart(count($phpFilePaths));
 
         $usedNames = [];
@@ -58,7 +59,8 @@ final class CheckCommand extends Command
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
-            $usedNames
+            $usedNames,
+            $typesToSkip
         );
 
         return $this->unusedClassReporter->reportResult($possiblyUnusedFilesWithClasses, $existingFilesWithClasses);

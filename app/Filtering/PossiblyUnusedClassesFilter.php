@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Filtering;
 
-use Symplify\PackageBuilder\Parameter\ParameterProvider;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
-use TomasVotruba\ClassLeak\ValueObject\Option;
+use Webmozart\Assert\Assert;
 
 final class PossiblyUnusedClassesFilter
 {
@@ -34,23 +33,25 @@ final class PossiblyUnusedClassesFilter
         'PHPUnit\Framework\TestCase',
         'PHPStan\Rules\Rule',
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
+        // laravel
+        'Illuminate\Support\ServiceProvider',
     ];
-
-    public function __construct(
-        private readonly ParameterProvider $parameterProvider
-    ) {
-    }
 
     /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedNames
+     * @param string[] $typesToSkip
+     *
      * @return FileWithClass[]
      */
-    public function filter(array $filesWithClasses, array $usedNames): array
+    public function filter(array $filesWithClasses, array $usedNames, array $typesToSkip): array
     {
+        Assert::allString($usedNames);
+        Assert::allString($typesToSkip);
+
+
         $possiblyUnusedFilesWithClasses = [];
 
-        $typesToSkip = $this->parameterProvider->provideArrayParameter(Option::TYPES_TO_SKIP);
         $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
 
         foreach ($filesWithClasses as $fileWithClass) {

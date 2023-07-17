@@ -17,6 +17,8 @@ final class PhpFilesFinder
      */
     public function findPhpFiles(array $paths): array
     {
+        Assert::allFileExists($paths);
+
         // fallback to config paths
         $filePaths = [];
 
@@ -33,6 +35,8 @@ final class PhpFilesFinder
                 $filePaths = array_merge($filePaths, $directoryFilePaths);
             }
         }
+
+        sort($filePaths);
 
         Assert::allString($filePaths);
         Assert::allFileExists($filePaths);
