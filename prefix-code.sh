@@ -15,9 +15,9 @@ set -u
 # functions
 note()
 {
-    MESSAGE=$1;
-    printf "\n";
-    echo "\033[0;33m[NOTE] $MESSAGE\033[0m";
+    local MESSAGE="$1"
+
+    printf "\n\033[0;33m[NOTE] %s\033[0m\n" "$MESSAGE"
 }
 
 # ---------------------------
