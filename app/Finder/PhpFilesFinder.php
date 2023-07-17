@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
-use Symfony\Component\Finder\Finder;
 use Webmozart\Assert\Assert;
 
 /**
@@ -27,14 +26,8 @@ final class PhpFilesFinder
             if (is_file($path)) {
                 $filePaths[] = $path;
             } else {
-                $phpFilesFinder = Finder::create()
-                    ->files()
-                    ->in($path)
-                    ->name('*.php');
-
-                foreach ($phpFilesFinder->getIterator() as $fileInfo) {
-                    $filePaths[] = $fileInfo->getPathname();
-                }
+                $currentFilePaths = $this->findFilesUsingGlob($path);
+                $filePaths = array_merge($filePaths, $currentFilePaths);
             }
         }
 
@@ -44,5 +37,33 @@ final class PhpFilesFinder
         Assert::allFileExists($filePaths);
 
         return $filePaths;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function findFilesUsingGlob(string $directory): array
+    {
+        $phpFiles = [];
+
+        // Search for php files in the current directory
+        /** @var string[] $files */
+        $files = glob($directory . '/*.php');
+
+        foreach ($files as $file) {
+            $phpFiles[] = $file;
+        }
+
+        // recursively search in subdirectories
+
+        /** @var string[] $subdirectories */
+        $subdirectories = glob($directory . '/*', GLOB_ONLYDIR);
+
+        foreach ($subdirectories as $subdirectory) {
+            // Merge the results from subdirectories
+            $phpFiles = array_merge($phpFiles, $this->findFilesUsingGlob($subdirectory));
+        }
+
+        return $phpFiles;
     }
 }

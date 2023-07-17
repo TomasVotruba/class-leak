@@ -9,8 +9,7 @@
         "php": ">=8.1",
         "illuminate/container": "^10.15",
         "nikic/php-parser": "^4.16",
-        "symfony/console": "^6.3",
-        "symfony/finder": "^6.3"
+        "symfony/console": "^6.3"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.3",

@@ -21,7 +21,6 @@ final class PhpFilesFinderTest extends AbstractTestCase
     public function test(): void
     {
         $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture']);
-
-        $this->assertCount(2, $phpFiles);
+        $this->assertCount(3, $phpFiles);
     }
 }
