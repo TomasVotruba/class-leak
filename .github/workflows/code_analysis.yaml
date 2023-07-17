@@ -34,7 +34,7 @@ jobs:
 
                     -
                         name: 'PHP Linter'
-                        run: vendor/bin/parallel-lint src tests
+                        run: vendor/bin/parallel-lint app tests
 
                     -
                         name: 'Check Active Classes'
