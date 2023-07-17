@@ -31,7 +31,7 @@ final class ClassNameResolverTest extends AbstractTestCase
         $this->assertSame($expectedClassName, $resolvedClassName);
     }
 
-    public function provideData(): Iterator
+    public static function provideData(): Iterator
     {
         yield [__DIR__ . '/Fixture/SomeClass.php', SomeClass::class];
     }
