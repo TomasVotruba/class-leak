@@ -7,9 +7,6 @@ require __DIR__ . '/vendor/autoload.php';
 $nowDateTime = new DateTime('now');
 $timestamp = $nowDateTime->format('Ym');
 
-// @see https://github.com/humbug/php-scoper/blob/master/docs/further-reading.md
-use Nette\Utils\Strings;
-
 // see https://github.com/humbug/php-scoper
 return [
     'prefix' => 'ClassLeak' . $timestamp,
@@ -26,13 +23,12 @@ return [
                 return $content;
             }
 
-            return Strings::replace($content, '#DEFAULT_TYPES_TO_SKIP = (?<content>.*?)\;#ms', function (array $match) use (
+            return preg_replace_callback('#DEFAULT_TYPES_TO_SKIP = (?<content>.*?)\;#ms', function (array $match) use (
                 $prefix
             ) {
-                // remove prefix from there
-                return 'DEFAULT_TYPES_TO_SKIP = ' .
-                    Strings::replace($match['content'], '#' . $prefix . '\\\\#', '') . ';';
-            });
+                $unprefixedValue = preg_replace('#' . $prefix . '\\\\#', '', $match['content']);
+                return 'DEFAULT_TYPES_TO_SKIP = ' . $unprefixedValue . ';';
+            }, $content);
         },
     ],
 ];
