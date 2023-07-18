@@ -43,6 +43,7 @@ final class UseImportsResolver
      */
     public function resolve(string $filePath): array
     {
+        /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);
 
         $stmts = $this->parser->parse($fileContents);

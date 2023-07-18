@@ -22,6 +22,7 @@ final class ClassNameResolver
 
     public function resolveFromFromFilePath(string $filePath): ?string
     {
+        /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);
 
         $stmts = $this->parser->parse($fileContents);

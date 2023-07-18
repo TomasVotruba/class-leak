@@ -21,15 +21,6 @@ return [
         'vendor/symfony/deprecation-contracts/function.php',
     ],
     'patchers' => [
-        // scope symfony configs
-        function (string $filePath, string $prefix, string $content): string {
-            if (! Strings::match($filePath, '#(packages|config|services)\.php$#')) {
-                return $content;
-            }
-
-            return $content;
-        },
-
         function (string $filePath, string $prefix, string $content): string {
             if (! str_ends_with($filePath, 'app/Filtering/PossiblyUnusedClassesFilter.php')) {
                 return $content;

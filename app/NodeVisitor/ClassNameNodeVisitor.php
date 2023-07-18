@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\NodeVisitor;
 
-use Nette\Utils\Strings;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Identifier;
@@ -68,7 +67,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
             return false;
         }
 
-        $matches = Strings::match($doc->getText(), self::API_TAG_REGEX);
+        preg_match(self::API_TAG_REGEX, $doc->getText(), $matches);
 
         return $matches !== null;
     }
