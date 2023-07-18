@@ -1,5 +1,5 @@
 {
-    "name": "symplify/easy-ci",
+    "name": "tomasvotruba/class-leak",
     "description": "Toolkit of commands that should not be missed in you CI",
     "license": "MIT",
     "require": {
