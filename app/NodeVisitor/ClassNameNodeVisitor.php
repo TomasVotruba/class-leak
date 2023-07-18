@@ -21,7 +21,10 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
      */
     private const API_TAG_REGEX = '#@api\b#';
 
-    private string|null $className = null;
+    /**
+     * @var string|null
+     */
+    private $className = null;
 
     /**
      * @param Node\Stmt[] $nodes
