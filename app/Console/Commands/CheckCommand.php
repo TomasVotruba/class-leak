@@ -19,17 +19,46 @@ use TomasVotruba\ClassLeak\UseImportsResolver;
 
 final class CheckCommand extends Command
 {
-    public function __construct(
-        private readonly ClassNamesFinder $classNamesFinder,
-        private readonly UseImportsResolver $useImportsResolver,
-        private readonly PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
-        private readonly UnusedClassReporter $unusedClassReporter,
-        private readonly SymfonyStyle $symfonyStyle,
-        private readonly PhpFilesFinder $phpFilesFinder,
-    ) {
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\Finder\ClassNamesFinder
+     */
+    private $classNamesFinder;
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\UseImportsResolver
+     */
+    private $useImportsResolver;
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter
+     */
+    private $possiblyUnusedClassesFilter;
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\Reporting\UnusedClassReporter
+     */
+    private $unusedClassReporter;
+    /**
+     * @readonly
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     */
+    private $symfonyStyle;
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\Finder\PhpFilesFinder
+     */
+    private $phpFilesFinder;
+    public function __construct(ClassNamesFinder $classNamesFinder, UseImportsResolver $useImportsResolver, PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter, UnusedClassReporter $unusedClassReporter, SymfonyStyle $symfonyStyle, PhpFilesFinder $phpFilesFinder)
+    {
+        $this->classNamesFinder = $classNamesFinder;
+        $this->useImportsResolver = $useImportsResolver;
+        $this->possiblyUnusedClassesFilter = $possiblyUnusedClassesFilter;
+        $this->unusedClassReporter = $unusedClassReporter;
+        $this->symfonyStyle = $symfonyStyle;
+        $this->phpFilesFinder = $phpFilesFinder;
         parent::__construct();
     }
-
     protected function configure(): void
     {
         $this->setName('check');

@@ -15,12 +15,21 @@ use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
  */
 final class UseImportsResolver
 {
-    public function __construct(
-        private readonly Parser $parser,
-        private readonly FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
-    ) {
+    /**
+     * @readonly
+     * @var \PhpParser\Parser
+     */
+    private $parser;
+    /**
+     * @readonly
+     * @var \TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator
+     */
+    private $fullyQualifiedNameNodeDecorator;
+    public function __construct(Parser $parser, FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator)
+    {
+        $this->parser = $parser;
+        $this->fullyQualifiedNameNodeDecorator = $fullyQualifiedNameNodeDecorator;
     }
-
     /**
      * @param string[] $filePaths
      * @return string[]
