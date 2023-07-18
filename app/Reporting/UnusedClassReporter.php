@@ -10,9 +10,14 @@ use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final class UnusedClassReporter
 {
-    public function __construct(
-        private readonly SymfonyStyle $symfonyStyle
-    ) {
+    /**
+     * @readonly
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     */
+    private $symfonyStyle;
+    public function __construct(SymfonyStyle $symfonyStyle)
+    {
+        $this->symfonyStyle = $symfonyStyle;
     }
 
     /**
@@ -25,10 +30,7 @@ final class UnusedClassReporter
         $this->symfonyStyle->newLine(2);
 
         if ($unusedFilesWithClasses === []) {
-            $successMessage = sprintf(
-                'All the %d services are used. Great job!',
-                count($existingFilesWithClasses),
-            );
+            $successMessage = sprintf('All the %d services are used. Great job!', count($existingFilesWithClasses));
             $this->symfonyStyle->success($successMessage);
             return Command::SUCCESS;
         }

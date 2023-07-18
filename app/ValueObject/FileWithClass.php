@@ -8,10 +8,20 @@ use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
 final class FileWithClass
 {
-    public function __construct(
-        private readonly string $filePath,
-        private readonly string $className
-    ) {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $filePath;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $className;
+    public function __construct(string $filePath, string $className)
+    {
+        $this->filePath = $filePath;
+        $this->className = $className;
     }
 
     public function getClassName(): string
