@@ -19,7 +19,7 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
     /**
      * @var string[]
      */
-    private array $usedNames = [];
+    private $usedNames = [];
 
     /**
      * @param Stmt[] $nodes
@@ -31,7 +31,10 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
-    public function enterNode(Node $node): Node|null|int
+    /**
+     * @return \PhpParser\Node|null|int
+     */
+    public function enterNode(Node $node)
     {
         if ($node instanceof FuncCall) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;

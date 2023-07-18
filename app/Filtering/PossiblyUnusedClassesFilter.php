@@ -75,7 +75,7 @@ final class PossiblyUnusedClassesFilter
 
     private function isClassSkipped(FileWithClass $fileWithClass, string $typeToSkip): bool
     {
-        if (! str_contains($typeToSkip, '*')) {
+        if (strpos($typeToSkip, '*') === false) {
             return is_a($fileWithClass->getClassName(), $typeToSkip, true);
         }
 
