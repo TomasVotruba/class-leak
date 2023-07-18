@@ -1,6 +1,6 @@
 {
     "name": "tomasvotruba/class-leak",
-    "description": "Toolkit of commands that should not be missed in you CI",
+    "description": "Detect leaking classes",
     "license": "MIT",
     "require": {
         "php": ">=7.2"
