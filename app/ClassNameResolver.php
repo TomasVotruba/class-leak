@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak;
 
-use Nette\Utils\FileSystem;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
@@ -21,12 +20,9 @@ final class ClassNameResolver
     ) {
     }
 
-    /**
-     * @api
-     */
     public function resolveFromFromFilePath(string $filePath): ?string
     {
-        $fileContents = FileSystem::read($filePath);
+        $fileContents = file_get_contents($filePath);
 
         $stmts = $this->parser->parse($fileContents);
         if ($stmts === null) {

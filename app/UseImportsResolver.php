@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak;
 
-use Nette\Utils\FileSystem;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
@@ -21,31 +20,30 @@ final class UseImportsResolver
     ) {
     }
 
-    /**
-     * @param string[] $filePaths
-     * @return string[]
-     *@api
-     */
-    public function resolveFromFilePaths(array $filePaths): array
-    {
-        $usedNames = [];
-
-        foreach ($filePaths as $filePath) {
-            $usedNames = array_merge($usedNames, $this->resolve($filePath));
-        }
-
-        $usedNames = array_unique($usedNames);
-        sort($usedNames);
-
-        return $usedNames;
-    }
+    //    /**
+    //     * @param string[] $filePath
+    //     * @return string[]
+    //     */
+    //    public function resolveFromFilePaths(array $filePaths): array
+    //    {
+    //        $usedNames = [];
+    //
+    //        foreach ($filePaths as $filePath) {
+    //            $usedNames = array_merge($usedNames, $this->resolve($filePath));
+    //        }
+    //
+    //        $usedNames = array_unique($usedNames);
+    //        sort($usedNames);
+    //
+    //        return $usedNames;
+    //    }
 
     /**
      * @return string[]
      */
     public function resolve(string $filePath): array
     {
-        $fileContents = FileSystem::read($filePath);
+        $fileContents = file_get_contents($filePath);
 
         $stmts = $this->parser->parse($fileContents);
         if ($stmts === null) {

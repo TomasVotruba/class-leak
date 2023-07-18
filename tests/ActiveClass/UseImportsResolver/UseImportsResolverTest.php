@@ -23,18 +23,17 @@ final class UseImportsResolverTest extends AbstractTestCase
     }
 
     /**
-     * @param string[] $filePaths
      * @param string[] $expectedClassUsages
      */
     #[DataProvider('provideData')]
-    public function test(array $filePaths, array $expectedClassUsages): void
+    public function test(string $filePath, array $expectedClassUsages): void
     {
-        $resolvedClassUsages = $this->useImportsResolver->resolveFromFilePaths($filePaths);
+        $resolvedClassUsages = $this->useImportsResolver->resolve($filePath);
         $this->assertSame($expectedClassUsages, $resolvedClassUsages);
     }
 
     public static function provideData(): Iterator
     {
-        yield [[__DIR__ . '/Fixture/FileUsingOtherClasses.php'], [FirstUsedClass::class, SecondUsedClass::class]];
+        yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
     }
 }
