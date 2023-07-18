@@ -8,3 +8,6 @@ bootstrap/cache/*
 !bootstrap/cache/.gitkeep
 
 storage/*
+
+# avoid commiting scoper phar file
+php-scoper.phar
