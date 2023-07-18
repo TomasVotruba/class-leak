@@ -3,7 +3,8 @@
     "description": "Detect leaking classes",
     "license": "MIT",
     "bin": [
-        "bin/class-leak"
+        "bin/class-leak",
+        "bin/class-leak.php"
     ],
     "require": {
         "php": ">=8.1",
@@ -33,6 +34,12 @@
         "psr-4": {
             "TomasVotruba\\ClassLeak\\Tests\\": "tests"
         }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-intl-grapheme": "*",
+        "symfony/polyfill-intl-normalizer": "*",
+        "symfony/polyfill-mbstring": "*"
     },
     "config": {
         "sort-packages": true,
