@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver;
+namespace TomasVotruba\ClassLeak\Tests\UseImportsResolver;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
-use TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\Source\FirstUsedClass;
-use TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\Source\SecondUsedClass;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\SecondUsedClass;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
 final class UseImportsResolverTest extends AbstractTestCase

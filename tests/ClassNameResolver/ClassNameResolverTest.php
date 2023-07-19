@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver;
+namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
-use TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver\Fixture\SomeClass;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 
 final class ClassNameResolverTest extends AbstractTestCase
 {
