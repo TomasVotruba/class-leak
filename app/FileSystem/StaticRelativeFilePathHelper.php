@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace TomasVotruba\ClassLeak\FileSystem;
 
 final class StaticRelativeFilePathHelper
 {
-    public static function resolveFromCwd(string $filePath): string
+    public static function resolveFromCwd(string $filePath) : string
     {
         // make path relative with native PHP
-        $relativeFilePath = (string) realpath($filePath);
-        return str_replace(getcwd() . DIRECTORY_SEPARATOR, '', $relativeFilePath);
+        $relativeFilePath = (string) \realpath($filePath);
+        return \str_replace(\getcwd() . \DIRECTORY_SEPARATOR, '', $relativeFilePath);
     }
 }
