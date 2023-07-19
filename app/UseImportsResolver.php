@@ -10,7 +10,7 @@ use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
 
 /**
- * @see \TomasVotruba\ClassLeak\Tests\ActiveClass\UseImportsResolver\UseImportsResolverTest
+ * @see \TomasVotruba\ClassLeak\Tests\UseImportsResolver\UseImportsResolverTest
  */
 final class UseImportsResolver
 {
@@ -19,24 +19,6 @@ final class UseImportsResolver
         private readonly FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
     ) {
     }
-
-    //    /**
-    //     * @param string[] $filePath
-    //     * @return string[]
-    //     */
-    //    public function resolveFromFilePaths(array $filePaths): array
-    //    {
-    //        $usedNames = [];
-    //
-    //        foreach ($filePaths as $filePath) {
-    //            $usedNames = array_merge($usedNames, $this->resolve($filePath));
-    //        }
-    //
-    //        $usedNames = array_unique($usedNames);
-    //        sort($usedNames);
-    //
-    //        return $usedNames;
-    //    }
 
     /**
      * @return string[]

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\FileSystem;
 
+/**
+ * @see \TomasVotruba\ClassLeak\Tests\FileSystem\StaticRelativeFilePathHelperTest
+ */
 final class StaticRelativeFilePathHelper
 {
     public static function resolveFromCwd(string $filePath): string

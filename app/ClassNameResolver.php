@@ -10,7 +10,7 @@ use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\ClassNameNodeVisitor;
 
 /**
- * @see \TomasVotruba\ClassLeak\Tests\ActiveClass\ClassNameResolver\ClassNameResolverTest
+ * @see \TomasVotruba\ClassLeak\Tests\ClassNameResolver\ClassNameResolverTest
  */
 final class ClassNameResolver
 {
