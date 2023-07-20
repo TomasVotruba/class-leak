@@ -12,7 +12,7 @@ composer require tomasvotruba/class-leak --dev
 
 ## Usage
 
-How to avoid it? Add check to your CI:
+Pass directories you want to check:
 
 ```bash
 vendor/bin/class-leak bin src
