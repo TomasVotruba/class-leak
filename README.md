@@ -15,7 +15,7 @@ composer require tomasvotruba/class-leak --dev
 Pass directories you want to check:
 
 ```bash
-vendor/bin/class-leak bin src
+vendor/bin/class-leak check bin/ src/
 ```
 
 Make sure to exclude `/tests` directories, to keep reporting classes that are used in tests, but never used in the code-base.
@@ -25,5 +25,5 @@ Make sure to exclude `/tests` directories, to keep reporting classes that are us
 Many types are excluded by default, as they're collected by framework magic, e.g. console command classes. To exlude another class, e.g. your interface collector, use `--skip-type`:
 
 ```bash
-vendor/bin/class-leak check bin src --skip-type="App\\Contract\\SomeInterface"
+vendor/bin/class-leak check bin/ src/ --skip-type='App\Contract\SomeInterface'
 ```
