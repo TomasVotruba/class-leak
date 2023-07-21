@@ -15,7 +15,7 @@ composer require tomasvotruba/class-leak --dev
 Pass directories you want to check:
 
 ```bash
-vendor/bin/class-leak bin src
+vendor/bin/class-leak check bin src
 ```
 
 Make sure to exclude `/tests` directories, to keep reporting classes that are used in tests, but never used in the code-base.
