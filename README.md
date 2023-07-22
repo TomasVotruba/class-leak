@@ -27,3 +27,16 @@ Many types are excluded by default, as they're collected by framework magic, e.g
 ```bash
 vendor/bin/class-leak check bin src --skip-type="App\\Contract\\SomeInterface"
 ```
+
+It is also possible to specify the skipped types via a configuration file:
+
+```bash
+vendor/bin/class-leak check bin src -c class-leak.yaml
+```
+
+With this YAML as `class-leak.yaml` content:
+
+```yaml
+typesToSkip:
+    - App\Contract\SomeInterface
+```

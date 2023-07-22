@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Yaml\Yaml;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
@@ -46,6 +47,12 @@ final class CheckCommand extends Command
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
             'Class types that should be skipped'
         );
+        $this->addOption(
+            'configuration',
+            'c',
+            InputOption::VALUE_REQUIRED,
+            'Configuration file name'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,7 +61,16 @@ final class CheckCommand extends Command
         $paths = (array) $input->getArgument('paths');
 
         /** @var string[] $typesToSkip */
-        $typesToSkip = (array) $input->getOption('skip-type');
+        $typesToSkip = [];
+
+        if ($input->getOption('configuration') !== null) {
+            $config = Yaml::parseFile($input->getOption('configuration'));
+            $typesToSkip = $config['typesToSkip'] ?? [];
+        }
+
+        if (count($input->getOption('skip-type')) > 0) {
+            $typesToSkip = (array)$input->getOption('skip-type');
+        }
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 

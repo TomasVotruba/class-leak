@@ -11,6 +11,7 @@
         "illuminate/container": "^10.15",
         "nikic/php-parser": "^4.16",
         "symfony/console": "^6.3",
+        "symfony/yaml": "^6.3",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
