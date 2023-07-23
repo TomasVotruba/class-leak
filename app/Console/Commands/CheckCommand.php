@@ -60,17 +60,7 @@ final class CheckCommand extends Command
         /** @var string[] $paths */
         $paths = (array) $input->getArgument('paths');
 
-        /** @var string[] $typesToSkip */
-        $typesToSkip = [];
-
-        if ($input->getOption('configuration') !== null) {
-            $config = Yaml::parseFile($input->getOption('configuration'));
-            $typesToSkip = $config['typesToSkip'] ?? [];
-        }
-
-        if (count($input->getOption('skip-type')) > 0) {
-            $typesToSkip = (array)$input->getOption('skip-type');
-        }
+        $typesToSkip = self::resolveTypesToSkip($input);
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 
@@ -114,5 +104,26 @@ final class CheckCommand extends Command
         sort($usedNames);
 
         return $usedNames;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @return string[]
+     */
+    private static function resolveTypesToSkip(InputInterface $input): array
+    {
+        /** @var string[] $typesToSkip */
+        $typesToSkip = [];
+
+        if ($input->getOption('configuration') !== null) {
+            $config = Yaml::parseFile($input->getOption('configuration'));
+            $typesToSkip = $config['typesToSkip'] ?? [];
+        }
+
+        if (count($input->getOption('skip-type')) > 0) {
+            $typesToSkip = (array)$input->getOption('skip-type');
+        }
+
+        return $typesToSkip;
     }
 }
