@@ -112,11 +112,22 @@ final class CheckCommand extends Command
      */
     private static function resolveTypesToSkip(InputInterface $input): array
     {
-        /** @var string[] $typesToSkip */
-        $typesToSkip = [];
+        $config = null;
 
         if ($input->getOption('configuration') !== null) {
             $config = Yaml::parseFile($input->getOption('configuration'));
+        }
+
+        $defaultConfigFileName = getcwd() . '/class-leak.yaml';
+
+        if ($config === null && file_exists($defaultConfigFileName)) {
+            $config = Yaml::parseFile($defaultConfigFileName);
+        }
+
+        /** @var string[] $typesToSkip */
+        $typesToSkip = [];
+
+        if ($config !== null) {
             $typesToSkip = $config['typesToSkip'] ?? [];
         }
 
