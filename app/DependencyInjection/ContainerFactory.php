@@ -14,6 +14,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ContainerFactory
 {
+    /**
+     * @api
+     */
     public function create(): Container
     {
         $container = new Container();
