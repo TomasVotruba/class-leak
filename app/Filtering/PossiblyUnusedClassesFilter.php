@@ -36,7 +36,9 @@ final class PossiblyUnusedClassesFilter
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
         // laravel
         'Illuminate\Support\ServiceProvider',
+        'Illuminate\Foundation\Http\Kernel',
         'Illuminate\Contracts\Console\Kernel',
+        'Illuminate\Routing\Controller',
     ];
 
     /**
