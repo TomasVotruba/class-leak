@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\SecondUsedClass;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\ThirdUsedClass;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
 final class UseImportsResolverTest extends AbstractTestCase
@@ -35,6 +36,6 @@ final class UseImportsResolverTest extends AbstractTestCase
     public static function provideData(): Iterator
     {
         yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
-        yield [__DIR__ . '/Fixture/PHPDocTyped.php', [FirstUsedClass::class, SecondUsedClass::class]];
+        yield [__DIR__ . '/Fixture/PHPDocTyped.php', [FirstUsedClass::class, SecondUsedClass::class, ThirdUsedClass::class]];
     }
 }

@@ -8,6 +8,8 @@ final class PHPDocTyped
 {
     /**
      * @param \TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass $firstUsed
+     *
+     * @return \TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\ThirdUsedClass
      */
     public function run($firstUsed)
     {
