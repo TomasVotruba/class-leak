@@ -35,5 +35,6 @@ final class UseImportsResolverTest extends AbstractTestCase
     public static function provideData(): Iterator
     {
         yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
+        yield [__DIR__ . '/Fixture/PHPDocTyped.php', [FirstUsedClass::class, SecondUsedClass::class]];
     }
 }
