@@ -22,7 +22,7 @@ Make sure to exclude `/tests` directories, to keep reporting classes that are us
 
 <br>
 
-Many types are excluded by default, as they're collected by framework magic, e.g. console command classes. To exlude another class, e.g. your interface collector, use `--skip-type`:
+Many types are excluded by default, as they're collected by framework magic, e.g. console command classes. To exclude another class, e.g. your interface collector, use `--skip-type`:
 
 ```bash
 vendor/bin/class-leak check bin src --skip-type="App\\Contract\\SomeInterface"
