@@ -7,6 +7,7 @@ namespace TomasVotruba\ClassLeak\DependencyInjection;
 use Illuminate\Container\Container;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -34,6 +35,15 @@ final class ContainerFactory
                 return new SymfonyStyle(new ArrayInput([]), $consoleOutput);
             }
         );
+
+        $container->singleton(Application::class, function (Container $container): Application {
+            $checkCommand = $container->make(\TomasVotruba\ClassLeak\Console\Commands\CheckCommand::class);
+
+            $application = new Application();
+            $application->add($checkCommand);
+
+            return $application;
+        });
 
         return $container;
     }
