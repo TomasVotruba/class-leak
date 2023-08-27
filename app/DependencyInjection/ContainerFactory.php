@@ -12,6 +12,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TomasVotruba\ClassLeak\Console\Commands\CheckCommand;
+use TomasVotruba\ClassLeak\Helpers\PrivatesAccessor;
 
 final class ContainerFactory
 {
@@ -37,14 +39,28 @@ final class ContainerFactory
         );
 
         $container->singleton(Application::class, function (Container $container): Application {
-            $checkCommand = $container->make(\TomasVotruba\ClassLeak\Console\Commands\CheckCommand::class);
+            /** @var CheckCommand $checkCommand */
+            $checkCommand = $container->make(CheckCommand::class);
 
             $application = new Application();
             $application->add($checkCommand);
+
+            $this->cleanupDefaultCommands($application);
 
             return $application;
         });
 
         return $container;
+    }
+
+    private function cleanupDefaultCommands(Application $application): void
+    {
+        PrivatesAccessor::propertyClosure($application, 'commands', static function (array $commands): array {
+            // remove default commands, as not needed here
+            unset($commands['completion']);
+            unset($commands['help']);
+
+            return $commands;
+        });
     }
 }
