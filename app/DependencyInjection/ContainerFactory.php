@@ -13,10 +13,14 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Console\Commands\CheckCommand;
-use TomasVotruba\ClassLeak\Helpers\PrivatesAccessor;
 
 final class ContainerFactory
 {
+    /**
+     * @var string[]
+     */
+    private const COMMAND_NAMES_TO_HIDE = ['completion', 'help', 'list'];
+
     /**
      * @api
      */
@@ -45,7 +49,7 @@ final class ContainerFactory
             $application = new Application();
             $application->add($checkCommand);
 
-            $this->cleanupDefaultCommands($application);
+            $this->hideDefaultCommands($application);
 
             return $application;
         });
@@ -53,14 +57,14 @@ final class ContainerFactory
         return $container;
     }
 
-    private function cleanupDefaultCommands(Application $application): void
+    /**
+     * @see https://tomasvotruba.com/blog/how-make-your-tool-commands-list-easy-to-read
+     */
+    private function hideDefaultCommands(Application $application): void
     {
-        PrivatesAccessor::propertyClosure($application, 'commands', static function (array $commands): array {
-            // remove default commands, as not needed here
-            unset($commands['completion']);
-            unset($commands['help']);
-
-            return $commands;
-        });
+        foreach (self::COMMAND_NAMES_TO_HIDE as $commandNameToHide) {
+            $commandToHide = $application->get($commandNameToHide);
+            $commandToHide->setHidden();
+        }
     }
 }
