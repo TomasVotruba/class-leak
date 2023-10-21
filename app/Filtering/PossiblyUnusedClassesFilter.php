@@ -45,13 +45,19 @@ final class PossiblyUnusedClassesFilter
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
      * @param string[] $typesToSkip
+     * @param string[] $suffixesToSkip
      *
      * @return FileWithClass[]
      */
-    public function filter(array $filesWithClasses, array $usedClassNames, array $typesToSkip): array
-    {
+    public function filter(
+        array $filesWithClasses,
+        array $usedClassNames,
+        array $typesToSkip,
+        array $suffixesToSkip
+    ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
+        Assert::allString($suffixesToSkip);
 
         $possiblyUnusedFilesWithClasses = [];
 
@@ -65,6 +71,13 @@ final class PossiblyUnusedClassesFilter
             // is excluded interfaces?
             foreach ($typesToSkip as $typeToSkip) {
                 if ($this->isClassSkipped($fileWithClass, $typeToSkip)) {
+                    continue 2;
+                }
+            }
+
+            // is excluded suffix?
+            foreach ($suffixesToSkip as $suffixToSkip) {
+                if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
                     continue 2;
                 }
             }

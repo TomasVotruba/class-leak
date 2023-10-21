@@ -27,3 +27,13 @@ Many types are excluded by default, as they're collected by framework magic, e.g
 ```bash
 vendor/bin/class-leak check bin src --skip-type="App\\Contract\\SomeInterface"
 ```
+
+What if your classes do no implement any type? Use `--skip-suffix` instead:
+
+```bash
+vendor/bin/class-leak check bin src --skip-suffix "Controller"
+```
+
+<br>
+
+Happy coding!
