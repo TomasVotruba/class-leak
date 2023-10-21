@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Console\Commands;
+namespace TomasVotruba\ClassLeak\Commands;
 
 use Closure;
 use Symfony\Component\Console\Command\Command;
@@ -46,6 +46,13 @@ final class CheckCommand extends Command
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
             'Class types that should be skipped'
         );
+
+        $this->addOption(
+            'skip-suffix',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+            'Class suffix that should be skipped'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -55,6 +62,9 @@ final class CheckCommand extends Command
 
         /** @var string[] $typesToSkip */
         $typesToSkip = (array) $input->getOption('skip-type');
+
+        /** @var string[] $suffixesToSkip */
+        $suffixesToSkip = (array) $input->getOption('skip-suffix');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 
@@ -70,7 +80,8 @@ final class CheckCommand extends Command
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
             $usedNames,
-            $typesToSkip
+            $typesToSkip,
+            $suffixesToSkip
         );
 
         return $this->unusedClassReporter->reportResult(

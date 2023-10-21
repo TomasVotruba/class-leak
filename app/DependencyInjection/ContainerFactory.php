@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use TomasVotruba\ClassLeak\Console\Commands\CheckCommand;
+use TomasVotruba\ClassLeak\Commands\CheckCommand;
 
 final class ContainerFactory
 {
