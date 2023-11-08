@@ -61,7 +61,7 @@ final class PossiblyUnusedClassesFilter
 
         $possiblyUnusedFilesWithClasses = [];
 
-        $typesToSkip = array_merge($typesToSkip, self::DEFAULT_TYPES_TO_SKIP);
+        $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
 
         foreach ($filesWithClasses as $fileWithClass) {
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {

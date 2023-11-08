@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Finder;
 
 use TomasVotruba\ClassLeak\ClassNameResolver;
+use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final class ClassNamesFinder
@@ -23,12 +24,16 @@ final class ClassNamesFinder
         $filesWithClasses = [];
 
         foreach ($filePaths as $filePath) {
-            $className = $this->classNameResolver->resolveFromFromFilePath($filePath);
-            if ($className === null) {
+            $classNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+            if (! $classNames instanceof ClassNames) {
                 continue;
             }
 
-            $filesWithClasses[] = new FileWithClass($filePath, $className);
+            $filesWithClasses[] = new FileWithClass(
+                $filePath,
+                $classNames->getClassName(),
+                $classNames->hasParentClassOrInterface()
+            );
         }
 
         return $filesWithClasses;

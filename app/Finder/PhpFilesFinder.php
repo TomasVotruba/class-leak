@@ -27,7 +27,7 @@ final class PhpFilesFinder
                 $filePaths[] = $path;
             } else {
                 $currentFilePaths = $this->findFilesUsingGlob($path);
-                $filePaths = array_merge($filePaths, $currentFilePaths);
+                $filePaths = [...$filePaths, ...$currentFilePaths];
             }
         }
 

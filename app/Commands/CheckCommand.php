@@ -14,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
+use TomasVotruba\ClassLeak\Reporting\UnusedClassesResultFactory;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
@@ -26,6 +27,7 @@ final class CheckCommand extends Command
         private readonly UnusedClassReporter $unusedClassReporter,
         private readonly SymfonyStyle $symfonyStyle,
         private readonly PhpFilesFinder $phpFilesFinder,
+        private readonly UnusedClassesResultFactory $unusedClassesResultFactory,
     ) {
         parent::__construct();
     }
@@ -84,10 +86,9 @@ final class CheckCommand extends Command
             $suffixesToSkip
         );
 
-        return $this->unusedClassReporter->reportResult(
-            $possiblyUnusedFilesWithClasses,
-            $existingFilesWithClasses
-        );
+        $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
+
+        return $this->unusedClassReporter->reportResult($unusedClassesResult, count($existingFilesWithClasses));
     }
 
     /**
@@ -100,7 +101,7 @@ final class CheckCommand extends Command
 
         foreach ($phpFilePaths as $phpFilePath) {
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
-            $usedNames = array_merge($usedNames, $currentUsedNames);
+            $usedNames = [...$usedNames, ...$currentUsedNames];
 
             $progressClosure();
         }

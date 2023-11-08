@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
+use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 
 final class ClassNameResolverTest extends AbstractTestCase
 {
@@ -21,18 +22,21 @@ final class ClassNameResolverTest extends AbstractTestCase
         $this->classNameResolver = $this->make(ClassNameResolver::class);
     }
 
-    /**
-     * @param class-string $expectedClassName
-     */
     #[DataProvider('provideData')]
-    public function test(string $filePath, string $expectedClassName): void
+    public function test(string $filePath, ClassNames $expectedClassNames): void
     {
-        $resolvedClassName = $this->classNameResolver->resolveFromFromFilePath($filePath);
-        $this->assertSame($expectedClassName, $resolvedClassName);
+        $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+        $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
+
+        $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
+        $this->assertSame(
+            $expectedClassNames->hasParentClassOrInterface(),
+            $resolvedClassNames->hasParentClassOrInterface()
+        );
     }
 
     public static function provideData(): Iterator
     {
-        yield [__DIR__ . '/Fixture/SomeClass.php', SomeClass::class];
+        yield [__DIR__ . '/Fixture/SomeClass.php', new ClassNames(SomeClass::class, false)];
     }
 }

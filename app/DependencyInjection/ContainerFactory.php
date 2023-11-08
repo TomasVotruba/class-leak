@@ -14,6 +14,9 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\Commands\CheckCommand;
 
+/**
+ * @api
+ */
 final class ContainerFactory
 {
     /**
