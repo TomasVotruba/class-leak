@@ -8,7 +8,9 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\Interface_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
@@ -22,6 +24,8 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
 
     private string|null $className = null;
 
+    private bool $hasParentClassOrInterface = false;
+
     /**
      * @param Node\Stmt[] $nodes
      * @return Node\Stmt[]
@@ -29,6 +33,8 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function beforeTraverse(array $nodes): array
     {
         $this->className = null;
+        $this->hasParentClassOrInterface = false;
+
         return $nodes;
     }
 
@@ -51,6 +57,19 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         }
 
         $this->className = $node->namespacedName->toString();
+        if ($node instanceof Class_) {
+            if ($node->extends instanceof Name) {
+                $this->hasParentClassOrInterface = true;
+            }
+
+            if ($node->implements !== []) {
+                $this->hasParentClassOrInterface = true;
+            }
+        }
+
+        if ($node instanceof Interface_ && $node->extends !== []) {
+            $this->hasParentClassOrInterface = true;
+        }
 
         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
     }
@@ -58,6 +77,11 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function getClassName(): ?string
     {
         return $this->className;
+    }
+
+    public function hasParentClassOrInterface(): bool
+    {
+        return $this->hasParentClassOrInterface;
     }
 
     private function hasApiTag(ClassLike $classLike): bool
