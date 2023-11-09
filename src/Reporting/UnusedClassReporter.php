@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Reporting;
 
+use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
@@ -19,32 +20,42 @@ final class UnusedClassReporter
     /**
      * @return Command::*
      */
-    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount): int
+    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount, bool $isJson): int
     {
-        $this->symfonyStyle->newLine(2);
+        if ($isJson) {
+            $jsonResult = [
+                'unused_class_count' => $unusedClassesResult->getCount(),
+                'unused_parent_less_classes' => $unusedClassesResult->getParentLessFileWithClasses(),
+                'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
+            ];
 
-        if ($unusedClassesResult->getCount() === 0) {
-            $this->symfonyStyle->success(sprintf('All the %d services are used. Great job!', $classCount));
+            $this->symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
 
             return Command::SUCCESS;
         }
 
-        // separate with and without parent, as first one can be removed more easily
+        $this->symfonyStyle->newLine(2);
 
+        if ($unusedClassesResult->getCount() === 0) {
+            $this->symfonyStyle->success(sprintf('All the %d services are used. Great job!', $classCount));
+            return Command::SUCCESS;
+        }
+
+        // separate with and without parent, as first one can be removed more easily
         if ($unusedClassesResult->getWithParentsFileWithClasses() !== []) {
             $this->symfonyStyle->title('Classes with a parent/interface - possibly used by type');
+
             $this->reportFileWithClasses($unusedClassesResult->getWithParentsFileWithClasses());
         }
 
         if ($unusedClassesResult->getParentLessFileWithClasses() !== []) {
             $this->symfonyStyle->newLine();
-
             $this->symfonyStyle->title('Classes without any parent/interface - easier to remove');
+
             $this->reportFileWithClasses($unusedClassesResult->getParentLessFileWithClasses());
         }
 
         $this->symfonyStyle->newLine();
-
         $this->symfonyStyle->error(sprintf(
             'Found %d unused classes. Check and remove them or skip them using "--skip-type" option',
             $unusedClassesResult->getCount()
