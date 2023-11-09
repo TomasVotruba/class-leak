@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "TomasVotruba\\ClassLeak\\": "app"
+            "TomasVotruba\\ClassLeak\\": "src"
         }
     },
     "autoload-dev": {

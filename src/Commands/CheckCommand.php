@@ -55,6 +55,8 @@ final class CheckCommand extends Command
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
             'Class suffix that should be skipped'
         );
+
+        $this->addOption('json', null, InputOption::VALUE_NONE, 'Output as JSON');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -68,10 +70,14 @@ final class CheckCommand extends Command
         /** @var string[] $suffixesToSkip */
         $suffixesToSkip = (array) $input->getOption('skip-suffix');
 
+        $isJson = (bool) $input->getOption('json');
+
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
 
-        $this->symfonyStyle->progressStart(count($phpFilePaths));
-        $this->symfonyStyle->newLine();
+        if (! $isJson) {
+            $this->symfonyStyle->progressStart(count($phpFilePaths));
+            $this->symfonyStyle->newLine();
+        }
 
         $usedNames = $this->resolveUsedClassNames($phpFilePaths, function (): void {
             $this->symfonyStyle->progressAdvance();
@@ -88,7 +94,11 @@ final class CheckCommand extends Command
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
 
-        return $this->unusedClassReporter->reportResult($unusedClassesResult, count($existingFilesWithClasses));
+        return $this->unusedClassReporter->reportResult(
+            $unusedClassesResult,
+            count($existingFilesWithClasses),
+            $isJson
+        );
     }
 
     /**

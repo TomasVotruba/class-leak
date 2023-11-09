@@ -19,7 +19,7 @@ final class UnusedClassReporter
     /**
      * @return Command::*
      */
-    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount): int
+    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount, bool $isJson): int
     {
         $this->symfonyStyle->newLine(2);
 

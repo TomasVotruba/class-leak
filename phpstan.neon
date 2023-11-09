@@ -2,8 +2,8 @@ parameters:
     level: max
 
     paths:
-        - app
         - bin
+        - src
         - tests
 
     excludePaths:
