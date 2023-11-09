@@ -34,11 +34,11 @@ jobs:
 
                     -
                         name: 'PHP Linter'
-                        run: vendor/bin/parallel-lint app tests
+                        run: vendor/bin/parallel-lint src tests
 
                     -
                         name: 'Check Active Classes'
-                        run: bin/class-leak check app bin --ansi
+                        run: bin/class-leak check src bin --ansi
 
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest

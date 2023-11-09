@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\ValueObject;
 
+use JsonSerializable;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
-final class FileWithClass
+final class FileWithClass implements JsonSerializable
 {
     public function __construct(
         private readonly string $filePath,
@@ -28,5 +29,16 @@ final class FileWithClass
     public function hasParentClassOrInterface(): bool
     {
         return $this->hasParentClassOrInterface;
+    }
+
+    /**
+     * @return array{file_path: string, class: string}
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'file_path' => $this->filePath,
+            'class' => $this->className,
+        ];
     }
 }

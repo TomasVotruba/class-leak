@@ -79,7 +79,11 @@ final class CheckCommand extends Command
             $this->symfonyStyle->newLine();
         }
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function (): void {
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () use ($isJson): void {
+            if ($isJson) {
+                return;
+            }
+
             $this->symfonyStyle->progressAdvance();
         });
 
