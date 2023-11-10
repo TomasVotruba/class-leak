@@ -24,4 +24,4 @@ jobs:
                     coverage: none
 
             -   run: php bin/class-leak list --ansi
-            -   run: php bin/class-leak check app bin --ansi
+            -   run: php bin/class-leak check src bin --ansi
