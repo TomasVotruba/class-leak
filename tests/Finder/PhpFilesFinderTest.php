@@ -20,7 +20,10 @@ final class PhpFilesFinderTest extends AbstractTestCase
 
     public function test(): void
     {
-        $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture']);
+        $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture'], ['php', 'phtml']);
+        $this->assertCount(4, $phpFiles);
+
+        $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture'], ['php']);
         $this->assertCount(3, $phpFiles);
     }
 }
