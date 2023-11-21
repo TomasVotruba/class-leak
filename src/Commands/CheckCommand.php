@@ -56,6 +56,14 @@ final class CheckCommand extends Command
             'Class suffix that should be skipped'
         );
 
+        $this->addOption(
+            'file-extension',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+            'File extensions to check',
+            ['php']
+        );
+
         $this->addOption('json', null, InputOption::VALUE_NONE, 'Output as JSON');
     }
 
@@ -72,7 +80,10 @@ final class CheckCommand extends Command
 
         $isJson = (bool) $input->getOption('json');
 
-        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths);
+        /** @var string[] $fileExtensions */
+        $fileExtensions = (array) $input->getOption('file-extension');
+
+        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions);
 
         if (! $isJson) {
             $this->symfonyStyle->progressStart(count($phpFilePaths));
