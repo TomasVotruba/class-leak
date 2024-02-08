@@ -25,7 +25,6 @@ final class PossiblyUnusedClassesFilter
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
         'Symfony\Component\HttpKernel\KernelInterface',
-        'Symplify\SymplifyKernel\Contract\LightKernelInterface',
         'Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator',
         // console
         'Symfony\Component\Console\Command\Command',
