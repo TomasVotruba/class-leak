@@ -20,11 +20,6 @@ use TomasVotruba\ClassLeak\Commands\CheckCommand;
 final class ContainerFactory
 {
     /**
-     * @var string[]
-     */
-    private const COMMAND_NAMES_TO_HIDE = ['completion', 'help', 'list'];
-
-    /**
      * @api
      */
     public function create(): Container
@@ -65,9 +60,8 @@ final class ContainerFactory
      */
     private function hideDefaultCommands(Application $application): void
     {
-        foreach (self::COMMAND_NAMES_TO_HIDE as $commandNameToHide) {
-            $commandToHide = $application->get($commandNameToHide);
-            $commandToHide->setHidden();
-        }
+        $application->get('completion')->setHidden();
+        $application->get('help')->setHidden();
+        $application->get('list')->setHidden();
     }
 }
