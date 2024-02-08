@@ -90,7 +90,7 @@ final class PossiblyUnusedClassesFilter
     private function isClassSkipped(FileWithClass $fileWithClass, string $typeToSkip): bool
     {
         if (! str_contains($typeToSkip, '*')) {
-            return is_a($fileWithClass->getClassName(), $typeToSkip, true);
+            return class_exists($fileWithClass->getClassName(), true) && is_a($fileWithClass->getClassName(), $typeToSkip, true);
         }
 
         // try fnmatch
