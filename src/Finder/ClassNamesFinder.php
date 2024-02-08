@@ -8,10 +8,10 @@ use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
-final class ClassNamesFinder
+final readonly class ClassNamesFinder
 {
     public function __construct(
-        private readonly ClassNameResolver $classNameResolver,
+        private ClassNameResolver $classNameResolver,
     ) {
     }
 

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\ValueObject;
 
-final class UnusedClassesResult
+final readonly class UnusedClassesResult
 {
     /**
      * @param FileWithClass[] $withParentsFileWithClasses
      * @param FileWithClass[] $parentLessFileWithClasses
      */
     public function __construct(
-        private readonly array $parentLessFileWithClasses,
-        private readonly array $withParentsFileWithClasses,
+        private array $parentLessFileWithClasses,
+        private array $withParentsFileWithClasses,
     ) {
     }
 

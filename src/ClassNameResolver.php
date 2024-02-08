@@ -13,11 +13,11 @@ use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\ClassNameResolver\ClassNameResolverTest
  */
-final class ClassNameResolver
+final readonly class ClassNameResolver
 {
     public function __construct(
-        private readonly Parser $parser,
-        private readonly FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator
+        private Parser $parser,
+        private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator
     ) {
     }
 

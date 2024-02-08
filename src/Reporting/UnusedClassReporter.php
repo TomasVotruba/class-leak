@@ -10,10 +10,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use TomasVotruba\ClassLeak\ValueObject\UnusedClassesResult;
 
-final class UnusedClassReporter
+final readonly class UnusedClassReporter
 {
     public function __construct(
-        private readonly SymfonyStyle $symfonyStyle
+        private SymfonyStyle $symfonyStyle
     ) {
     }
 
