@@ -12,11 +12,11 @@ use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\UseImportsResolver\UseImportsResolverTest
  */
-final class UseImportsResolver
+final readonly class UseImportsResolver
 {
     public function __construct(
-        private readonly Parser $parser,
-        private readonly FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
+        private Parser $parser,
+        private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
     ) {
     }
 

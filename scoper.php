@@ -19,7 +19,7 @@ return [
     ],
     'patchers' => [
         function (string $filePath, string $prefix, string $content): string {
-            if (! str_ends_with($filePath, 'app/Filtering/PossiblyUnusedClassesFilter.php')) {
+            if (! str_ends_with($filePath, 'src/Filtering/PossiblyUnusedClassesFilter.php')) {
                 return $content;
             }
 

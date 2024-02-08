@@ -7,12 +7,12 @@ namespace TomasVotruba\ClassLeak\ValueObject;
 use JsonSerializable;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
-final class FileWithClass implements JsonSerializable
+final readonly class FileWithClass implements JsonSerializable
 {
     public function __construct(
-        private readonly string $filePath,
-        private readonly string $className,
-        private readonly bool $hasParentClassOrInterface
+        private string $filePath,
+        private string $className,
+        private bool $hasParentClassOrInterface
     ) {
     }
 
