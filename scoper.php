@@ -26,7 +26,7 @@ return [
             return preg_replace_callback('#DEFAULT_TYPES_TO_SKIP = (?<content>.*?)\;#ms', function (array $match) use (
                 $prefix
             ) {
-                $unprefixedValue = preg_replace('#\'' . $prefix . '\\\\#', '', $match['content']);
+                $unprefixedValue = preg_replace('#\'' . $prefix . '\\\\#', '\'', $match['content']);
                 return 'DEFAULT_TYPES_TO_SKIP = ' . $unprefixedValue . ';';
             }, $content);
         },
