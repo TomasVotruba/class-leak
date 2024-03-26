@@ -8,7 +8,7 @@ final readonly class ClassNames
 {
     /**
      * @param string[] $attributes
-     * @param array<string, string[]> $methods
+     * @param array<string, string[]> $attributesByMethod
      */
     public function __construct(
         private string $className,

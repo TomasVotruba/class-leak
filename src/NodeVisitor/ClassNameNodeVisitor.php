@@ -31,6 +31,9 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
      */
     private array $attributes = [];
 
+    /**
+     * @var array<string, string[]>
+     */
     private array $attributesByMethod = [];
 
     /**
