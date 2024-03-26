@@ -122,7 +122,7 @@ final class PossiblyUnusedClassesFilter
         return $possiblyUnusedFilesWithClasses;
     }
 
-    private function shouldSkip($type, string $skip): bool
+    private function shouldSkip(string $type, string $skip): bool
     {
         if (! str_contains($type, '*')) {
             return is_a($type, $skip, true);
