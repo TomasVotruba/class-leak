@@ -8,7 +8,9 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 
 final class ClassNameResolverTest extends AbstractTestCase
@@ -33,10 +35,20 @@ final class ClassNameResolverTest extends AbstractTestCase
             $expectedClassNames->hasParentClassOrInterface(),
             $resolvedClassNames->hasParentClassOrInterface()
         );
+        $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
+        $this->assertSame($expectedClassNames->getAttributesByMethod(), $resolvedClassNames->getAttributesByMethod());
     }
 
     public static function provideData(): Iterator
     {
-        yield [__DIR__ . '/Fixture/SomeClass.php', new ClassNames(SomeClass::class, false)];
+        yield [
+            __DIR__ . '/Fixture/SomeClass.php',
+            new ClassNames(
+                SomeClass::class,
+                false,
+                [SomeAttribute::class],
+                ['myMethod' => [SomeMethodAttribute::class]],
+            ),
+        ];
     }
 }

@@ -32,7 +32,9 @@ final readonly class ClassNamesFinder
             $filesWithClasses[] = new FileWithClass(
                 $filePath,
                 $classNames->getClassName(),
-                $classNames->hasParentClassOrInterface()
+                $classNames->hasParentClassOrInterface(),
+                $classNames->getAttributes(),
+                $classNames->getAttributesByMethod(),
             );
         }
 

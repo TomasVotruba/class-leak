@@ -27,6 +27,13 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private bool $hasParentClassOrInterface = false;
 
     /**
+     * @var string[]
+     */
+    private array $attributes = [];
+
+    private array $attributesByMethod = [];
+
+    /**
      * @param Node\Stmt[] $nodes
      * @return Node\Stmt[]
      */
@@ -34,6 +41,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     {
         $this->className = null;
         $this->hasParentClassOrInterface = false;
+        $this->attributes = [];
 
         return $nodes;
     }
@@ -71,6 +79,20 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
             $this->hasParentClassOrInterface = true;
         }
 
+        foreach ($node->attrGroups as $attrGroup) {
+            foreach ($attrGroup->attrs as $attr) {
+                $this->attributes[] = $attr->name->toString();
+            }
+        }
+
+        foreach ($node->getMethods() as $method) {
+            foreach ($method->attrGroups as $attrGroup) {
+                foreach ($attrGroup->attrs as $attr) {
+                    $this->attributesByMethod[$method->name->toString()][] = $attr->name->toString();
+                }
+            }
+        }
+
         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
     }
 
@@ -82,6 +104,22 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function hasParentClassOrInterface(): bool
     {
         return $this->hasParentClassOrInterface;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAttributes() : array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @return array<string, string[]>
+     */
+    public function getAttributesByMethod() : array
+    {
+        return $this->attributesByMethod;
     }
 
     private function hasApiTag(ClassLike $classLike): bool

@@ -57,6 +57,13 @@ final class CheckCommand extends Command
         );
 
         $this->addOption(
+            'skip-attribute',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+            'Class attribute that should be skipped'
+        );
+
+        $this->addOption(
             'file-extension',
             null,
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
@@ -77,6 +84,9 @@ final class CheckCommand extends Command
 
         /** @var string[] $suffixesToSkip */
         $suffixesToSkip = (array) $input->getOption('skip-suffix');
+
+        /** @var string[] $attributesToSkip */
+        $attributesToSkip = (array) $input->getOption('skip-attribute');
 
         $isJson = (bool) $input->getOption('json');
 
@@ -104,7 +114,8 @@ final class CheckCommand extends Command
             $existingFilesWithClasses,
             $usedNames,
             $typesToSkip,
-            $suffixesToSkip
+            $suffixesToSkip,
+            $attributesToSkip
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);

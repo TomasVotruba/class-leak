@@ -43,10 +43,20 @@ final class PossiblyUnusedClassesFilter
     ];
 
     /**
+     * @var string[]
+     */
+    private const DEFAULT_ATTRIBUTES_TO_SKIP = [
+        'Symfony\Component\Console\Attribute\AsCommand',
+        'Symfony\Component\HttpKernel\Attribute\AsController',
+        'Symfony\Component\EventDispatcher\Attribute\AsEventListener'
+    ];
+
+    /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
+     * @param string[] $attributesToSkip
      *
      * @return FileWithClass[]
      */
@@ -54,7 +64,8 @@ final class PossiblyUnusedClassesFilter
         array $filesWithClasses,
         array $usedClassNames,
         array $typesToSkip,
-        array $suffixesToSkip
+        array $suffixesToSkip,
+        array $attributesToSkip
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -63,6 +74,7 @@ final class PossiblyUnusedClassesFilter
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
+        $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
         foreach ($filesWithClasses as $fileWithClass) {
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
@@ -80,6 +92,17 @@ final class PossiblyUnusedClassesFilter
             foreach ($suffixesToSkip as $suffixToSkip) {
                 if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
                     continue 2;
+                }
+            }
+
+            foreach ($attributesToSkip as $attributeToSkip) {
+                if (in_array($attributeToSkip, $fileWithClass->getAttributes(), true)) {
+                    continue 2;
+                }
+                foreach ($fileWithClass->getAttributesByMethod() as $attributes) {
+                    if (in_array($attributeToSkip, $attributes, true)) {
+                        continue 3;
+                    }
                 }
             }
 

@@ -43,6 +43,11 @@ final readonly class ClassNameResolver
             return null;
         }
 
-        return new ClassNames($className, $classNameNodeVisitor->hasParentClassOrInterface());
+        return new ClassNames(
+            $className,
+            $classNameNodeVisitor->hasParentClassOrInterface(),
+            $classNameNodeVisitor->getAttributes(),
+            $classNameNodeVisitor->getAttributesByMethod(),
+        );
     }
 }
