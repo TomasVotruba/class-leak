@@ -11,14 +11,12 @@ final readonly class FileWithClass implements JsonSerializable
 {
     /**
      * @param string[] $attributes
-     * @param array<string, string[]> $attributesByMethod
      */
     public function __construct(
         private string $filePath,
         private string $className,
         private bool $hasParentClassOrInterface,
         private array $attributes,
-        private array $attributesByMethod,
     ) {
     }
 
@@ -46,15 +44,7 @@ final readonly class FileWithClass implements JsonSerializable
     }
 
     /**
-     * @return array<string, string[]>
-     */
-    public function getAttributesByMethod(): array
-    {
-        return $this->attributesByMethod;
-    }
-
-    /**
-     * @return array{file_path: string, class: string, attributes: string[], attributesByMethod: array<string, string[]>}
+     * @return array{file_path: string, class: string, attributes: string[]>}
      */
     public function jsonSerialize(): array
     {
@@ -62,7 +52,6 @@ final readonly class FileWithClass implements JsonSerializable
             'file_path' => $this->filePath,
             'class' => $this->className,
             'attributes' => $this->attributes,
-            'attributesByMethod' => $this->attributesByMethod,
         ];
     }
 }

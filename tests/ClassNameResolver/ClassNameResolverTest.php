@@ -36,7 +36,6 @@ final class ClassNameResolverTest extends AbstractTestCase
             $resolvedClassNames->hasParentClassOrInterface()
         );
         $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
-        $this->assertSame($expectedClassNames->getAttributesByMethod(), $resolvedClassNames->getAttributesByMethod());
     }
 
     public static function provideData(): Iterator
@@ -46,8 +45,7 @@ final class ClassNameResolverTest extends AbstractTestCase
             new ClassNames(
                 SomeClass::class,
                 false,
-                [SomeAttribute::class],
-                ['myMethod' => [SomeMethodAttribute::class]],
+                [SomeAttribute::class, SomeMethodAttribute::class],
             ),
         ];
     }

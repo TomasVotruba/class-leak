@@ -101,15 +101,6 @@ final class PossiblyUnusedClassesFilter
                 }
             }
 
-            // is excluded attributes by method?
-            foreach ($fileWithClass->getAttributesByMethod() as $attributes) {
-                foreach ($attributes as $attribute) {
-                    if ($this->shouldSkip($attribute, $attributesToSkip)) {
-                        continue 3;
-                    }
-                }
-            }
-
             $possiblyUnusedFilesWithClasses[] = $fileWithClass;
         }
 

@@ -32,11 +32,6 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private array $attributes = [];
 
     /**
-     * @var array<string, string[]>
-     */
-    private array $attributesByMethod = [];
-
-    /**
      * @param Node\Stmt[] $nodes
      * @return Node\Stmt[]
      */
@@ -91,7 +86,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         foreach ($node->getMethods() as $classMethod) {
             foreach ($classMethod->attrGroups as $attrGroup) {
                 foreach ($attrGroup->attrs as $attr) {
-                    $this->attributesByMethod[$classMethod->name->toString()][] = $attr->name->toString();
+                    $this->attributes[] = $attr->name->toString();
                 }
             }
         }
@@ -114,15 +109,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
      */
     public function getAttributes() : array
     {
-        return $this->attributes;
-    }
-
-    /**
-     * @return array<string, string[]>
-     */
-    public function getAttributesByMethod() : array
-    {
-        return $this->attributesByMethod;
+        return array_unique($this->attributes);
     }
 
     private function hasApiTag(ClassLike $classLike): bool

@@ -8,13 +8,11 @@ final readonly class ClassNames
 {
     /**
      * @param string[] $attributes
-     * @param array<string, string[]> $attributesByMethod
      */
     public function __construct(
         private string $className,
         private bool $hasParentClassOrInterface,
         private array $attributes,
-        private array $attributesByMethod,
     ) {
     }
 
@@ -34,13 +32,5 @@ final readonly class ClassNames
     public function getAttributes(): array
     {
         return $this->attributes;
-    }
-
-    /**
-     * @return array<string, string[]>
-     */
-    public function getAttributesByMethod() : array
-    {
-        return $this->attributesByMethod;
     }
 }
