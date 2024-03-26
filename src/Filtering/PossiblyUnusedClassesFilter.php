@@ -46,7 +46,7 @@ final class PossiblyUnusedClassesFilter
      * @var string[]
      */
     private const DEFAULT_ATTRIBUTES_TO_SKIP = [
-        // symfony
+        // Symfony
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener'
