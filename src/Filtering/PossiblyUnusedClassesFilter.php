@@ -83,10 +83,8 @@ final class PossiblyUnusedClassesFilter
             }
 
             // is excluded interfaces?
-            foreach ($typesToSkip as $typeToSkip) {
-                if ($this->shouldSkip($fileWithClass->getClassName(), $typeToSkip)) {
-                    continue 2;
-                }
+            if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
+                continue;
             }
 
             // is excluded suffix?
@@ -98,20 +96,16 @@ final class PossiblyUnusedClassesFilter
 
             // is excluded attributes?
             foreach ($fileWithClass->getAttributes() as $attribute) {
-                foreach ($attributesToSkip as $attributeToSkip) {
-                    if ($this->shouldSkip($attribute, $attributeToSkip)) {
-                        continue 3;
-                    }
+                if ($this->shouldSkip($attribute, $attributesToSkip)) {
+                    continue 2;
                 }
             }
 
             // is excluded attributes by method?
             foreach ($fileWithClass->getAttributesByMethod() as $attributes) {
                 foreach ($attributes as $attribute) {
-                    foreach ($attributesToSkip as $attributeToSkip) {
-                        if ($this->shouldSkip($attribute, $attributeToSkip)) {
-                            continue 4;
-                        }
+                    if ($this->shouldSkip($attribute, $attributesToSkip)) {
+                        continue 3;
                     }
                 }
             }
@@ -122,13 +116,21 @@ final class PossiblyUnusedClassesFilter
         return $possiblyUnusedFilesWithClasses;
     }
 
-    private function shouldSkip(string $type, string $skip): bool
+    /**
+     * @param string[] $skips
+     */
+    private function shouldSkip(string $type, array $skips): bool
     {
-        if (! str_contains($type, '*')) {
-            return is_a($type, $skip, true);
+        foreach ($skips as $skip) {
+            if (! str_contains($type, '*') && is_a($type, $skip, true)) {
+                return true;
+            }
+
+            if (fnmatch($skip, $type, FNM_NOESCAPE)) {
+                return true;
+            }
         }
 
-        // try fnmatch
-        return fnmatch($skip, $type, FNM_NOESCAPE);
+        return false;
     }
 }
