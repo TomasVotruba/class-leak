@@ -38,7 +38,7 @@ final class PossiblyUnusedClassesFilter
         'Illuminate\Foundation\Http\Kernel',
         'Illuminate\Contracts\Console\Kernel',
         'Illuminate\Routing\Controller',
-        // doctrine
+        // Doctrine
         'Doctrine\Migrations\AbstractMigration',
     ];
 
