@@ -44,7 +44,7 @@ final readonly class FileWithClass implements JsonSerializable
     }
 
     /**
-     * @return array{file_path: string, class: string, attributes: string[]>}
+     * @return array{file_path: string, class: string, attributes: string[]}
      */
     public function jsonSerialize(): array
     {
