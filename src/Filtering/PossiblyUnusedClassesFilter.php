@@ -84,7 +84,7 @@ final class PossiblyUnusedClassesFilter
 
             // is excluded interfaces?
             foreach ($typesToSkip as $typeToSkip) {
-                if ($this->isClassSkipped($fileWithClass, $typeToSkip)) {
+                if ($this->shouldSkip($fileWithClass->getClassName(), $typeToSkip)) {
                     continue 2;
                 }
             }
@@ -96,13 +96,22 @@ final class PossiblyUnusedClassesFilter
                 }
             }
 
-            foreach ($attributesToSkip as $attributeToSkip) {
-                if (in_array($attributeToSkip, $fileWithClass->getAttributes(), true)) {
-                    continue 2;
-                }
-                foreach ($fileWithClass->getAttributesByMethod() as $attributes) {
-                    if (in_array($attributeToSkip, $attributes, true)) {
+            // is excluded attributes?
+            foreach ($fileWithClass->getAttributes() as $attribute) {
+                foreach ($attributesToSkip as $attributeToSkip) {
+                    if ($this->shouldSkip($attribute, $attributeToSkip)) {
                         continue 3;
+                    }
+                }
+            }
+
+            // is excluded attributes by method?
+            foreach ($fileWithClass->getAttributesByMethod() as $attributes) {
+                foreach ($attributes as $attribute) {
+                    foreach ($attributesToSkip as $attributeToSkip) {
+                        if ($this->shouldSkip($attribute, $attributeToSkip)) {
+                            continue 4;
+                        }
                     }
                 }
             }
@@ -113,13 +122,13 @@ final class PossiblyUnusedClassesFilter
         return $possiblyUnusedFilesWithClasses;
     }
 
-    private function isClassSkipped(FileWithClass $fileWithClass, string $typeToSkip): bool
+    private function shouldSkip($type, string $skip): bool
     {
-        if (! str_contains($typeToSkip, '*')) {
-            return is_a($fileWithClass->getClassName(), $typeToSkip, true);
+        if (! str_contains($type, '*')) {
+            return is_a($type, $skip, true);
         }
 
         // try fnmatch
-        return fnmatch($typeToSkip, $fileWithClass->getClassName(), FNM_NOESCAPE);
+        return fnmatch($skip, $type, FNM_NOESCAPE);
     }
 }
