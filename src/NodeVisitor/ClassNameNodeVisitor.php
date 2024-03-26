@@ -88,10 +88,10 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
             }
         }
 
-        foreach ($node->getMethods() as $method) {
-            foreach ($method->attrGroups as $attrGroup) {
+        foreach ($node->getMethods() as $classMethod) {
+            foreach ($classMethod->attrGroups as $attrGroup) {
                 foreach ($attrGroup->attrs as $attr) {
-                    $this->attributesByMethod[$method->name->toString()][] = $attr->name->toString();
+                    $this->attributesByMethod[$classMethod->name->toString()][] = $attr->name->toString();
                 }
             }
         }
