@@ -7,7 +7,9 @@ namespace TomasVotruba\ClassLeak\Tests\UseImportsResolver;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Fixture\SomeFactory;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FourthUsedClass;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\SecondUsedClass;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
@@ -35,5 +37,6 @@ final class UseImportsResolverTest extends AbstractTestCase
     public static function provideData(): Iterator
     {
         yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
+        yield [__DIR__ . '/Fixture/FileUsesStaticCall.php', [SomeFactory::class, FourthUsedClass::class]];
     }
 }

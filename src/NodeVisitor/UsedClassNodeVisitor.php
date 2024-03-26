@@ -33,10 +33,6 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node): Node|null|int
     {
-        if ($node instanceof FuncCall) {
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
-        }
-
         if ($node instanceof ConstFetch) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
@@ -72,6 +68,10 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
         // skip nodes that are not part of class names
         $parent = $name->getAttribute('parent');
         if ($parent instanceof Namespace_) {
+            return true;
+        }
+
+        if ($parent instanceof FuncCall) {
             return true;
         }
 
