@@ -38,6 +38,18 @@ final class PossiblyUnusedClassesFilter
         'Illuminate\Foundation\Http\Kernel',
         'Illuminate\Contracts\Console\Kernel',
         'Illuminate\Routing\Controller',
+        // Doctrine
+        'Doctrine\Migrations\AbstractMigration',
+    ];
+
+    /**
+     * @var string[]
+     */
+    private const DEFAULT_ATTRIBUTES_TO_SKIP = [
+        // Symfony
+        'Symfony\Component\Console\Attribute\AsCommand',
+        'Symfony\Component\HttpKernel\Attribute\AsController',
+        'Symfony\Component\EventDispatcher\Attribute\AsEventListener'
     ];
 
     /**
@@ -45,6 +57,7 @@ final class PossiblyUnusedClassesFilter
      * @param string[] $usedClassNames
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
+     * @param string[] $attributesToSkip
      *
      * @return FileWithClass[]
      */
@@ -52,7 +65,8 @@ final class PossiblyUnusedClassesFilter
         array $filesWithClasses,
         array $usedClassNames,
         array $typesToSkip,
-        array $suffixesToSkip
+        array $suffixesToSkip,
+        array $attributesToSkip
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -61,6 +75,7 @@ final class PossiblyUnusedClassesFilter
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
+        $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
         foreach ($filesWithClasses as $fileWithClass) {
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
@@ -68,15 +83,20 @@ final class PossiblyUnusedClassesFilter
             }
 
             // is excluded interfaces?
-            foreach ($typesToSkip as $typeToSkip) {
-                if ($this->isClassSkipped($fileWithClass, $typeToSkip)) {
-                    continue 2;
-                }
+            if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
+                continue;
             }
 
             // is excluded suffix?
             foreach ($suffixesToSkip as $suffixToSkip) {
                 if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
+                    continue 2;
+                }
+            }
+
+            // is excluded attributes?
+            foreach ($fileWithClass->getAttributes() as $attribute) {
+                if ($this->shouldSkip($attribute, $attributesToSkip)) {
                     continue 2;
                 }
             }
@@ -87,13 +107,21 @@ final class PossiblyUnusedClassesFilter
         return $possiblyUnusedFilesWithClasses;
     }
 
-    private function isClassSkipped(FileWithClass $fileWithClass, string $typeToSkip): bool
+    /**
+     * @param string[] $skips
+     */
+    private function shouldSkip(string $type, array $skips): bool
     {
-        if (! str_contains($typeToSkip, '*')) {
-            return is_a($fileWithClass->getClassName(), $typeToSkip, true);
+        foreach ($skips as $skip) {
+            if (! str_contains($type, '*') && is_a($type, $skip, true)) {
+                return true;
+            }
+
+            if (fnmatch($skip, $type, FNM_NOESCAPE)) {
+                return true;
+            }
         }
 
-        // try fnmatch
-        return fnmatch($typeToSkip, $fileWithClass->getClassName(), FNM_NOESCAPE);
+        return false;
     }
 }

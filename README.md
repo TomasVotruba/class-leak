@@ -34,6 +34,12 @@ What if your classes do no implement any type? Use `--skip-suffix` instead:
 vendor/bin/class-leak check bin src --skip-suffix "Controller"
 ```
 
+If you want to skip classes that use a specific attribute or have methods that use a specific attribute, use `--skip-attribute`:
+
+```bash
+vendor/bin/class-leak check bin src --skip-attribute "Symfony\\Component\\HttpKernel\\Attribute\\AsController"
+```
+
 <br>
 
 Happy coding!

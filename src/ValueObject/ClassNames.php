@@ -6,9 +6,13 @@ namespace TomasVotruba\ClassLeak\ValueObject;
 
 final readonly class ClassNames
 {
+    /**
+     * @param string[] $attributes
+     */
     public function __construct(
         private string $className,
-        private bool $hasParentClassOrInterface
+        private bool $hasParentClassOrInterface,
+        private array $attributes,
     ) {
     }
 
@@ -20,5 +24,13 @@ final readonly class ClassNames
     public function hasParentClassOrInterface(): bool
     {
         return $this->hasParentClassOrInterface;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }
