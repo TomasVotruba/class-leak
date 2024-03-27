@@ -31,7 +31,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     /**
      * @var string[]
      */
-    private array $attributes = [];
+    private array $usedAttributes = [];
 
     /**
      * @param Node\Stmt[] $nodes
@@ -42,7 +42,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         $this->className = null;
         $this->hasParentClassOrInterface = false;
         $this->hasApiTag = false;
-        $this->attributes = [];
+        $this->usedAttributes = [];
 
         return $nodes;
     }
@@ -82,14 +82,14 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
 
         foreach ($node->attrGroups as $attrGroup) {
             foreach ($attrGroup->attrs as $attr) {
-                $this->attributes[] = $attr->name->toString();
+                $this->usedAttributes[] = $attr->name->toString();
             }
         }
 
         foreach ($node->getMethods() as $classMethod) {
             foreach ($classMethod->attrGroups as $attrGroup) {
                 foreach ($attrGroup->attrs as $attr) {
-                    $this->attributes[] = $attr->name->toString();
+                    $this->usedAttributes[] = $attr->name->toString();
                 }
             }
         }
@@ -115,9 +115,9 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     /**
      * @return string[]
      */
-    public function getAttributes() : array
+    public function getUsedAttributes(): array
     {
-        return array_unique($this->attributes);
+        return array_unique($this->usedAttributes);
     }
 
     private function doesClassHaveApiTag(ClassLike $classLike): bool

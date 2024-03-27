@@ -10,14 +10,14 @@ use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 final readonly class FileWithClass implements JsonSerializable
 {
     /**
-     * @param string[] $attributes
+     * @param string[] $usedAttributes
      */
     public function __construct(
         private string $filePath,
         private string $className,
         private bool $hasParentClassOrInterface,
         private bool $hasApiTag,
-        private array $attributes,
+        private array $usedAttributes,
     ) {
     }
 
@@ -44,9 +44,9 @@ final readonly class FileWithClass implements JsonSerializable
     /**
      * @return string[]
      */
-    public function getAttributes(): array
+    public function getUsedAttributes(): array
     {
-        return $this->attributes;
+        return $this->usedAttributes;
     }
 
     /**
@@ -55,7 +55,7 @@ final readonly class FileWithClass implements JsonSerializable
      *     class: string,
      *     has_parent_class_or_interface: bool,
      *     has_api_tag: bool,
-     *     attributes: string[]
+     *     used_attributes: string[]
      * }
      */
     public function jsonSerialize(): array
@@ -65,7 +65,7 @@ final readonly class FileWithClass implements JsonSerializable
             'class' => $this->className,
             'has_parent_class_or_interface' => $this->hasParentClassOrInterface,
             'has_api_tag' => $this->hasApiTag,
-            'attributes' => $this->attributes,
+            'used_attributes' => $this->usedAttributes,
         ];
     }
 }

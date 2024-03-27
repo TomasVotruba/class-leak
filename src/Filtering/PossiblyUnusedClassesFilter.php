@@ -99,7 +99,7 @@ final class PossiblyUnusedClassesFilter
             }
 
             // is excluded attributes?
-            foreach ($fileWithClass->getAttributes() as $attribute) {
+            foreach ($fileWithClass->getUsedAttributes() as $attribute) {
                 if ($this->shouldSkip($attribute, $attributesToSkip)) {
                     continue 2;
                 }

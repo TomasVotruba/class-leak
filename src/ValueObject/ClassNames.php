@@ -7,13 +7,13 @@ namespace TomasVotruba\ClassLeak\ValueObject;
 final readonly class ClassNames
 {
     /**
-     * @param string[] $attributes
+     * @param string[] $usedAttributes
      */
     public function __construct(
         private string $className,
         private bool $hasParentClassOrInterface,
         private bool $hasApiTag,
-        private array $attributes,
+        private array $usedAttributes,
     ) {
     }
 
@@ -35,8 +35,8 @@ final readonly class ClassNames
     /**
      * @return string[]
      */
-    public function getAttributes(): array
+    public function getUsedAttributes(): array
     {
-        return $this->attributes;
+        return $this->usedAttributes;
     }
 }
