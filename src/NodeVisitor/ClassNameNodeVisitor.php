@@ -126,8 +126,6 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
             return false;
         }
 
-        preg_match(self::API_TAG_REGEX, $doc->getText(), $matches);
-
-        return $matches !== null;
+        return preg_match(self::API_TAG_REGEX, $doc->getText()) === 1;
     }
 }
