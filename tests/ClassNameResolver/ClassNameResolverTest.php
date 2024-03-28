@@ -8,6 +8,7 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithOtherComment;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
@@ -42,6 +43,15 @@ final class ClassNameResolverTest extends AbstractTestCase
                 false,
                 true,
                 [SomeAttribute::class, SomeMethodAttribute::class],
+            ),
+        ];
+        yield [
+            __DIR__ . '/Fixture/ClassWithOtherComment.php',
+            new ClassNames(
+                ClassWithOtherComment::class,
+                false,
+                false,
+                [],
             ),
         ];
     }
