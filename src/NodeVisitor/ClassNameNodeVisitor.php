@@ -25,6 +25,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private string|null $className = null;
 
     private bool $hasParentClassOrInterface = false;
+
     private bool $hasApiTag = false;
 
     /**

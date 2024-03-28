@@ -12,13 +12,13 @@ use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final class PossiblyUnusedClassesFilterTest extends TestCase
 {
-    private PossiblyUnusedClassesFilter $filter;
+    private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter;
 
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->filter = new PossiblyUnusedClassesFilter();
+        $this->possiblyUnusedClassesFilter = new PossiblyUnusedClassesFilter();
     }
 
     /**
@@ -27,6 +27,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
      * @param string[] $attributesToSkip
+     * @param FileWithClass[] $expectedFilteredFilesWithClasses
      */
     #[DataProvider('provideData')]
     public function test(
@@ -39,7 +40,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
     ) : void {
         self::assertEquals(
             $expectedFilteredFilesWithClasses,
-            $this->filter->filter(
+            $this->possiblyUnusedClassesFilter->filter(
                 $filesWithClasses,
                 $usedClassNames,
                 $typesToSkip,
@@ -49,6 +50,9 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         );
     }
 
+    /**
+     * @return iterable<string, array{FileWithClass[], string[], string[], string[], string[], FileWithClass[]}>
+     */
     public static function provideData() : iterable
     {
         yield 'it should not filter' => [
