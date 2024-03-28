@@ -46,6 +46,7 @@ final readonly class ClassNameResolver
         return new ClassNames(
             $className,
             $classNameNodeVisitor->hasParentClassOrInterface(),
+            $classNameNodeVisitor->hasApiTag(),
             $classNameNodeVisitor->getAttributes(),
         );
     }

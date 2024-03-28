@@ -30,12 +30,7 @@ final class ClassNameResolverTest extends AbstractTestCase
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
         $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
 
-        $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
-        $this->assertSame(
-            $expectedClassNames->hasParentClassOrInterface(),
-            $resolvedClassNames->hasParentClassOrInterface()
-        );
-        $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
+        $this->assertEquals($expectedClassNames, $resolvedClassNames);
     }
 
     public static function provideData(): Iterator
@@ -45,6 +40,7 @@ final class ClassNameResolverTest extends AbstractTestCase
             new ClassNames(
                 SomeClass::class,
                 false,
+                true,
                 [SomeAttribute::class, SomeMethodAttribute::class],
             ),
         ];

@@ -33,6 +33,7 @@ final readonly class ClassNamesFinder
                 $filePath,
                 $classNames->getClassName(),
                 $classNames->hasParentClassOrInterface(),
+                $classNames->hasApiTag(),
                 $classNames->getAttributes(),
             );
         }

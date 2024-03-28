@@ -78,6 +78,10 @@ final class PossiblyUnusedClassesFilter
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
         foreach ($filesWithClasses as $fileWithClass) {
+            if ($fileWithClass->hasApiTag()) {
+                continue;
+            }
+
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;
             }
