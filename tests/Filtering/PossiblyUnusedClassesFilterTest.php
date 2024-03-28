@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\Filtering;
 
-use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
