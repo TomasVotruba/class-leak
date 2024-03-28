@@ -12,6 +12,7 @@ final readonly class ClassNames
     public function __construct(
         private string $className,
         private bool $hasParentClassOrInterface,
+        private bool $hasApiTag,
         private array $attributes,
     ) {
     }
@@ -24,6 +25,11 @@ final readonly class ClassNames
     public function hasParentClassOrInterface(): bool
     {
         return $this->hasParentClassOrInterface;
+    }
+
+    public function hasApiTag() : bool
+    {
+        return $this->hasApiTag;
     }
 
     /**

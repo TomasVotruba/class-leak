@@ -16,6 +16,7 @@ final readonly class FileWithClass implements JsonSerializable
         private string $filePath,
         private string $className,
         private bool $hasParentClassOrInterface,
+        private bool $hasApiTag,
         private array $attributes,
     ) {
     }
@@ -35,6 +36,11 @@ final readonly class FileWithClass implements JsonSerializable
         return $this->hasParentClassOrInterface;
     }
 
+    public function hasApiTag(): bool
+    {
+        return $this->hasApiTag;
+    }
+
     /**
      * @return string[]
      */
@@ -44,13 +50,21 @@ final readonly class FileWithClass implements JsonSerializable
     }
 
     /**
-     * @return array{file_path: string, class: string, attributes: string[]}
+     * @return array{
+     *     file_path: string,
+     *     class: string,
+     *     has_parent_class_or_interface: bool,
+     *     has_api_tag: bool,
+     *     attributes: string[]
+     * }
      */
     public function jsonSerialize(): array
     {
         return [
             'file_path' => $this->filePath,
             'class' => $this->className,
+            'has_parent_class_or_interface' => $this->hasParentClassOrInterface,
+            'has_api_tag' => $this->hasApiTag,
             'attributes' => $this->attributes,
         ];
     }

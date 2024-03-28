@@ -8,6 +8,7 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithOtherComment;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
@@ -30,12 +31,7 @@ final class ClassNameResolverTest extends AbstractTestCase
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
         $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
 
-        $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
-        $this->assertSame(
-            $expectedClassNames->hasParentClassOrInterface(),
-            $resolvedClassNames->hasParentClassOrInterface()
-        );
-        $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
+        $this->assertEquals($expectedClassNames, $resolvedClassNames);
     }
 
     public static function provideData(): Iterator
@@ -45,7 +41,17 @@ final class ClassNameResolverTest extends AbstractTestCase
             new ClassNames(
                 SomeClass::class,
                 false,
+                true,
                 [SomeAttribute::class, SomeMethodAttribute::class],
+            ),
+        ];
+        yield [
+            __DIR__ . '/Fixture/ClassWithOtherComment.php',
+            new ClassNames(
+                ClassWithOtherComment::class,
+                false,
+                false,
+                [],
             ),
         ];
     }

@@ -26,6 +26,8 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
 
     private bool $hasParentClassOrInterface = false;
 
+    private bool $hasApiTag = false;
+
     /**
      * @var string[]
      */
@@ -39,6 +41,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     {
         $this->className = null;
         $this->hasParentClassOrInterface = false;
+        $this->hasApiTag = false;
         $this->attributes = [];
 
         return $nodes;
@@ -54,8 +57,8 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($this->hasApiTag($node)) {
-            return null;
+        if ($this->doesClassHaveApiTag($node)) {
+            $this->hasApiTag = true;
         }
 
         if (! $node->namespacedName instanceof Name) {
@@ -104,6 +107,11 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         return $this->hasParentClassOrInterface;
     }
 
+    public function hasApiTag() : bool
+    {
+        return $this->hasApiTag;
+    }
+
     /**
      * @return string[]
      */
@@ -112,15 +120,13 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         return array_unique($this->attributes);
     }
 
-    private function hasApiTag(ClassLike $classLike): bool
+    private function doesClassHaveApiTag(ClassLike $classLike): bool
     {
         $doc = $classLike->getDocComment();
         if (! $doc instanceof Doc) {
             return false;
         }
 
-        preg_match(self::API_TAG_REGEX, $doc->getText(), $matches);
-
-        return $matches !== null;
+        return preg_match(self::API_TAG_REGEX, $doc->getText()) === 1;
     }
 }
