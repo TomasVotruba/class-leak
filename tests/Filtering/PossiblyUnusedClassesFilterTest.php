@@ -62,6 +62,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
                     false,
                     false,
                     [],
+                    [],
                 ),
             ],
             [],
@@ -75,6 +76,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
                     false,
                     false,
                     [],
+                    [],
                 ),
             ],
         ];
@@ -86,6 +88,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
                     'SomeClass',
                     false,
                     true,
+                    [],
                     [],
                 ),
             ],

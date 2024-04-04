@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture;
 
+use DateTime;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\Attributes\SomeAttribute;
+
 /**
  * @api
  */
@@ -11,7 +14,7 @@ namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture;
 final class SomeClass
 {
     #[SomeMethodAttribute]
-    public function myMethod(): void
+    public function myMethod(): DateTime
     {
     }
 }

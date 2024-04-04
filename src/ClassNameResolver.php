@@ -48,6 +48,7 @@ final readonly class ClassNameResolver
             $classNameNodeVisitor->hasParentClassOrInterface(),
             $classNameNodeVisitor->hasApiTag(),
             $classNameNodeVisitor->getUsedAttributes(),
+            $classNameNodeVisitor->getImports()
         );
     }
 }

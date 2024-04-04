@@ -8,6 +8,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
+use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 /**
  * @see \TomasVotruba\ClassLeak\Tests\UseImportsResolver\UseImportsResolverTest
@@ -23,7 +24,7 @@ final readonly class UseImportsResolver
     /**
      * @return string[]
      */
-    public function resolve(string $filePath): array
+    public function resolve(string $filePath, ?FileWithClass $fileWithClass): array
     {
         /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);
@@ -40,6 +41,15 @@ final readonly class UseImportsResolver
         $nodeTraverser->addVisitor($usedClassNodeVisitor);
         $nodeTraverser->traverse($stmts);
 
-        return $usedClassNodeVisitor->getUsedNames();
+        $usedNames = $usedClassNodeVisitor->getUsedNames();
+
+        foreach ($usedClassNodeVisitor->getUsedNamesInComments() as $usedNameInComment) {
+            $usedNames[] = $fileWithClass?->resolveName($usedNameInComment) ?? $usedNameInComment;
+        }
+
+        $uniqueUsedNames = array_unique($usedNames);
+        sort($uniqueUsedNames);
+
+        return $uniqueUsedNames;
     }
 }

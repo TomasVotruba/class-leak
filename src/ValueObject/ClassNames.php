@@ -8,12 +8,14 @@ final readonly class ClassNames
 {
     /**
      * @param string[] $usedAttributes
+     * @param array<string, string> $imports
      */
     public function __construct(
         private string $className,
         private bool $hasParentClassOrInterface,
         private bool $hasApiTag,
         private array $usedAttributes,
+        private array $imports,
     ) {
     }
 
@@ -27,7 +29,7 @@ final readonly class ClassNames
         return $this->hasParentClassOrInterface;
     }
 
-    public function hasApiTag() : bool
+    public function hasApiTag(): bool
     {
         return $this->hasApiTag;
     }
@@ -38,5 +40,13 @@ final readonly class ClassNames
     public function getUsedAttributes(): array
     {
         return $this->usedAttributes;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getImports(): array
+    {
+        return $this->imports;
     }
 }

@@ -12,15 +12,10 @@ use TomasVotruba\ClassLeak\ValueObject\UnusedClassesResult;
 
 final readonly class UnusedClassReporter
 {
-    public function __construct(
-        private SymfonyStyle $symfonyStyle
-    ) {
-    }
-
     /**
      * @return Command::*
      */
-    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount, bool $isJson): int
+    public function reportResult(SymfonyStyle $symfonyStyle, UnusedClassesResult $unusedClassesResult, int $classCount, bool $isJson): int
     {
         if ($isJson) {
             $jsonResult = [
@@ -29,34 +24,34 @@ final readonly class UnusedClassReporter
                 'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
             ];
 
-            $this->symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
+            $symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
 
             return Command::SUCCESS;
         }
 
-        $this->symfonyStyle->newLine(2);
+        $symfonyStyle->newLine(2);
 
         if ($unusedClassesResult->getCount() === 0) {
-            $this->symfonyStyle->success(sprintf('All the %d services are used. Great job!', $classCount));
+            $symfonyStyle->success(sprintf('All the %d services are used. Great job!', $classCount));
             return Command::SUCCESS;
         }
 
         // separate with and without parent, as first one can be removed more easily
         if ($unusedClassesResult->getWithParentsFileWithClasses() !== []) {
-            $this->symfonyStyle->title('Classes with a parent/interface - possibly used by type');
+            $symfonyStyle->title('Classes with a parent/interface - possibly used by type');
 
-            $this->reportFileWithClasses($unusedClassesResult->getWithParentsFileWithClasses());
+            $this->reportFileWithClasses($symfonyStyle, $unusedClassesResult->getWithParentsFileWithClasses());
         }
 
         if ($unusedClassesResult->getParentLessFileWithClasses() !== []) {
-            $this->symfonyStyle->newLine();
-            $this->symfonyStyle->title('Classes without any parent/interface - easier to remove');
+            $symfonyStyle->newLine();
+            $symfonyStyle->title('Classes without any parent/interface - easier to remove');
 
-            $this->reportFileWithClasses($unusedClassesResult->getParentLessFileWithClasses());
+            $this->reportFileWithClasses($symfonyStyle, $unusedClassesResult->getParentLessFileWithClasses());
         }
 
-        $this->symfonyStyle->newLine();
-        $this->symfonyStyle->error(sprintf(
+        $symfonyStyle->newLine();
+        $symfonyStyle->error(sprintf(
             'Found %d unused classes. Check and remove them or skip them using "--skip-type" option',
             $unusedClassesResult->getCount()
         ));
@@ -67,12 +62,12 @@ final readonly class UnusedClassReporter
     /**
      * @param FileWithClass[] $fileWithClasses
      */
-    private function reportFileWithClasses(array $fileWithClasses): void
+    private function reportFileWithClasses(SymfonyStyle $symfonyStyle, array $fileWithClasses): void
     {
         foreach ($fileWithClasses as $fileWithClass) {
-            $this->symfonyStyle->writeln(' * ' . $fileWithClass->getClassName());
-            $this->symfonyStyle->writeln($fileWithClass->getFilePath());
-            $this->symfonyStyle->newLine();
+            $symfonyStyle->writeln(' * ' . $fileWithClass->getClassName());
+            $symfonyStyle->writeln($fileWithClass->getFilePath());
+            $symfonyStyle->newLine();
         }
     }
 }

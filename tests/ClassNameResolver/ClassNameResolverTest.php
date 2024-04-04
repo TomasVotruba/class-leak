@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver;
 
+use DateTime;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\Attributes\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithOtherComment;
-use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
@@ -43,6 +44,10 @@ final class ClassNameResolverTest extends AbstractTestCase
                 false,
                 true,
                 [SomeAttribute::class, SomeMethodAttribute::class],
+                [
+                    'SomeAttribute' => SomeAttribute::class,
+                    'DateTime' => DateTime::class,
+                ],
             ),
         ];
         yield [
@@ -51,6 +56,7 @@ final class ClassNameResolverTest extends AbstractTestCase
                 ClassWithOtherComment::class,
                 false,
                 false,
+                [],
                 [],
             ),
         ];

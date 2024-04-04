@@ -11,6 +11,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
@@ -34,6 +35,11 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private array $usedAttributes = [];
 
     /**
+     * @var array<string, string>
+     */
+    private array $imports = [];
+
+    /**
      * @param Node\Stmt[] $nodes
      * @return Node\Stmt[]
      */
@@ -43,12 +49,19 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         $this->hasParentClassOrInterface = false;
         $this->hasApiTag = false;
         $this->usedAttributes = [];
+        $this->imports = [];
 
         return $nodes;
     }
 
     public function enterNode(Node $node): ?int
     {
+        if ($node instanceof Use_) {
+            foreach ($node->uses as $use) {
+                $this->imports[$use->alias?->name ?? $use->name->getLast()] = $use->name->toString();
+            }
+        }
+
         if (! $node instanceof ClassLike) {
             return null;
         }
@@ -107,7 +120,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         return $this->hasParentClassOrInterface;
     }
 
-    public function hasApiTag() : bool
+    public function hasApiTag(): bool
     {
         return $this->hasApiTag;
     }
@@ -118,6 +131,14 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function getUsedAttributes(): array
     {
         return array_unique($this->usedAttributes);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getImports(): array
+    {
+        return $this->imports;
     }
 
     private function doesClassHaveApiTag(ClassLike $classLike): bool

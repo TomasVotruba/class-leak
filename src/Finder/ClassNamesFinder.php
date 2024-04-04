@@ -17,7 +17,7 @@ final readonly class ClassNamesFinder
 
     /**
      * @param string[] $filePaths
-     * @return FileWithClass[]
+     * @return array<string, FileWithClass>
      */
     public function resolveClassNamesToCheck(array $filePaths): array
     {
@@ -29,12 +29,13 @@ final readonly class ClassNamesFinder
                 continue;
             }
 
-            $filesWithClasses[] = new FileWithClass(
+            $filesWithClasses[$filePath] = new FileWithClass(
                 $filePath,
                 $classNames->getClassName(),
                 $classNames->hasParentClassOrInterface(),
                 $classNames->hasApiTag(),
                 $classNames->getUsedAttributes(),
+                $classNames->getImports()
             );
         }
 

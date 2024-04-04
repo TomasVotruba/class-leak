@@ -17,6 +17,7 @@ use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassesResultFactory;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
+use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final class CheckCommand extends Command
 {
@@ -93,6 +94,8 @@ final class CheckCommand extends Command
         /** @var string[] $fileExtensions */
         $fileExtensions = (array) $input->getOption('file-extension');
 
+        $symfonyStyle = new SymfonyStyle($input, $output);
+
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions);
 
         if (! $isJson) {
@@ -100,15 +103,15 @@ final class CheckCommand extends Command
             $this->symfonyStyle->newLine();
         }
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () use ($isJson): void {
+        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
+
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, $existingFilesWithClasses, function () use ($isJson): void {
             if ($isJson) {
                 return;
             }
 
             $this->symfonyStyle->progressAdvance();
         });
-
-        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
@@ -121,6 +124,7 @@ final class CheckCommand extends Command
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
 
         return $this->unusedClassReporter->reportResult(
+            $symfonyStyle,
             $unusedClassesResult,
             count($existingFilesWithClasses),
             $isJson
@@ -129,14 +133,16 @@ final class CheckCommand extends Command
 
     /**
      * @param string[] $phpFilePaths
+     * @param array<string, FileWithClass> $fileClasses
+     *
      * @return string[]
      */
-    private function resolveUsedClassNames(array $phpFilePaths, Closure $progressClosure): array
+    private function resolveUsedClassNames(array $phpFilePaths, array $fileClasses, Closure $progressClosure): array
     {
         $usedNames = [];
 
         foreach ($phpFilePaths as $phpFilePath) {
-            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
+            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath, $fileClasses[$phpFilePath] ?? null);
             $usedNames = [...$usedNames, ...$currentUsedNames];
 
             $progressClosure();
