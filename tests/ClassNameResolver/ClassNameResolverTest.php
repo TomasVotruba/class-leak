@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithAnyComment;
-use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithApiComment;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
@@ -30,7 +29,7 @@ final class ClassNameResolverTest extends AbstractTestCase
     public function test(string $filePath, ?ClassNames $expectedClassNames): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
-        if ($expectedClassNames === null) {
+        if (!$expectedClassNames instanceof ClassNames) {
             $this->assertNull($resolvedClassNames);
             return;
         }
