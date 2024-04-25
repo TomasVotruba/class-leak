@@ -8,6 +8,8 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithAnyComment;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithApiComment;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
@@ -25,11 +27,15 @@ final class ClassNameResolverTest extends AbstractTestCase
     }
 
     #[DataProvider('provideData')]
-    public function test(string $filePath, ClassNames $expectedClassNames): void
+    public function test(string $filePath, ?ClassNames $expectedClassNames): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
-        $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
+        if ($expectedClassNames === null) {
+            $this->assertNull($resolvedClassNames);
+            return;
+        }
 
+        $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
         $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
         $this->assertSame(
             $expectedClassNames->hasParentClassOrInterface(),
@@ -47,6 +53,20 @@ final class ClassNameResolverTest extends AbstractTestCase
                 false,
                 [SomeAttribute::class, SomeMethodAttribute::class],
             ),
+        ];
+
+        yield [
+            __DIR__ . '/Fixture/ClassWithAnyComment.php',
+            new ClassNames(
+                ClassWithAnyComment::class,
+                false,
+                [],
+            ),
+        ];
+
+        yield [
+            __DIR__ . '/Fixture/ClassWithApiComment.php',
+            null,
         ];
     }
 }
