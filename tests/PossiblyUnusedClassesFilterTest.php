@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use Iterator;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
@@ -26,10 +26,10 @@ final class PossiblyUnusedClassesFilterTest extends AbstractTestCase
         array $typesToSkip,
         array $suffixesToSkip,
         array $attributesToSkip
-    )
+    ): void
     {
-        $filter = new PossiblyUnusedClassesFilter();
-        $this->assertSame($expectedResult, $filter->filter(
+        $possiblyUnusedClassesFilter = new PossiblyUnusedClassesFilter();
+        $this->assertSame($expectedResult, $possiblyUnusedClassesFilter->filter(
             $filesWithClasses,
             $usedClassNames,
             $typesToSkip,
@@ -38,7 +38,7 @@ final class PossiblyUnusedClassesFilterTest extends AbstractTestCase
         ));
     }
 
-    public static function provideData(): \Iterator
+    public static function provideData(): Iterator
     {
         yield [ // test case-insensitive class name
             [],
