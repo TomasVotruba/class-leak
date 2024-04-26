@@ -93,7 +93,7 @@ final class PossiblyUnusedClassesFilter
             }
 
             // is excluded interfaces?
-            if ($this->shouldSkip($lowerClassName, $typesToSkip)) {
+            if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
                 continue;
             }
 
