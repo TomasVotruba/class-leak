@@ -82,19 +82,24 @@ final class PossiblyUnusedClassesFilter
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
+        $usedClassNames = array_map('strtolower', $usedClassNames);
+        $suffixesToSkip = array_map('strtolower', $suffixesToSkip);
+
         foreach ($filesWithClasses as $fileWithClass) {
-            if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
+            $lowerClassName = strtolower($fileWithClass->getClassName());
+
+            if (in_array($lowerClassName, $usedClassNames, true)) {
                 continue;
             }
 
             // is excluded interfaces?
-            if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
+            if ($this->shouldSkip($lowerClassName, $typesToSkip)) {
                 continue;
             }
 
             // is excluded suffix?
             foreach ($suffixesToSkip as $suffixToSkip) {
-                if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
+                if (str_ends_with($lowerClassName, $suffixToSkip)) {
                     continue 2;
                 }
             }
