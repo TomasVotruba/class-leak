@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\ClassLeak\Tests;
+namespace TomasVotruba\ClassLeak\Tests\Filtering;
 
 use Iterator;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
+use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final class PossiblyUnusedClassesFilterTest extends AbstractTestCase
