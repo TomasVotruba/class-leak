@@ -18,6 +18,7 @@ final class PossiblyUnusedClassesFilter
     private const DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
         'Symfony\Component\Console\Application',
+        'Symfony\Component\HttpKernel\DependencyInjection\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         // events
