@@ -107,7 +107,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     /**
      * @return string[]
      */
-    public function getAttributes() : array
+    public function getAttributes(): array
     {
         return array_unique($this->attributes);
     }

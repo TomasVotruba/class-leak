@@ -49,7 +49,7 @@ final class PossiblyUnusedClassesFilter
         // Symfony
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
-        'Symfony\Component\EventDispatcher\Attribute\AsEventListener'
+        'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
     ];
 
     /**
