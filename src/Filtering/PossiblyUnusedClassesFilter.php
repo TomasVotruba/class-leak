@@ -18,6 +18,7 @@ final class PossiblyUnusedClassesFilter
     private const DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
         'Symfony\Component\Console\Application',
+        'Symfony\Component\HttpKernel\DependencyInjection\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         // events
@@ -33,6 +34,10 @@ final class PossiblyUnusedClassesFilter
         'PHPUnit\Framework\TestCase',
         'PHPStan\Rules\Rule',
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
+        // tests
+        'Behat\Behat\Context\Context',
+        // jms
+        'JMS\Serializer\Handler\SubscribingHandlerInterface',
         // laravel
         'Illuminate\Support\ServiceProvider',
         'Illuminate\Foundation\Http\Kernel',
