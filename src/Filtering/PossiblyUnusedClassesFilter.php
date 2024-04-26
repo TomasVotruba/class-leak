@@ -34,6 +34,8 @@ final class PossiblyUnusedClassesFilter
         'PHPUnit\Framework\TestCase',
         'PHPStan\Rules\Rule',
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
+        // tests
+        'Behat\Behat\Context\Context',
         // laravel
         'Illuminate\Support\ServiceProvider',
         'Illuminate\Foundation\Http\Kernel',
