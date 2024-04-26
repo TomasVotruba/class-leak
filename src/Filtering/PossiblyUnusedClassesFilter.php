@@ -36,6 +36,8 @@ final class PossiblyUnusedClassesFilter
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
         // tests
         'Behat\Behat\Context\Context',
+        // jms
+        'JMS\Serializer\Handler\SubscribingHandlerInterface',
         // laravel
         'Illuminate\Support\ServiceProvider',
         'Illuminate\Foundation\Http\Kernel',
