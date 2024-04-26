@@ -8,6 +8,7 @@ use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
+use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithAnyComment;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeAttribute;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeClass;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\SomeMethodAttribute;
@@ -28,8 +29,8 @@ final class ClassNameResolverTest extends AbstractTestCase
     public function test(string $filePath, ClassNames $expectedClassNames): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
-        $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
 
+        $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
         $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
         $this->assertSame(
             $expectedClassNames->hasParentClassOrInterface(),
@@ -48,5 +49,29 @@ final class ClassNameResolverTest extends AbstractTestCase
                 [SomeAttribute::class, SomeMethodAttribute::class],
             ),
         ];
+
+        yield [
+            __DIR__ . '/Fixture/ClassWithAnyComment.php',
+            new ClassNames(
+                ClassWithAnyComment::class,
+                false,
+                [],
+            ),
+        ];
     }
+
+    #[DataProvider('provideNoClassContainedData')]
+    public function testNoClassContained(string $filePath): void
+    {
+        $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+        $this->assertNull($resolvedClassNames);
+    }
+
+    public static function provideNoClassContainedData(): Iterator
+    {
+        yield [
+            __DIR__ . '/Fixture/ClassWithApiComment.php',
+        ];
+    }
+
 }
