@@ -26,13 +26,9 @@ final class ClassNameResolverTest extends AbstractTestCase
     }
 
     #[DataProvider('provideData')]
-    public function test(string $filePath, ?ClassNames $expectedClassNames): void
+    public function test(string $filePath, ClassNames $expectedClassNames): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
-        if (!$expectedClassNames instanceof ClassNames) {
-            $this->assertNull($resolvedClassNames);
-            return;
-        }
 
         $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
         $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
@@ -62,10 +58,20 @@ final class ClassNameResolverTest extends AbstractTestCase
                 [],
             ),
         ];
+    }
 
+    #[DataProvider('provideNoClassContainedData')]
+    public function testNoClassContained(string $filePath): void
+    {
+        $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+        $this->assertNull($resolvedClassNames);
+    }
+
+    public static function provideNoClassContainedData(): Iterator
+    {
         yield [
             __DIR__ . '/Fixture/ClassWithApiComment.php',
-            null,
         ];
     }
+
 }
