@@ -43,20 +43,12 @@ final class ClassNameResolverTest extends AbstractTestCase
     {
         yield [
             __DIR__ . '/Fixture/SomeClass.php',
-            new ClassNames(
-                SomeClass::class,
-                false,
-                [SomeAttribute::class, SomeMethodAttribute::class],
-            ),
+            new ClassNames(SomeClass::class, false, [SomeAttribute::class, SomeMethodAttribute::class]),
         ];
 
         yield [
             __DIR__ . '/Fixture/ClassWithAnyComment.php',
-            new ClassNames(
-                ClassWithAnyComment::class,
-                false,
-                [],
-            ),
+            new ClassNames(ClassWithAnyComment::class, false, []),
         ];
     }
 
@@ -69,9 +61,6 @@ final class ClassNameResolverTest extends AbstractTestCase
 
     public static function provideNoClassContainedData(): Iterator
     {
-        yield [
-            __DIR__ . '/Fixture/ClassWithApiComment.php',
-        ];
+        yield [__DIR__ . '/Fixture/ClassWithApiComment.php'];
     }
-
 }

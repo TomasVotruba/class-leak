@@ -8,11 +8,11 @@
     ],
     "require": {
         "php": ">=8.2",
-        "illuminate/container": "^10.43",
+        "illuminate/container": "^11.0",
         "nette/utils": "^3.2",
-        "nikic/php-parser": "^4.18",
-        "symfony/console": "^6.3",
-        "symfony/finder": "^6.3",
+        "nikic/php-parser": "^4.19",
+        "symfony/console": "^6.4",
+        "symfony/finder": "^6.4",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
