@@ -15,8 +15,6 @@ jobs:
                 php_version: ['7.2', '7.3', '7.4', '8.0']
 
         steps:
-            -   uses: actions/checkout@v2
-
             -
                 uses: shivammathur/setup-php@v2
                 with:
@@ -25,4 +23,4 @@ jobs:
 
             -   run: composer require tomasvotruba/class-leak
 
-            -   run: php vendor/bin/class-leak list --ansi
+            -   run: vendor/bin/class-leak list --ansi
