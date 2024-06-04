@@ -23,6 +23,8 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         'Livewire\Component',
         'Illuminate\Routing\Controller',
+        'Illuminate\Contracts\Http\Kernel',
+        'Illuminate\Support\ServiceProvider',
         // events
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
         // kernel
