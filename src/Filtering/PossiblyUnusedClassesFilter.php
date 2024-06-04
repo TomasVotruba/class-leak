@@ -21,6 +21,8 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
+        'Livewire\Component',
+        'Illuminate\Routing\Controller',
         // events
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
         // kernel
