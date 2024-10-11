@@ -10,7 +10,7 @@
         "php": ">=8.2",
         "illuminate/container": "^11.0",
         "nette/utils": "^3.2",
-        "nikic/php-parser": "^4.19",
+        "nikic/php-parser": "^5",
         "symfony/console": "^6.4",
         "symfony/finder": "^6.4",
         "webmozart/assert": "^1.11"
@@ -51,6 +51,7 @@
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi  --error-format symplify",
-        "rector": "vendor/bin/rector process --dry-run --ansi"
+        "rector": "vendor/bin/rector process --dry-run --ansi",
+        "test": "vendor/bin/phpunit"
     }
 }
