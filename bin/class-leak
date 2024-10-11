@@ -1,4 +1,5 @@
 #!/usr/bin/env php
-<?php
+<?php 
+namespace ClassLeak202410;
 
 require __DIR__ . '/class-leak.php';
