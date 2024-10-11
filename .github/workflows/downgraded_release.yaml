@@ -33,8 +33,8 @@ jobs:
             -   run: mkdir rector-local
             -   run: composer require rector/rector --working-dir rector-local --ansi
 
-            # downgrade to PHP 7.4
-            -   run: rector-local/vendor/bin/rector process src bin vendor --config build/rector-downgrade-php-74.php --ansi
+            # downgrade to PHP 7.2
+            -   run: rector-local/vendor/bin/rector process src bin vendor --config build/rector-downgrade-php-72.php --ansi
 
             # clear the dev files
             -   run: rm -rf tests ecs.php phpstan.neon phpunit.xml .gitignore .editorconfig
@@ -42,7 +42,7 @@ jobs:
             # prefix and scope
             -   run: sh prefix-code.sh
 
-            # copy PHP 7.4 composer + workflows
+            # copy PHP 7.2 composer + workflows
             -   run: cp -r build/target-repository/. .
 
             # clear the dev files
