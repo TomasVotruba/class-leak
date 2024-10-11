@@ -28,9 +28,13 @@ final readonly class UseImportsResolver
         /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);
 
-        $stmts = $this->parser->parse($fileContents);
-        if ($stmts === null) {
-            return [];
+        try {
+            $stmts = $this->parser->parse($fileContents);
+            if ($stmts === null) {
+                return [];
+            }
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(sprintf('Could not parse file "%s": %s', $filePath, $e->getMessage()));
         }
 
         $this->fullyQualifiedNameNodeDecorator->decorate($stmts);
