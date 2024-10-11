@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak;
 
-use Throwable;
-use RuntimeException;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
+use RuntimeException;
+use Throwable;
 use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
 
@@ -36,7 +36,11 @@ final readonly class UseImportsResolver
                 return [];
             }
         } catch (Throwable $throwable) {
-            throw new RuntimeException(sprintf('Could not parse file "%s": %s', $filePath, $throwable->getMessage()), $throwable->getCode(), $throwable);
+            throw new RuntimeException(sprintf(
+                'Could not parse file "%s": %s',
+                $filePath,
+                $throwable->getMessage()
+            ), $throwable->getCode(), $throwable);
         }
 
         $this->fullyQualifiedNameNodeDecorator->decorate($stmts);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\UseImportsResolver;
 
-use RuntimeException;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Fixture\SomeFactory;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass;
