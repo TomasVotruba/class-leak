@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\UseImportsResolver;
 
+use RuntimeException;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
@@ -40,10 +41,13 @@ final class UseImportsResolverTest extends AbstractTestCase
         yield [__DIR__ . '/Fixture/FileUsesStaticCall.php', [SomeFactory::class, FourthUsedClass::class]];
     }
 
-    public function testParseError() {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Could not parse file "' . __DIR__ . '/Fixture/ParseError.php": Syntax error, unexpected T_STRING on line 7');
+    public function testParseError(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Could not parse file "' . __DIR__ . '/Fixture/ParseError.php": Syntax error, unexpected T_STRING on line 7'
+        );
 
-        $this->useImportsResolver->resolve(__DIR__ .'/Fixture/ParseError.php');
+        $this->useImportsResolver->resolve(__DIR__ . '/Fixture/ParseError.php');
     }
 }
