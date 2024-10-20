@@ -21,7 +21,7 @@ final readonly class ClassNameResolver
     ) {
     }
 
-    public function resolveFromFromFilePath(string $filePath): ?ClassNames
+    public function resolveFromFilePath(string $filePath): ?ClassNames
     {
         /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);

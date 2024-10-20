@@ -28,7 +28,7 @@ final class ClassNameResolverTest extends AbstractTestCase
     #[DataProvider('provideData')]
     public function test(string $filePath, ClassNames $expectedClassNames): void
     {
-        $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+        $resolvedClassNames = $this->classNameResolver->resolveFromFilePath($filePath);
 
         $this->assertInstanceOf(ClassNames::class, $resolvedClassNames);
         $this->assertSame($expectedClassNames->getClassName(), $resolvedClassNames->getClassName());
@@ -55,7 +55,7 @@ final class ClassNameResolverTest extends AbstractTestCase
     #[DataProvider('provideNoClassContainedData')]
     public function testNoClassContained(string $filePath): void
     {
-        $resolvedClassNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+        $resolvedClassNames = $this->classNameResolver->resolveFromFilePath($filePath);
         $this->assertNull($resolvedClassNames);
     }
 

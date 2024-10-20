@@ -24,7 +24,7 @@ final readonly class ClassNamesFinder
         $filesWithClasses = [];
 
         foreach ($filePaths as $filePath) {
-            $classNames = $this->classNameResolver->resolveFromFromFilePath($filePath);
+            $classNames = $this->classNameResolver->resolveFromFilePath($filePath);
             if (! $classNames instanceof ClassNames) {
                 continue;
             }
