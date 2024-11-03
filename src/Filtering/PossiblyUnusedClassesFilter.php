@@ -27,6 +27,10 @@ final class PossiblyUnusedClassesFilter
         'Illuminate\Support\ServiceProvider',
         // events
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
+        // validator
+        'Symfony\Component\Validator\Constraint',
+        'Symfony\Component\Validator\ConstraintValidator',
+
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
         'Symfony\Component\HttpKernel\KernelInterface',
