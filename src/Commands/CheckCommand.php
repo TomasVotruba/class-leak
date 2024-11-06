@@ -57,6 +57,13 @@ final class CheckCommand extends Command
         );
 
         $this->addOption(
+            'skip-path',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+            'Paths to skip (real path or just directory name)'
+        );
+
+        $this->addOption(
             'skip-attribute',
             null,
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
@@ -88,12 +95,15 @@ final class CheckCommand extends Command
         /** @var string[] $attributesToSkip */
         $attributesToSkip = (array) $input->getOption('skip-attribute');
 
+        /** @var string[] $pathsToSkip */
+        $pathsToSkip = (array) $input->getOption('skip-path');
+
         $isJson = (bool) $input->getOption('json');
 
         /** @var string[] $fileExtensions */
         $fileExtensions = (array) $input->getOption('file-extension');
 
-        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions);
+        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
 
         if (! $isJson) {
             $this->symfonyStyle->progressStart(count($phpFilePaths));
