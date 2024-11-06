@@ -16,9 +16,11 @@ final class PhpFilesFinder
     /**
      * @param string[] $paths
      * @param string[] $fileExtensions
+     * @param string[] $pathsToSkip
+     *
      * @return string[]
      */
-    public function findPhpFiles(array $paths, array $fileExtensions): array
+    public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip): array
     {
         Assert::allFileExists($paths);
         Assert::allString($fileExtensions);
@@ -29,6 +31,10 @@ final class PhpFilesFinder
         $currentFileFinder = Finder::create()->files()
             ->in($paths)
             ->sortByName();
+
+        if ($pathsToSkip !== []) {
+            $currentFileFinder->exclude($pathsToSkip);
+        }
 
         foreach ($fileExtensions as $fileExtension) {
             $currentFileFinder->name('*.' . $fileExtension);
