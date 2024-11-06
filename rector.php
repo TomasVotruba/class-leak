@@ -10,9 +10,9 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withPreparedSets(
-        deadCode: true, naming: true, privatization: true, earlyReturn: true, codeQuality: true, codingStyle: true, typeDeclarations: true
+        deadCode: true, naming: true, privatization: true, earlyReturn: true, codeQuality: true, codingStyle: true, typeDeclarations: true, phpunit: true, phpunitCodeQuality: true
     )
     ->withPhpSets()
     ->withRootFiles()
-    ->withImportNames(removeUnusedImports: true)
+    ->withImportNames()
     ->withSkip(['*/scoper.php', '*/Source/*', '*/Fixture/*']);
