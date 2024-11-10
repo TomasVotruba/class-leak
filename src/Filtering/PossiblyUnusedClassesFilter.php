@@ -31,6 +31,7 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\Validator\Constraint',
         'Symfony\Component\Validator\ConstraintValidator',
         'Symfony\Component\Validator\ConstraintValidatorInterface',
+        'Symfony\Component\Security\Core\Authorization\Voter\VoterInterface',
 
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
