@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\ValueObject;
 
 use JsonSerializable;
+use Nette\Utils\FileSystem;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
 final readonly class FileWithClass implements JsonSerializable
@@ -53,5 +54,14 @@ final readonly class FileWithClass implements JsonSerializable
             'class' => $this->className,
             'attributes' => $this->attributes,
         ];
+    }
+
+    /**
+     * Is serialized, could be hidden inside json output magic
+     */
+    public function isSerialized(): bool
+    {
+        $fileContents = FileSystem::read($this->filePath);
+        return str_contains($fileContents, '@Serializer');
     }
 }

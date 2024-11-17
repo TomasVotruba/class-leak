@@ -103,6 +103,10 @@ final class PossiblyUnusedClassesFilter
                 continue;
             }
 
+            if ($fileWithClass->isSerialized()) {
+                continue;
+            }
+
             // is excluded suffix?
             foreach ($suffixesToSkip as $suffixToSkip) {
                 if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
