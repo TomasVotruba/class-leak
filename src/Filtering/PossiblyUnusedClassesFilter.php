@@ -34,6 +34,7 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\Security\Core\Authorization\Voter\VoterInterface',
         'Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface',
         'Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface',
+        'Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface',
 
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
