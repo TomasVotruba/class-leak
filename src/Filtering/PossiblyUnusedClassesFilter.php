@@ -32,6 +32,7 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\Validator\ConstraintValidator',
         'Symfony\Component\Validator\ConstraintValidatorInterface',
         'Symfony\Component\Security\Core\Authorization\Voter\VoterInterface',
+        'Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface',
         'Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface',
         'Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface',
         'Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface',
