@@ -71,6 +71,15 @@ final readonly class FileWithClass implements JsonSerializable
     public function isEntity(): bool
     {
         $fileContents = FileSystem::read($this->filePath);
+
+        if (str_contains($fileContents, 'Doctrine\ODM\MongoDB\Mapping\Annotations')) {
+            return true;
+        }
+
+        if (str_contains($fileContents, 'Doctrine\ORM\Annotations')) {
+            return true;
+        }
+
         if (str_contains($fileContents, '@ORM\Entity')) {
             return true;
         }
