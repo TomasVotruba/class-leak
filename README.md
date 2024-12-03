@@ -47,7 +47,7 @@ vendor/bin/class-leak check src --skip-suffix="Controller"
 Do you want to skip classes using a specific attribute?
 
 ```bash
-vendor/bin/class-leak check src --skip-attribute "App\\Attribute\\AsController"
+vendor/bin/class-leak check src --skip-attribute="App\\Attribute\\AsController"
 ```
 
 <br>
