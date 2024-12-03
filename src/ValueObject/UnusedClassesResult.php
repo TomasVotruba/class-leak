@@ -9,10 +9,12 @@ final readonly class UnusedClassesResult
     /**
      * @param FileWithClass[] $withParentsFileWithClasses
      * @param FileWithClass[] $parentLessFileWithClasses
+     * @param FileWithClass[] $traits
      */
     public function __construct(
         private array $parentLessFileWithClasses,
         private array $withParentsFileWithClasses,
+        private array $traits,
     ) {
     }
 
@@ -35,5 +37,13 @@ final readonly class UnusedClassesResult
     public function getCount(): int
     {
         return count($this->parentLessFileWithClasses) + count($this->withParentsFileWithClasses);
+    }
+
+    /**
+     * @return FileWithClass[]
+     */
+    public function getTraits(): array
+    {
+        return $this->traits;
     }
 }

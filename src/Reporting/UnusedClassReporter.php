@@ -43,16 +43,24 @@ final readonly class UnusedClassReporter
 
         // separate with and without parent, as first one can be removed more easily
         if ($unusedClassesResult->getWithParentsFileWithClasses() !== []) {
-            $this->symfonyStyle->title('Classes with a parent/interface - possibly used by type');
+            $this->symfonyStyle->section('Classes with a parent/interface - possibly used by type');
 
             $this->reportFileWithClasses($unusedClassesResult->getWithParentsFileWithClasses());
         }
 
         if ($unusedClassesResult->getParentLessFileWithClasses() !== []) {
             $this->symfonyStyle->newLine();
-            $this->symfonyStyle->title('Classes without any parent/interface - easier to remove');
+            $this->symfonyStyle->section('Classes without any parent/interface - easier to remove');
 
             $this->reportFileWithClasses($unusedClassesResult->getParentLessFileWithClasses());
+        }
+
+        // @todo traits - the easier to remove as hardly used anywhere
+        if ($unusedClassesResult->getTraits() !== []) {
+            $this->symfonyStyle->newLine();
+            $this->symfonyStyle->section('Traits without any use - the easiest to remove');
+
+            $this->reportFileWithClasses($unusedClassesResult->getTraits());
         }
 
         $this->symfonyStyle->newLine();

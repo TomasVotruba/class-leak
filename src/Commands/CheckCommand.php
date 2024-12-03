@@ -71,6 +71,13 @@ final class CheckCommand extends Command
         );
 
         $this->addOption(
+            'include-entities',
+            null,
+            InputOption::VALUE_NONE,
+            'Include Doctrine ORM and ODM entities (skipped by default)'
+        );
+
+        $this->addOption(
             'file-extension',
             null,
             InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
@@ -85,6 +92,8 @@ final class CheckCommand extends Command
     {
         /** @var string[] $paths */
         $paths = (array) $input->getArgument('paths');
+
+        $shouldIncludeEntities = (bool) $input->getOption('include-entities');
 
         /** @var string[] $typesToSkip */
         $typesToSkip = (array) $input->getOption('skip-type');
@@ -106,19 +115,26 @@ final class CheckCommand extends Command
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
 
         if (! $isJson) {
-            $this->symfonyStyle->progressStart(count($phpFilePaths));
+            $findingClassesProgressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
             $this->symfonyStyle->newLine();
         }
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () use ($isJson): void {
+        $this->symfonyStyle->title('1. Scanning for classes');
+
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () use (
+            $isJson,
+            $findingClassesProgressBar
+        ): void {
             if ($isJson) {
                 return;
             }
 
-            $this->symfonyStyle->progressAdvance();
+            $findingClassesProgressBar->advance();
         });
 
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
+
+        $this->symfonyStyle->title('2. Comparing found classes to their usage');
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
