@@ -37,6 +37,13 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface',
         'Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface',
 
+        // symfony forms
+        'Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface',
+        'Symfony\Component\Form\AbstractType',
+
+        // doctrine
+        'Doctrine\Common\DataFixtures\FixtureInterface',
+
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
         'Symfony\Component\HttpKernel\KernelInterface',
