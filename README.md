@@ -22,19 +22,25 @@ Make sure to exclude `/tests` directories, to keep reporting classes that are us
 
 <br>
 
-Many types are excluded by default, as they're collected by framework magic, e.g. console command classes. To exclude another class, e.g. your interface collector, use `--skip-type`:
+Many types are excluded by default, as they're collected by framework magic, e.g. console command classes.
+
+### Exclude what you use
+
+Do you want to skip classes of certain type?
 
 ```bash
 vendor/bin/class-leak check bin src --skip-type="App\\Contract\\SomeInterface"
 ```
 
-What if your classes do no implement any type? Use `--skip-suffix` instead:
+<br>
+
+What if your classes do no implement any type?
 
 ```bash
-vendor/bin/class-leak check bin src --skip-suffix "Controller"
+vendor/bin/class-leak check bin src --skip-suffix="Controller"
 ```
 
-If you want to skip classes that use a specific attribute or have methods that use a specific attribute, use `--skip-attribute`:
+Do you want to skip classes using a specific attribute?
 
 ```bash
 vendor/bin/class-leak check bin src --skip-attribute "Symfony\\Component\\HttpKernel\\Attribute\\AsController"
