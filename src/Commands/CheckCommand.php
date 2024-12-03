@@ -154,14 +154,9 @@ final class CheckCommand extends Command
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
-
         $this->symfonyStyle->newLine();
 
-        return $this->unusedClassReporter->reportResult(
-            $unusedClassesResult,
-            count($existingFilesWithClasses),
-            $isJson
-        );
+        return $this->unusedClassReporter->reportResult($unusedClassesResult, $isJson);
     }
 
     /**

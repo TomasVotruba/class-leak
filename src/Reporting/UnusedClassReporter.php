@@ -20,7 +20,7 @@ final readonly class UnusedClassReporter
     /**
      * @return Command::*
      */
-    public function reportResult(UnusedClassesResult $unusedClassesResult, int $classCount, bool $isJson): int
+    public function reportResult(UnusedClassesResult $unusedClassesResult, bool $isJson): int
     {
         if ($isJson) {
             $jsonResult = [
@@ -37,7 +37,7 @@ final readonly class UnusedClassReporter
         $this->symfonyStyle->newLine(2);
 
         if ($unusedClassesResult->getCount() === 0) {
-            $this->symfonyStyle->success(sprintf('All the %d services are used. Great job!', $classCount));
+            $this->symfonyStyle->success('All services are used. Great job!');
             return Command::SUCCESS;
         }
 
