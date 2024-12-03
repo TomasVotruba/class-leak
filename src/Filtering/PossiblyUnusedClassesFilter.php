@@ -95,7 +95,7 @@ final class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
-        ProgressBar $progressBar
+        ?ProgressBar $progressBar
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -107,7 +107,9 @@ final class PossiblyUnusedClassesFilter
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
         foreach ($filesWithClasses as $fileWithClass) {
-            $progressBar->advance();
+            if ($progressBar instanceof ProgressBar) {
+                $progressBar->advance();
+            }
 
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;
