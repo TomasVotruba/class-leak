@@ -16,15 +16,18 @@ final class UnusedClassesResultFactory
     {
         $parentLessFileWithClasses = [];
         $withParentsFileWithClasses = [];
+        $traits = [];
 
         foreach ($unusedFilesWithClasses as $unusedFileWithClass) {
             if ($unusedFileWithClass->hasParentClassOrInterface()) {
                 $withParentsFileWithClasses[] = $unusedFileWithClass;
+            } elseif ($unusedFileWithClass->isTrait()) {
+                $traits[] = $unusedFileWithClass;
             } else {
                 $parentLessFileWithClasses[] = $unusedFileWithClass;
             }
         }
 
-        return new UnusedClassesResult($parentLessFileWithClasses, $withParentsFileWithClasses);
+        return new UnusedClassesResult($parentLessFileWithClasses, $withParentsFileWithClasses, $traits);
     }
 }

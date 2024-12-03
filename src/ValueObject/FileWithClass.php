@@ -64,4 +64,30 @@ final readonly class FileWithClass implements JsonSerializable
         $fileContents = FileSystem::read($this->filePath);
         return str_contains($fileContents, '@Serializer');
     }
+
+    /**
+     * Dummy check for Doctrine ORM/ODM entity
+     */
+    public function isEntity(): bool
+    {
+        $fileContents = FileSystem::read($this->filePath);
+        if (str_contains($fileContents, '@ORM\Entity')) {
+            return true;
+        }
+
+        if (str_contains($fileContents, '@Entity')) {
+            return true;
+        }
+
+        if (str_contains($fileContents, '@ODM\\Document')) {
+            return true;
+        }
+
+        return str_contains($fileContents, '@Document');
+    }
+
+    public function isTrait(): bool
+    {
+        return trait_exists($this->className);
+    }
 }
