@@ -44,28 +44,26 @@ final readonly class UnusedClassReporter
 
         // separate with and without parent, as first one can be removed more easily
         if ($unusedClassesResult->getWithParentsFileWithClasses() !== []) {
-            $this->symfonyStyle->section('Classes with a parent/interface - possibly used by type');
-            $this->reportFileWithClasses($unusedClassesResult->getWithParentsFileWithClasses());
+            $this->printLineWIthClasses(
+                'Classes with a parent/interface',
+                $unusedClassesResult->getWithParentsFileWithClasses()
+            );
         }
 
         if ($unusedClassesResult->getParentLessFileWithClasses() !== []) {
-            $this->symfonyStyle->newLine();
-            $this->symfonyStyle->section('Classes without any parent/interface - easier to remove');
-
-            $this->reportFileWithClasses($unusedClassesResult->getParentLessFileWithClasses());
+            $this->printLineWIthClasses(
+                'Classes without any parent/interface - easier to remove',
+                $unusedClassesResult->getParentLessFileWithClasses()
+            );
         }
 
-        // @todo traits - the easier to remove as hardly used anywhere
         if ($unusedClassesResult->getTraits() !== []) {
-            $this->symfonyStyle->newLine();
-            $this->symfonyStyle->section('Traits without any use - the easiest to remove');
-
-            $this->reportFileWithClasses($unusedClassesResult->getTraits());
+            $this->printLineWIthClasses('Unused traits - the easiest to remove', $unusedClassesResult->getTraits());
         }
 
         $this->symfonyStyle->newLine();
         $this->symfonyStyle->error(sprintf(
-            'Found %d unused classes. Check and remove them or skip them using "--skip-type" option',
+            'Found %d unused classes. Remove them or skip them using "--skip-type" option',
             $unusedClassesResult->getCount()
         ));
 
@@ -75,8 +73,11 @@ final readonly class UnusedClassReporter
     /**
      * @param FileWithClass[] $fileWithClasses
      */
-    private function reportFileWithClasses(array $fileWithClasses): void
+    private function printLineWIthClasses(string $title, array $fileWithClasses): void
     {
+        $this->symfonyStyle->newLine();
+        $this->symfonyStyle->section($title);
+
         foreach ($fileWithClasses as $fileWithClass) {
             $this->symfonyStyle->writeln($fileWithClass->getFilePath());
             $this->symfonyStyle->newLine();
