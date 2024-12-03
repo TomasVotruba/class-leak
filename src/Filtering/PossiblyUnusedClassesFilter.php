@@ -8,7 +8,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use Webmozart\Assert\Assert;
 
-final class PossiblyUnusedClassesFilter
+final readonly class PossiblyUnusedClassesFilter
 {
     /**
      * These class types are used by some kind of collector pattern. Either loaded magically, registered only in config,
