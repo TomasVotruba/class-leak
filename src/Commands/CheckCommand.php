@@ -120,8 +120,6 @@ final class CheckCommand extends Command
 
         $this->symfonyStyle->newLine(2);
 
-        $this->symfonyStyle->title('3. Comparing found classes to their usage');
-
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
             $usedNames,

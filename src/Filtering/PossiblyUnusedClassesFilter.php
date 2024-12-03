@@ -80,11 +80,6 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
     ];
 
-    public function __construct(
-        private SymfonyStyle $symfonyStyle
-    ) {
-    }
-
     /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
@@ -111,11 +106,7 @@ final readonly class PossiblyUnusedClassesFilter
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
-        $progressBar = $this->symfonyStyle->createProgressBar(count($filesWithClasses));
-
         foreach ($filesWithClasses as $fileWithClass) {
-            $progressBar->advance();
-
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;
             }
