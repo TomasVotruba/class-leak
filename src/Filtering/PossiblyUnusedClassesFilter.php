@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Filtering;
 
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use Webmozart\Assert\Assert;
 
@@ -80,6 +81,10 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
     ];
 
+    public function __construct(private SymfonyStyle $symfonyStyle)
+    {
+    }
+
     /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
@@ -96,7 +101,6 @@ final class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
-        ?ProgressBar $progressBar
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -107,10 +111,10 @@ final class PossiblyUnusedClassesFilter
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
+        $progressBar = $this->symfonyStyle->createProgressBar(count($filesWithClasses));
+
         foreach ($filesWithClasses as $fileWithClass) {
-            if ($progressBar instanceof ProgressBar) {
-                $progressBar->advance();
-            }
+            $progressBar->advance();
 
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
                 continue;

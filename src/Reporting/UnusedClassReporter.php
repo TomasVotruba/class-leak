@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Reporting;
 
-use Nette\Utils\Json;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
@@ -20,21 +19,8 @@ final readonly class UnusedClassReporter
     /**
      * @return Command::*
      */
-    public function reportResult(UnusedClassesResult $unusedClassesResult, bool $isJson): int
+    public function reportResult(UnusedClassesResult $unusedClassesResult): int
     {
-        if ($isJson) {
-            $jsonResult = [
-                'unused_class_count' => $unusedClassesResult->getCount(),
-                'unused_parent_less_classes' => $unusedClassesResult->getParentLessFileWithClasses(),
-                'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
-                'unused_traits' => $unusedClassesResult->getTraits(),
-            ];
-
-            $this->symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
-
-            return Command::SUCCESS;
-        }
-
         $this->symfonyStyle->newLine(2);
 
         if ($unusedClassesResult->getCount() === 0) {
@@ -80,7 +66,6 @@ final readonly class UnusedClassReporter
 
         foreach ($fileWithClasses as $fileWithClass) {
             $this->symfonyStyle->writeln($fileWithClass->getFilePath());
-            $this->symfonyStyle->newLine();
         }
     }
 }

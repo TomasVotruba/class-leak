@@ -85,8 +85,6 @@ final class CheckCommand extends Command
             'File extensions to check',
             ['php']
         );
-
-        $this->addOption('json', null, InputOption::VALUE_NONE, 'Output as JSON');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -108,39 +106,22 @@ final class CheckCommand extends Command
         /** @var string[] $pathsToSkip */
         $pathsToSkip = (array) $input->getOption('skip-path');
 
-        $isJson = (bool) $input->getOption('json');
-
         /** @var string[] $fileExtensions */
         $fileExtensions = (array) $input->getOption('file-extension');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
 
-        $findingClassesProgressBar = $isJson ? null : $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+        $this->symfonyStyle->title('1. Finding used classes');
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths);
 
-        $this->symfonyStyle->title('1. Scanning for classes');
+        $this->symfonyStyle->newLine(2);
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, function () use (
-            $isJson,
-            $findingClassesProgressBar
-        ): void {
-            if ($isJson) {
-                return;
-            }
-
-            if ($findingClassesProgressBar instanceof ProgressBar) {
-                $findingClassesProgressBar->advance();
-            }
-        });
-
+        $this->symfonyStyle->title('2. Extracting existing files with classes');
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
 
-        $this->symfonyStyle->newLine(3);
-        $this->symfonyStyle->title('2. Comparing found classes to their usage');
+        $this->symfonyStyle->newLine(2);
 
-        $analysisProgressBar = $isJson ? null : $this->symfonyStyle->createProgressBar(
-            count($existingFilesWithClasses)
-        );
-
+        $this->symfonyStyle->title('3. Comparing found classes to their usage');
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
             $usedNames,
@@ -148,28 +129,29 @@ final class CheckCommand extends Command
             $suffixesToSkip,
             $attributesToSkip,
             $shouldIncludeEntities,
-            $analysisProgressBar
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
         $this->symfonyStyle->newLine();
 
-        return $this->unusedClassReporter->reportResult($unusedClassesResult, $isJson);
+        return $this->unusedClassReporter->reportResult($unusedClassesResult);
     }
 
     /**
      * @param string[] $phpFilePaths
      * @return string[]
      */
-    private function resolveUsedClassNames(array $phpFilePaths, Closure $progressClosure): array
+    private function resolveUsedClassNames(array $phpFilePaths): array
     {
+        $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+
         $usedNames = [];
 
         foreach ($phpFilePaths as $phpFilePath) {
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
             $usedNames = [...$usedNames, ...$currentUsedNames];
 
-            $progressClosure();
+            $progressBar->advance();
         }
 
         $usedNames = array_unique($usedNames);
