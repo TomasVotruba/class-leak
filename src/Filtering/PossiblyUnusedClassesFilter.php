@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Filtering;
 
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use Webmozart\Assert\Assert;
@@ -81,8 +80,9 @@ final class PossiblyUnusedClassesFilter
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
     ];
 
-    public function __construct(private SymfonyStyle $symfonyStyle)
-    {
+    public function __construct(
+        private SymfonyStyle $symfonyStyle
+    ) {
     }
 
     /**
