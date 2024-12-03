@@ -44,6 +44,7 @@ final class PossiblyUnusedClassesFilter
 
         // doctrine
         'Doctrine\Common\DataFixtures\FixtureInterface',
+        'Nelmio\Alice\ProcessorInterface',
 
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
