@@ -36,7 +36,7 @@ final readonly class UnusedClassesResult
 
     public function getCount(): int
     {
-        return count($this->parentLessFileWithClasses) + count($this->withParentsFileWithClasses);
+        return count($this->parentLessFileWithClasses) + count($this->withParentsFileWithClasses) + count($this->traits);
     }
 
     /**

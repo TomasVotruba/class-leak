@@ -137,7 +137,9 @@ final class CheckCommand extends Command
         $this->symfonyStyle->newLine(3);
         $this->symfonyStyle->title('2. Comparing found classes to their usage');
 
-        $analysisProgressBar = $isJson ? null : $this->symfonyStyle->createProgressBar(count($existingFilesWithClasses));
+        $analysisProgressBar = $isJson ? null : $this->symfonyStyle->createProgressBar(
+            count($existingFilesWithClasses)
+        );
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,

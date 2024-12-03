@@ -27,6 +27,7 @@ final readonly class UnusedClassReporter
                 'unused_class_count' => $unusedClassesResult->getCount(),
                 'unused_parent_less_classes' => $unusedClassesResult->getParentLessFileWithClasses(),
                 'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
+                'unused_traits' => $unusedClassesResult->getTraits(),
             ];
 
             $this->symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
@@ -44,7 +45,6 @@ final readonly class UnusedClassReporter
         // separate with and without parent, as first one can be removed more easily
         if ($unusedClassesResult->getWithParentsFileWithClasses() !== []) {
             $this->symfonyStyle->section('Classes with a parent/interface - possibly used by type');
-
             $this->reportFileWithClasses($unusedClassesResult->getWithParentsFileWithClasses());
         }
 
@@ -78,7 +78,6 @@ final readonly class UnusedClassReporter
     private function reportFileWithClasses(array $fileWithClasses): void
     {
         foreach ($fileWithClasses as $fileWithClass) {
-            $this->symfonyStyle->writeln(' * ' . $fileWithClass->getClassName());
             $this->symfonyStyle->writeln($fileWithClass->getFilePath());
             $this->symfonyStyle->newLine();
         }
