@@ -44,6 +44,7 @@ final readonly class PossiblyUnusedClassesFilter
 
         // doctrine
         'Doctrine\Common\DataFixtures\FixtureInterface',
+        'Doctrine\Common\EventSubscriber',
         'Nelmio\Alice\ProcessorInterface',
 
         // kernel
