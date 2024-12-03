@@ -117,7 +117,6 @@ final class CheckCommand extends Command
 
         if (! $isJson) {
             $findingClassesProgressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
-            $this->symfonyStyle->newLine();
         } else {
             $findingClassesProgressBar = null;
         }
@@ -139,7 +138,10 @@ final class CheckCommand extends Command
 
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
 
+        $this->symfonyStyle->newLine(3);
         $this->symfonyStyle->title('2. Comparing found classes to their usage');
+
+        $analysisProgressBar = $this->symfonyStyle->createProgressBar(count($existingFilesWithClasses));
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
@@ -147,10 +149,13 @@ final class CheckCommand extends Command
             $typesToSkip,
             $suffixesToSkip,
             $attributesToSkip,
-            $shouldIncludeEntities
+            $shouldIncludeEntities,
+            $analysisProgressBar
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
+
+        $this->symfonyStyle->newLine();
 
         return $this->unusedClassReporter->reportResult(
             $unusedClassesResult,
