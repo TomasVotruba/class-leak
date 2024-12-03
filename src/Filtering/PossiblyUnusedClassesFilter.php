@@ -92,7 +92,8 @@ final class PossiblyUnusedClassesFilter
         array $usedClassNames,
         array $typesToSkip,
         array $suffixesToSkip,
-        array $attributesToSkip
+        array $attributesToSkip,
+        bool $shouldIncludeEntities
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -110,6 +111,10 @@ final class PossiblyUnusedClassesFilter
 
             // is excluded interfaces?
             if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
+                continue;
+            }
+
+            if ($shouldIncludeEntities === false && $fileWithClass->isEntity()) {
                 continue;
             }
 

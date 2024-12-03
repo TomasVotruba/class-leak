@@ -6,6 +6,7 @@ namespace TomasVotruba\ClassLeak\Commands;
 
 use Closure;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -74,7 +75,7 @@ final class CheckCommand extends Command
             'include-entities',
             null,
             InputOption::VALUE_NONE,
-            'Include Doctrine ORM and ODM entities (skipped by default)'
+            'Include Doctrine ORM and ODM entities (skipped by default)',
         );
 
         $this->addOption(
@@ -117,6 +118,8 @@ final class CheckCommand extends Command
         if (! $isJson) {
             $findingClassesProgressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
             $this->symfonyStyle->newLine();
+        } else {
+            $findingClassesProgressBar = null;
         }
 
         $this->symfonyStyle->title('1. Scanning for classes');
@@ -129,7 +132,9 @@ final class CheckCommand extends Command
                 return;
             }
 
-            $findingClassesProgressBar->advance();
+            if ($findingClassesProgressBar instanceof ProgressBar) {
+                $findingClassesProgressBar->advance();
+            }
         });
 
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
@@ -141,7 +146,8 @@ final class CheckCommand extends Command
             $usedNames,
             $typesToSkip,
             $suffixesToSkip,
-            $attributesToSkip
+            $attributesToSkip,
+            $shouldIncludeEntities
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
