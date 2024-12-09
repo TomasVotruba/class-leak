@@ -28,6 +28,9 @@ final readonly class PossiblyUnusedClassesFilter
         'Illuminate\Support\ServiceProvider',
         // events
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
+        'Symfony\Component\Form\FormTypeExtensionInterface',
+        'Symfony\Component\Security\Core\Authentication\SimpleAuthenticatorInterface',
+        'Vich\UploaderBundle\Naming\DirectoryNamerInterface',
         // validator
         'Symfony\Component\Validator\Constraint',
         'Symfony\Component\Validator\ConstraintValidator',
