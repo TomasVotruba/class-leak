@@ -8,21 +8,21 @@
     ],
     "require": {
         "php": ">=8.2",
-        "illuminate/container": "^11.0",
+        "illuminate/container": "^11.35",
         "nette/utils": "^3.2",
-        "nikic/php-parser": "^4.19",
+        "nikic/php-parser": "^5.3",
         "symfony/console": "^6.4",
         "symfony/finder": "^6.4",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "phpstan/extension-installer": "^1.2",
-        "phpstan/phpstan": "^1.12",
-        "phpunit/phpunit": "^10.5",
-        "rector/rector": "^1.2",
-        "symplify/easy-coding-standard": "^12.1",
-        "symplify/phpstan-extensions": "^11.2",
-        "tomasvotruba/unused-public": "^1.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^11.5",
+        "rector/rector": "^2.0",
+        "symplify/easy-coding-standard": "^12.4",
+        "symplify/phpstan-extensions": "^12.0",
+        "tomasvotruba/unused-public": "^2.0",
         "tracy/tracy": "^2.10"
     },
     "autoload": {
@@ -50,7 +50,7 @@
     "scripts": {
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
-        "phpstan": "vendor/bin/phpstan analyse --ansi  --error-format symplify",
+        "phpstan": "vendor/bin/phpstan analyse --ansi",
         "rector": "vendor/bin/rector process --dry-run --ansi"
     }
 }
