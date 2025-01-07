@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -83,6 +84,8 @@ final class CheckCommand extends Command
             'File extensions to check',
             ['php']
         );
+
+        $this->addOption('json', null, InputOption::VALUE_NONE, 'Output as JSON');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -104,19 +107,28 @@ final class CheckCommand extends Command
         /** @var string[] $pathsToSkip */
         $pathsToSkip = (array) $input->getOption('skip-path');
 
+        $isJson = (bool) $input->getOption('json');
+
         /** @var string[] $fileExtensions */
         $fileExtensions = (array) $input->getOption('file-extension');
 
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
 
-        $this->symfonyStyle->title('1. Finding used classes');
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths);
+        $progressBar = null;
+        if (! $isJson) {
+            $this->symfonyStyle->title('1. Finding used classes');
+            $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+        }
+        $usedNames = $this->resolveUsedClassNames($phpFilePaths, $progressBar);
 
         $this->symfonyStyle->newLine(2);
 
-        $this->symfonyStyle->title('2. Extracting existing files with classes');
-
-        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths);
+        $progressBar = null;
+        if (! $isJson) {
+            $this->symfonyStyle->title('2. Extracting existing files with classes');
+            $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+        }
+        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths, $progressBar);
 
         $this->symfonyStyle->newLine(2);
 
@@ -132,24 +144,22 @@ final class CheckCommand extends Command
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
         $this->symfonyStyle->newLine();
 
-        return $this->unusedClassReporter->reportResult($unusedClassesResult);
+        return $this->unusedClassReporter->reportResult($unusedClassesResult, $isJson);
     }
 
     /**
      * @param string[] $phpFilePaths
      * @return string[]
      */
-    private function resolveUsedClassNames(array $phpFilePaths): array
+    private function resolveUsedClassNames(array $phpFilePaths, ?ProgressBar $progressBar): array
     {
-        $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
-
         $usedNames = [];
 
         foreach ($phpFilePaths as $phpFilePath) {
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
             $usedNames = [...$usedNames, ...$currentUsedNames];
 
-            $progressBar->advance();
+            $progressBar?->advance();
         }
 
         $usedNames = array_unique($usedNames);
