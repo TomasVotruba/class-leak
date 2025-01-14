@@ -119,6 +119,7 @@ final class CheckCommand extends Command
             $this->symfonyStyle->title('1. Finding used classes');
             $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
         }
+
         $usedNames = $this->resolveUsedClassNames($phpFilePaths, $progressBar);
 
         $this->symfonyStyle->newLine(2);
@@ -128,6 +129,7 @@ final class CheckCommand extends Command
             $this->symfonyStyle->title('2. Extracting existing files with classes');
             $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
         }
+
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths, $progressBar);
 
         $this->symfonyStyle->newLine(2);
