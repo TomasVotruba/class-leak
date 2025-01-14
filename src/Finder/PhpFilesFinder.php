@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace TomasVotruba\ClassLeak\Finder;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\Assert\Assert;
-
+use ClassLeak202501\Symfony\Component\Finder\Finder;
+use ClassLeak202501\Symfony\Component\Finder\SplFileInfo;
+use ClassLeak202501\Webmozart\Assert\Assert;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\Finder\PhpFilesFinderTest
  */
@@ -20,31 +18,23 @@ final class PhpFilesFinder
      *
      * @return string[]
      */
-    public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip): array
+    public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip) : array
     {
         Assert::allFileExists($paths);
         Assert::allString($fileExtensions);
-
         // fallback to config paths
         $filePaths = [];
-
-        $currentFileFinder = Finder::create()->files()
-            ->in($paths)
-            ->sortByName();
-
+        $currentFileFinder = Finder::create()->files()->in($paths)->sortByName();
         if ($pathsToSkip !== []) {
             $currentFileFinder->exclude($pathsToSkip);
         }
-
         foreach ($fileExtensions as $fileExtension) {
             $currentFileFinder->name('*.' . $fileExtension);
         }
-
         foreach ($currentFileFinder as $fileInfo) {
             /** @var SplFileInfo $fileInfo */
             $filePaths[] = $fileInfo->getRealPath();
         }
-
         return $filePaths;
     }
 }
