@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Finder;
 
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;

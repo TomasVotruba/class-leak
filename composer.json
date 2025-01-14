@@ -9,8 +9,8 @@
     "require": {
         "php": ">=8.2",
         "illuminate/container": "^11.35",
-        "nette/utils": "^3.2",
-        "nikic/php-parser": "^5.3",
+        "nette/utils": "^4.0",
+        "nikic/php-parser": "^5.4",
         "symfony/console": "^6.4",
         "symfony/finder": "^6.4",
         "webmozart/assert": "^1.11"
@@ -37,8 +37,7 @@
     },
     "replace": {
         "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-intl-normalizer": "*",
-        "symfony/polyfill-mbstring": "*"
+        "symfony/polyfill-intl-normalizer": "*"
     },
     "config": {
         "sort-packages": true,
