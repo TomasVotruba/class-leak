@@ -8,7 +8,7 @@
     ],
     "require": {
         "php": ">=8.2",
-        "illuminate/container": "^11.35",
+        "illuminate/container": "^11.44",
         "nette/utils": "^4.0",
         "nikic/php-parser": "^5.4",
         "symfony/console": "^6.4",
@@ -17,12 +17,12 @@
     },
     "require-dev": {
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.0",
-        "symplify/easy-coding-standard": "^12.4",
+        "phpecs/phpecs": "^2.1",
         "symplify/phpstan-extensions": "^12.0",
-        "symplify/vendor-patches": "^11.3",
+        "symplify/vendor-patches": "^11.4",
         "tomasvotruba/unused-public": "^2.0",
         "tracy/tracy": "^2.10"
     },
@@ -57,6 +57,9 @@
     },
     "extra": {
         "patches": {
+            "nikic/php-parser": [
+                "patches/nikic-php-parser-lib-phpparser-parserabstract-php.patch"
+            ],
             "symfony/console": [
                 "patches/symfony-console-helper-helper-php.patch"
             ]
