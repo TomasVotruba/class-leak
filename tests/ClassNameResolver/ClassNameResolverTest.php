@@ -56,7 +56,7 @@ final class ClassNameResolverTest extends AbstractTestCase
     public function testNoClassContained(string $filePath): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFilePath($filePath);
-        $this->assertNull($resolvedClassNames);
+        $this->assertNotInstanceOf(ClassNames::class, $resolvedClassNames);
     }
 
     public static function provideNoClassContainedData(): Iterator
