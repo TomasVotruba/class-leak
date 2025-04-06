@@ -1,0 +1,11 @@
+--- /dev/null
++++ ../lib/PhpParser/ParserAbstract.php
+@@ -1260,7 +1260,7 @@
+         }
+ 
+         foreach ($this->symbolToName as $name) {
+-            if ($name[0] === 'T') {
++            if ($name[0] === 'T' && defined($name)) {
+                 $tokenMap[\constant($name)] = constant(static::class . '::' . $name);
+             }
+         }
