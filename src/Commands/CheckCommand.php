@@ -112,15 +112,19 @@ final class CheckCommand extends Command
         /** @var string[] $fileExtensions */
         $fileExtensions = (array) $input->getOption('file-extension');
 
+        // we have to look for usage in every path
+        $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, []);
+
+        // but we only want to check the files that are not in the skipped paths
         $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
 
         $progressBar = null;
         if (! $isJson) {
             $this->symfonyStyle->title('1. Finding used classes');
-            $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+            $progressBar = $this->symfonyStyle->createProgressBar(count($allFilePaths));
         }
 
-        $usedNames = $this->resolveUsedClassNames($phpFilePaths, $progressBar);
+        $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressBar);
 
         $this->symfonyStyle->newLine(2);
 
