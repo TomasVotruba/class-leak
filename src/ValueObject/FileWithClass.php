@@ -1,102 +1,102 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace TomasVotruba\ClassLeak\ValueObject;
 
 use JsonSerializable;
-use Nette\Utils\FileSystem;
+use ClassLeak202504\Nette\Utils\FileSystem;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
-
-final readonly class FileWithClass implements JsonSerializable
+final class FileWithClass implements JsonSerializable
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $filePath;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $className;
+    /**
+     * @readonly
+     * @var bool
+     */
+    private $hasParentClassOrInterface;
+    /**
+     * @var string[]
+     * @readonly
+     */
+    private $attributes;
     /**
      * @param string[] $attributes
      */
-    public function __construct(
-        private string $filePath,
-        private string $className,
-        private bool $hasParentClassOrInterface,
-        private array $attributes,
-    ) {
+    public function __construct(string $filePath, string $className, bool $hasParentClassOrInterface, array $attributes)
+    {
+        $this->filePath = $filePath;
+        $this->className = $className;
+        $this->hasParentClassOrInterface = $hasParentClassOrInterface;
+        $this->attributes = $attributes;
     }
-
-    public function getClassName(): string
+    public function getClassName() : string
     {
         return $this->className;
     }
-
-    public function getFilePath(): string
+    public function getFilePath() : string
     {
         return StaticRelativeFilePathHelper::resolveFromCwd($this->filePath);
     }
-
-    public function hasParentClassOrInterface(): bool
+    public function hasParentClassOrInterface() : bool
     {
         return $this->hasParentClassOrInterface;
     }
-
     /**
      * @return string[]
      */
-    public function getAttributes(): array
+    public function getAttributes() : array
     {
         return $this->attributes;
     }
-
     /**
      * @return array{file_path: string, class: string, attributes: string[]}
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize() : array
     {
-        return [
-            'file_path' => $this->filePath,
-            'class' => $this->className,
-            'attributes' => $this->attributes,
-        ];
+        return ['file_path' => $this->filePath, 'class' => $this->className, 'attributes' => $this->attributes];
     }
-
     /**
      * Is serialized, could be hidden inside json output magic
      */
-    public function isSerialized(): bool
+    public function isSerialized() : bool
     {
         $fileContents = FileSystem::read($this->filePath);
-        return str_contains($fileContents, '@Serializer');
+        return \strpos($fileContents, '@Serializer') !== \false;
     }
-
     /**
      * Dummy check for Doctrine ORM/ODM entity
      */
-    public function isEntity(): bool
+    public function isEntity() : bool
     {
         $fileContents = FileSystem::read($this->filePath);
-
-        if (str_contains($fileContents, 'Doctrine\ODM\MongoDB\Mapping\Annotations')) {
-            return true;
+        if (\strpos($fileContents, 'ClassLeak202504\\Doctrine\\ODM\\MongoDB\\Mapping\\Annotations') !== \false) {
+            return \true;
         }
-
-        if (str_contains($fileContents, 'Doctrine\ORM\Annotations')) {
-            return true;
+        if (\strpos($fileContents, 'ClassLeak202504\\Doctrine\\ORM\\Annotations') !== \false) {
+            return \true;
         }
-
-        if (str_contains($fileContents, '@ORM\Entity')) {
-            return true;
+        if (\strpos($fileContents, '@ORM\\Entity') !== \false) {
+            return \true;
         }
-
-        if (str_contains($fileContents, '@Entity')) {
-            return true;
+        if (\strpos($fileContents, '@Entity') !== \false) {
+            return \true;
         }
-
-        if (str_contains($fileContents, '@ODM\\Document')) {
-            return true;
+        if (\strpos($fileContents, '@ODM\\Document') !== \false) {
+            return \true;
         }
-
-        return str_contains($fileContents, '@Document');
+        return \strpos($fileContents, '@Document') !== \false;
     }
-
-    public function isTrait(): bool
+    public function isTrait() : bool
     {
-        return trait_exists($this->className);
+        return \trait_exists($this->className);
     }
 }
