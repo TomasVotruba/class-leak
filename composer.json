@@ -22,7 +22,6 @@
         "rector/rector": "^2.2",
         "phpecs/phpecs": "^2.1",
         "symplify/phpstan-extensions": "^12.0",
-        "symplify/vendor-patches": "^11.4",
         "tomasvotruba/unused-public": "^2.0",
         "tracy/tracy": "^2.10"
     },
@@ -45,7 +44,6 @@
         "sort-packages": true,
         "platform-check": false,
         "allow-plugins": {
-            "cweagans/composer-patches": true,
             "phpstan/extension-installer": true
         }
     },
@@ -54,12 +52,5 @@
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi",
         "rector": "vendor/bin/rector process --dry-run --ansi"
-    },
-    "extra": {
-        "patches": {
-            "nikic/php-parser": [
-                "patches/nikic-php-parser-lib-phpparser-parserabstract-php.patch"
-            ]
-        }
     }
 }

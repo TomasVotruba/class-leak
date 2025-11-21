@@ -28,7 +28,7 @@ final class ContainerFactory
 
         $container->singleton(Parser::class, static function (): Parser {
             $parserFactory = new ParserFactory();
-            return $parserFactory->createForHostVersion();
+            return $parserFactory->createForNewestSupportedVersion();
         });
 
         $container->singleton(
