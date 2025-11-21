@@ -39,6 +39,9 @@ final class ClassNameResolverTest extends AbstractTestCase
         $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
     }
 
+    /**
+     * @return Iterator<array<int, (string|ClassNames)>>
+     */
     public static function provideData(): Iterator
     {
         yield [
@@ -59,6 +62,9 @@ final class ClassNameResolverTest extends AbstractTestCase
         $this->assertNotInstanceOf(ClassNames::class, $resolvedClassNames);
     }
 
+    /**
+     * @return Iterator<array<int, string>>
+     */
     public static function provideNoClassContainedData(): Iterator
     {
         yield [__DIR__ . '/Fixture/ClassWithApiComment.php'];

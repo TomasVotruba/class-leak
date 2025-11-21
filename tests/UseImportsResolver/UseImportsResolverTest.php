@@ -35,6 +35,9 @@ final class UseImportsResolverTest extends AbstractTestCase
         $this->assertSame($expectedClassUsages, $resolvedClassUsages);
     }
 
+    /**
+     * @return Iterator<array<array<int, mixed>, mixed>>
+     */
     public static function provideData(): Iterator
     {
         yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
