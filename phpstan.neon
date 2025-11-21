@@ -1,6 +1,8 @@
 parameters:
     level: 8
+
     errorFormat: symplify
+    reportUnmatchedIgnoredErrors: false
 
     paths:
         - bin

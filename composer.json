@@ -59,9 +59,6 @@
         "patches": {
             "nikic/php-parser": [
                 "patches/nikic-php-parser-lib-phpparser-parserabstract-php.patch"
-            ],
-            "symfony/console": [
-                "patches/symfony-console-helper-helper-php.patch"
             ]
         }
     }
