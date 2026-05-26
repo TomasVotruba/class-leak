@@ -26,4 +26,20 @@ final class PhpFilesFinderTest extends AbstractTestCase
         $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture'], ['php'], []);
         $this->assertCount(3, $phpFiles);
     }
+
+    public function testSkipPathByDirectoryName(): void
+    {
+        $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture'], ['php'], ['more-nested']);
+        $this->assertCount(2, $phpFiles);
+    }
+
+    public function testSkipPathByRelativePath(): void
+    {
+        $phpFiles = $this->phpFilesFinder->findPhpFiles(
+            [__DIR__ . '/Fixture'],
+            ['php'],
+            [__DIR__ . '/Fixture/some/more-nested']
+        );
+        $this->assertCount(2, $phpFiles);
+    }
 }

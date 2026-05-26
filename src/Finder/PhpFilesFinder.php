@@ -25,6 +25,25 @@ final class PhpFilesFinder
         Assert::allFileExists($paths);
         Assert::allString($fileExtensions);
 
+        // skip-path option supports both directory names (e.g. "vendor") and
+        // real/relative paths (e.g. "lib/vendor"). Symfony Finder's exclude()
+        // matches relative paths from each searched root, so paths that include
+        // the searched root prefix never match. Split them: pass simple
+        // directory names to exclude(), and post-filter the rest by realpath.
+        $excludedDirectoryNames = [];
+        $excludedRealPaths = [];
+        foreach ($pathsToSkip as $pathToSkip) {
+            if (! str_contains($pathToSkip, '/') && ! str_contains($pathToSkip, '\\')) {
+                $excludedDirectoryNames[] = $pathToSkip;
+                continue;
+            }
+
+            $realPath = realpath($pathToSkip);
+            if ($realPath !== false) {
+                $excludedRealPaths[] = $realPath;
+            }
+        }
+
         // fallback to config paths
         $filePaths = [];
 
@@ -32,8 +51,8 @@ final class PhpFilesFinder
             ->in($paths)
             ->sortByName();
 
-        if ($pathsToSkip !== []) {
-            $currentFileFinder->exclude($pathsToSkip);
+        if ($excludedDirectoryNames !== []) {
+            $currentFileFinder->exclude($excludedDirectoryNames);
         }
 
         foreach ($fileExtensions as $fileExtension) {
@@ -42,9 +61,33 @@ final class PhpFilesFinder
 
         foreach ($currentFileFinder as $fileInfo) {
             /** @var SplFileInfo $fileInfo */
-            $filePaths[] = $fileInfo->getRealPath();
+            $realPath = $fileInfo->getRealPath();
+
+            if ($this->isWithinExcludedPath($realPath, $excludedRealPaths)) {
+                continue;
+            }
+
+            $filePaths[] = $realPath;
         }
 
         return $filePaths;
+    }
+
+    /**
+     * @param string[] $excludedRealPaths
+     */
+    private function isWithinExcludedPath(string $realPath, array $excludedRealPaths): bool
+    {
+        foreach ($excludedRealPaths as $excludedRealPath) {
+            if ($realPath === $excludedRealPath) {
+                return true;
+            }
+
+            if (str_starts_with($realPath, $excludedRealPath . DIRECTORY_SEPARATOR)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

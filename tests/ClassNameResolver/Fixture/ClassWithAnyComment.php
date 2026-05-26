@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture;
 
-/** some comment */
+/**
+ * some comment
+ */
 final class ClassWithAnyComment
 {
 }

@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Filtering;
 
+use Illuminate\Contracts\Http\Kernel;
+use PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use PHPStan\Rules\Rule;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use Webmozart\Assert\Assert;
 
@@ -17,13 +24,13 @@ final readonly class PossiblyUnusedClassesFilter
      */
     private const DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
-        'Symfony\Component\Console\Application',
+        Application::class,
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         'Livewire\Component',
         'Illuminate\Routing\Controller',
-        'Illuminate\Contracts\Http\Kernel',
+        Kernel::class,
         'Illuminate\Support\ServiceProvider',
         // events
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
@@ -54,12 +61,12 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\HttpKernel\KernelInterface',
         'Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator',
         // console
-        'Symfony\Component\Console\Command\Command',
+        Command::class,
         'Twig\Extension\ExtensionInterface',
         'PhpCsFixer\Fixer\FixerInterface',
-        'PHPUnit\Framework\TestCase',
-        'PHPStan\Rules\Rule',
-        'PHPStan\Command\ErrorFormatter\ErrorFormatter',
+        TestCase::class,
+        Rule::class,
+        ErrorFormatter::class,
         // tests
         'Behat\Behat\Context\Context',
         // jms
@@ -67,7 +74,7 @@ final readonly class PossiblyUnusedClassesFilter
         // laravel
         'Illuminate\Support\ServiceProvider',
         'Illuminate\Foundation\Http\Kernel',
-        'Illuminate\Contracts\Console\Kernel',
+        \Illuminate\Contracts\Console\Kernel::class,
         'Illuminate\Routing\Controller',
         // Doctrine
         'Doctrine\Migrations\AbstractMigration',
@@ -78,7 +85,7 @@ final readonly class PossiblyUnusedClassesFilter
      */
     private const DEFAULT_ATTRIBUTES_TO_SKIP = [
         // Symfony
-        'Symfony\Component\Console\Attribute\AsCommand',
+        AsCommand::class,
         'Symfony\Component\HttpKernel\Attribute\AsController',
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
     ];
