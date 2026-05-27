@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
@@ -15,4 +16,6 @@ return RectorConfig::configure()
     ->withPhpSets()
     ->withRootFiles()
     ->withImportNames()
-    ->withSkip(['*/scoper.php', '*/Source/*', '*/Fixture/*']);
+    ->withSkip(['*/scoper.php', '*/Source/*', '*/Fixture/*', StringClassNameToClassConstantRector::class => [
+        __DIR__ . '/src/Filtering/PossiblyUnusedClassesFilter.php',
+    ]]);
