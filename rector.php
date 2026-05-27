@@ -11,11 +11,24 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withPreparedSets(
-        deadCode: true, codeQuality: true, codingStyle: true, typeDeclarations: true, typeDeclarationDocblocks: true, privatization: true, naming: true, earlyReturn: true, phpunitCodeQuality: true
+        deadCode: true,
+        codeQuality: true,
+        codingStyle: true,
+        typeDeclarations: true,
+        typeDeclarationDocblocks: true,
+        privatization: true,
+        naming: true,
+        earlyReturn: true,
+        phpunitCodeQuality: true
     )
     ->withPhpSets()
     ->withRootFiles()
     ->withImportNames()
-    ->withSkip(['*/scoper.php', '*/Source/*', '*/Fixture/*', StringClassNameToClassConstantRector::class => [
-        __DIR__ . '/src/Filtering/PossiblyUnusedClassesFilter.php',
-    ]]);
+    ->withSkip([
+        '*/scoper.php',
+        '*/Source/*',
+        '*/Fixture/*',
+        StringClassNameToClassConstantRector::class => [
+            __DIR__ . '/src/Filtering/PossiblyUnusedClassesFilter.php',
+        ]
+    ]);
