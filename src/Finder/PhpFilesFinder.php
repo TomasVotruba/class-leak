@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace TomasVotruba\ClassLeak\Finder;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\Assert\Assert;
-
+use ClassLeak202605\Symfony\Component\Finder\Finder;
+use ClassLeak202605\Symfony\Component\Finder\SplFileInfo;
+use ClassLeak202605\Webmozart\Assert\Assert;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\Finder\PhpFilesFinderTest
  */
@@ -20,11 +18,10 @@ final class PhpFilesFinder
      *
      * @return string[]
      */
-    public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip): array
+    public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip) : array
     {
         Assert::allFileExists($paths);
         Assert::allString($fileExtensions);
-
         // skip-path option supports both directory names (e.g. "vendor") and
         // real/relative paths (e.g. "lib/vendor"). Symfony Finder's exclude()
         // matches relative paths from each searched root, so paths that include
@@ -33,61 +30,47 @@ final class PhpFilesFinder
         $excludedDirectoryNames = [];
         $excludedRealPaths = [];
         foreach ($pathsToSkip as $pathToSkip) {
-            if (! str_contains($pathToSkip, '/') && ! str_contains($pathToSkip, '\\')) {
+            if (\strpos($pathToSkip, '/') === \false && \strpos($pathToSkip, '\\') === \false) {
                 $excludedDirectoryNames[] = $pathToSkip;
                 continue;
             }
-
-            $realPath = realpath($pathToSkip);
-            if ($realPath !== false) {
+            $realPath = \realpath($pathToSkip);
+            if ($realPath !== \false) {
                 $excludedRealPaths[] = $realPath;
             }
         }
-
         // fallback to config paths
         $filePaths = [];
-
-        $currentFileFinder = Finder::create()->files()
-            ->in($paths)
-            ->sortByName();
-
+        $currentFileFinder = Finder::create()->files()->in($paths)->sortByName();
         if ($excludedDirectoryNames !== []) {
             $currentFileFinder->exclude($excludedDirectoryNames);
         }
-
         foreach ($fileExtensions as $fileExtension) {
             $currentFileFinder->name('*.' . $fileExtension);
         }
-
         foreach ($currentFileFinder as $fileInfo) {
             /** @var SplFileInfo $fileInfo */
             $realPath = $fileInfo->getRealPath();
-
             if ($this->isWithinExcludedPath($realPath, $excludedRealPaths)) {
                 continue;
             }
-
             $filePaths[] = $realPath;
         }
-
         return $filePaths;
     }
-
     /**
      * @param string[] $excludedRealPaths
      */
-    private function isWithinExcludedPath(string $realPath, array $excludedRealPaths): bool
+    private function isWithinExcludedPath(string $realPath, array $excludedRealPaths) : bool
     {
         foreach ($excludedRealPaths as $excludedRealPath) {
             if ($realPath === $excludedRealPath) {
-                return true;
+                return \true;
             }
-
-            if (str_starts_with($realPath, $excludedRealPath . DIRECTORY_SEPARATOR)) {
-                return true;
+            if (\strncmp($realPath, $excludedRealPath . \DIRECTORY_SEPARATOR, \strlen($excludedRealPath . \DIRECTORY_SEPARATOR)) === 0) {
+                return \true;
             }
         }
-
-        return false;
+        return \false;
     }
 }
