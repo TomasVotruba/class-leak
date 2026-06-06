@@ -1,7 +1,7 @@
 {
-    "name": "tomasvotruba/class-leak",
+    "name": "anywherephp/class-leak",
     "description": "Detect leaking classes",
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": ">=7.2"
     },
