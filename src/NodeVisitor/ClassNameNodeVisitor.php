@@ -17,10 +17,9 @@ use PhpParser\NodeVisitorAbstract;
 final class ClassNameNodeVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var string
      * @see https://regex101.com/r/LXmPYG/1
      */
-    private const API_TAG_REGEX = '#@api\b#';
+    private const string API_TAG_REGEX = '#@api\b#';
 
     private string|null $className = null;
 

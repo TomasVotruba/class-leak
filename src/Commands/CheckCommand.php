@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Commands;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Closure;
+use Entropy\Console\Contract\CommandInterface;
+use Entropy\Console\Output\OutputPrinter;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
@@ -18,146 +14,103 @@ use TomasVotruba\ClassLeak\Reporting\UnusedClassesResultFactory;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
-final class CheckCommand extends Command
+final readonly class CheckCommand implements CommandInterface
 {
     public function __construct(
-        private readonly ClassNamesFinder $classNamesFinder,
-        private readonly UseImportsResolver $useImportsResolver,
-        private readonly PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
-        private readonly UnusedClassReporter $unusedClassReporter,
-        private readonly SymfonyStyle $symfonyStyle,
-        private readonly PhpFilesFinder $phpFilesFinder,
-        private readonly UnusedClassesResultFactory $unusedClassesResultFactory,
+        private ClassNamesFinder $classNamesFinder,
+        private UseImportsResolver $useImportsResolver,
+        private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
+        private UnusedClassReporter $unusedClassReporter,
+        private OutputPrinter $outputPrinter,
+        private PhpFilesFinder $phpFilesFinder,
+        private UnusedClassesResultFactory $unusedClassesResultFactory,
     ) {
-        parent::__construct();
     }
 
-    protected function configure(): void
+    public function getName(): string
     {
-        $this->setName('check');
-        $this->setDescription('Check classes that are not used in any config and in the code');
-
-        $this->addArgument(
-            'paths',
-            InputArgument::REQUIRED | InputArgument::IS_ARRAY,
-            'Files and directories to analyze'
-        );
-        $this->addOption(
-            'skip-type',
-            null,
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Class types that should be skipped'
-        );
-
-        $this->addOption(
-            'skip-suffix',
-            null,
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Class suffix that should be skipped'
-        );
-
-        $this->addOption(
-            'skip-path',
-            null,
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Paths to skip (real path or just directory name)'
-        );
-
-        $this->addOption(
-            'skip-attribute',
-            null,
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'Class attribute that should be skipped'
-        );
-
-        $this->addOption(
-            'include-entities',
-            null,
-            InputOption::VALUE_NONE,
-            'Include Doctrine ORM and ODM entities (skipped by default)',
-        );
-
-        $this->addOption(
-            'file-extension',
-            null,
-            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
-            'File extensions to check',
-            ['php']
-        );
-
-        $this->addOption('json', null, InputOption::VALUE_NONE, 'Output as JSON');
+        return 'check';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function getDescription(): string
     {
-        /** @var string[] $paths */
-        $paths = (array) $input->getArgument('paths');
+        return 'Check classes that are not used in any config and in the code';
+    }
 
-        $shouldIncludeEntities = (bool) $input->getOption('include-entities');
-
-        /** @var string[] $typesToSkip */
-        $typesToSkip = (array) $input->getOption('skip-type');
-
-        /** @var string[] $suffixesToSkip */
-        $suffixesToSkip = (array) $input->getOption('skip-suffix');
-
-        /** @var string[] $attributesToSkip */
-        $attributesToSkip = (array) $input->getOption('skip-attribute');
-
-        /** @var string[] $pathsToSkip */
-        $pathsToSkip = (array) $input->getOption('skip-path');
-
-        $isJson = (bool) $input->getOption('json');
-
-        /** @var string[] $fileExtensions */
-        $fileExtensions = (array) $input->getOption('file-extension');
-
+    /**
+     * @api called by entropy console via reflection
+     *
+     * @option $skipType
+     * @option $skipSuffix
+     * @option $skipPath
+     * @option $skipAttribute
+     * @option $fileExtension
+     *
+     * @param string[] $paths Files and directories to analyze
+     * @param string[] $skipType Class types that should be skipped
+     * @param string[] $skipSuffix Class suffix that should be skipped
+     * @param string[] $skipPath Paths to skip (real path or just directory name)
+     * @param string[] $skipAttribute Class attribute that should be skipped
+     * @param bool $includeEntities Include Doctrine ORM and ODM entities (skipped by default)
+     * @param string[] $fileExtension File extensions to check
+     * @param bool $json Output as JSON
+     */
+    public function run(
+        array $paths,
+        array $skipType = [],
+        array $skipSuffix = [],
+        array $skipPath = [],
+        array $skipAttribute = [],
+        bool $includeEntities = false,
+        array $fileExtension = ['php'],
+        bool $json = false,
+    ): int {
         // we have to look for usage in every path
-        $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, []);
+        $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, []);
 
         // but we only want to check the files that are not in the skipped paths
-        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtensions, $pathsToSkip);
+        $phpFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, $skipPath);
 
-        $progressBar = null;
-        if (! $isJson) {
-            $this->symfonyStyle->title('1. Finding used classes');
-            $progressBar = $this->symfonyStyle->createProgressBar(count($allFilePaths));
+        $progressCallback = null;
+        if (! $json) {
+            $this->outputPrinter->title('1. Finding used classes');
+            $progressCallback = $this->createProgressCallback(count($allFilePaths));
         }
 
-        $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressBar);
+        $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressCallback);
 
-        $this->symfonyStyle->newLine(2);
+        $this->outputPrinter->newline(2);
 
-        $progressBar = null;
-        if (! $isJson) {
-            $this->symfonyStyle->title('2. Extracting existing files with classes');
-            $progressBar = $this->symfonyStyle->createProgressBar(count($phpFilePaths));
+        $progressCallback = null;
+        if (! $json) {
+            $this->outputPrinter->title('2. Extracting existing files with classes');
+            $progressCallback = $this->createProgressCallback(count($phpFilePaths));
         }
 
-        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths, $progressBar);
+        $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths, $progressCallback);
 
-        $this->symfonyStyle->newLine(2);
+        $this->outputPrinter->newline(2);
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
             $usedNames,
-            $typesToSkip,
-            $suffixesToSkip,
-            $attributesToSkip,
-            $shouldIncludeEntities,
+            $skipType,
+            $skipSuffix,
+            $skipAttribute,
+            $includeEntities,
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
-        $this->symfonyStyle->newLine();
+        $this->outputPrinter->newline();
 
-        return $this->unusedClassReporter->reportResult($unusedClassesResult, $isJson);
+        return $this->unusedClassReporter->reportResult($unusedClassesResult, $json);
     }
 
     /**
      * @param string[] $phpFilePaths
      * @return string[]
      */
-    private function resolveUsedClassNames(array $phpFilePaths, ?ProgressBar $progressBar): array
+    private function resolveUsedClassNames(array $phpFilePaths, ?Closure $progressCallback): array
     {
         $usedNames = [];
 
@@ -165,12 +118,27 @@ final class CheckCommand extends Command
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
             $usedNames = [...$usedNames, ...$currentUsedNames];
 
-            $progressBar?->advance();
+            $progressCallback?->__invoke();
         }
 
         $usedNames = array_unique($usedNames);
         sort($usedNames);
 
         return $usedNames;
+    }
+
+    private function createProgressCallback(int $max): ?Closure
+    {
+        // avoid printing to stdout during unit tests
+        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
+            return null;
+        }
+
+        $current = 0;
+
+        return static function () use (&$current, $max): void {
+            ++$current;
+            fwrite(STDOUT, sprintf("\r%d/%d", $current, $max));
+        };
     }
 }

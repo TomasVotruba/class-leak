@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Entropy\Console\ConsoleApplication;
 use TomasVotruba\ClassLeak\DependencyInjection\ContainerFactory;
 
 if (file_exists(__DIR__ . '/../../../../vendor/autoload.php')) {
@@ -23,8 +21,8 @@ if (file_exists(__DIR__ . '/../vendor/scoper-autoload.php')) {
 $containerFactory = new ContainerFactory();
 $container = $containerFactory->create();
 
-/** @var Application $application */
-$application = $container->make(Application::class);
+/** @var ConsoleApplication $consoleApplication */
+$consoleApplication = $container->make(ConsoleApplication::class);
 
-$exitCode = $application->run(new ArgvInput(), new ConsoleOutput());
+$exitCode = $consoleApplication->run($argv);
 exit($exitCode);

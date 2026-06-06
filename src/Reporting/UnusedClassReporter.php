@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Reporting;
 
+use Entropy\Console\Enum\ExitCode;
+use Entropy\Console\Output\OutputPrinter;
 use Nette\Utils\Json;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use TomasVotruba\ClassLeak\ValueObject\UnusedClassesResult;
 
 final readonly class UnusedClassReporter
 {
     public function __construct(
-        private SymfonyStyle $symfonyStyle
+        private OutputPrinter $outputPrinter
     ) {
     }
 
     /**
-     * @return Command::*
+     * @return ExitCode::*
      */
     public function reportResult(UnusedClassesResult $unusedClassesResult, bool $isJson): int
     {
@@ -29,16 +29,16 @@ final readonly class UnusedClassReporter
                 'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
                 'unused_traits' => $unusedClassesResult->getTraits(),
             ];
-            $this->symfonyStyle->writeln(Json::encode($jsonResult, Json::PRETTY));
+            $this->outputPrinter->writeln(Json::encode($jsonResult, Json::PRETTY));
 
-            return Command::SUCCESS;
+            return ExitCode::SUCCESS;
         }
 
-        $this->symfonyStyle->newLine(2);
+        $this->outputPrinter->newline(2);
 
         if ($unusedClassesResult->getCount() === 0) {
-            $this->symfonyStyle->success('All services are used. Great job!');
-            return Command::SUCCESS;
+            $this->outputPrinter->greenBackground('All services are used. Great job!');
+            return ExitCode::SUCCESS;
         }
 
         // separate with and without parent, as first one can be removed more easily
@@ -60,13 +60,13 @@ final readonly class UnusedClassReporter
             $this->printLineWIthClasses('Unused traits - the easiest to remove', $unusedClassesResult->getTraits());
         }
 
-        $this->symfonyStyle->newLine();
-        $this->symfonyStyle->error(sprintf(
+        $this->outputPrinter->newline();
+        $this->outputPrinter->redBackground(sprintf(
             'Found %d unused classes. Remove them or skip them using "--skip-type" option',
             $unusedClassesResult->getCount()
         ));
 
-        return Command::FAILURE;
+        return ExitCode::ERROR;
     }
 
     /**
@@ -74,11 +74,11 @@ final readonly class UnusedClassReporter
      */
     private function printLineWIthClasses(string $title, array $fileWithClasses): void
     {
-        $this->symfonyStyle->newLine();
-        $this->symfonyStyle->section($title);
+        $this->outputPrinter->newline();
+        $this->outputPrinter->title($title);
 
         foreach ($fileWithClasses as $fileWithClass) {
-            $this->symfonyStyle->writeln($fileWithClass->getFilePath());
+            $this->outputPrinter->writeln($fileWithClass->getFilePath());
         }
     }
 }
