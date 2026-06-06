@@ -54,6 +54,7 @@ final readonly class CheckCommand implements CommandInterface
      * @param bool $includeEntities Include Doctrine ORM and ODM entities (skipped by default)
      * @param string[] $fileExtension File extensions to check
      * @param bool $json Output as JSON
+     * @param bool $ansi Kept for backward compatibility, colored output is always on
      */
     public function run(
         array $paths,
@@ -64,6 +65,7 @@ final readonly class CheckCommand implements CommandInterface
         bool $includeEntities = false,
         array $fileExtension = ['php'],
         bool $json = false,
+        bool $ansi = false,
     ): int {
         // we have to look for usage in every path
         $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, []);
