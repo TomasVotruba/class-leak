@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
-use Symfony\Component\Console\Helper\ProgressBar;
+use Closure;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
@@ -20,11 +20,11 @@ final readonly class ClassNamesFinder
      * @param string[] $filePaths
      * @return FileWithClass[]
      */
-    public function resolveClassNamesToCheck(array $filePaths, ?ProgressBar $progressBar): array
+    public function resolveClassNamesToCheck(array $filePaths, ?Closure $progressCallback): array
     {
         $filesWithClasses = [];
         foreach ($filePaths as $filePath) {
-            $progressBar?->advance();
+            $progressCallback?->__invoke();
 
             $classNames = $this->classNameResolver->resolveFromFilePath($filePath);
             if (! $classNames instanceof ClassNames) {

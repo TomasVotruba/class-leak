@@ -15,7 +15,7 @@ final readonly class PossiblyUnusedClassesFilter
      *
      * @var string[]
      */
-    private const DEFAULT_TYPES_TO_SKIP = [
+    private const array DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
         'Symfony\Component\Console\Application',
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
@@ -55,6 +55,7 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator',
         // console
         'Symfony\Component\Console\Command\Command',
+        'Entropy\Console\Contract\CommandInterface',
         'Twig\Extension\ExtensionInterface',
         'PhpCsFixer\Fixer\FixerInterface',
         'PHPUnit\Framework\TestCase',
@@ -76,7 +77,7 @@ final readonly class PossiblyUnusedClassesFilter
     /**
      * @var string[]
      */
-    private const DEFAULT_ATTRIBUTES_TO_SKIP = [
+    private const array DEFAULT_ATTRIBUTES_TO_SKIP = [
         // Symfony
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
