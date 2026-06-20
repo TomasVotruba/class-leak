@@ -7,6 +7,7 @@ namespace TomasVotruba\ClassLeak\Commands;
 use Closure;
 use Entropy\Console\Contract\CommandInterface;
 use Entropy\Console\Output\OutputPrinter;
+use Entropy\Console\Output\ProgressBar;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
@@ -24,6 +25,7 @@ final readonly class CheckCommand implements CommandInterface
         private OutputPrinter $outputPrinter,
         private PhpFilesFinder $phpFilesFinder,
         private UnusedClassesResultFactory $unusedClassesResultFactory,
+        private ProgressBar $progressBar,
     ) {
     }
 
@@ -81,7 +83,11 @@ final readonly class CheckCommand implements CommandInterface
 
         $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressCallback);
 
-        $this->outputPrinter->newline(2);
+        if (! $json) {
+            $this->progressBar->finish();
+        }
+
+        $this->outputPrinter->newline();
 
         $progressCallback = null;
         if (! $json) {
@@ -91,7 +97,11 @@ final readonly class CheckCommand implements CommandInterface
 
         $existingFilesWithClasses = $this->classNamesFinder->resolveClassNamesToCheck($phpFilePaths, $progressCallback);
 
-        $this->outputPrinter->newline(2);
+        if (! $json) {
+            $this->progressBar->finish();
+        }
+
+        $this->outputPrinter->newline();
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
@@ -129,18 +139,12 @@ final readonly class CheckCommand implements CommandInterface
         return $usedNames;
     }
 
-    private function createProgressCallback(int $max): ?Closure
+    private function createProgressCallback(int $max): Closure
     {
-        // avoid printing to stdout during unit tests
-        if (defined('PHPUNIT_COMPOSER_INSTALL')) {
-            return null;
-        }
+        $this->progressBar->start($max);
 
-        $current = 0;
-
-        return static function () use (&$current, $max): void {
-            ++$current;
-            fwrite(STDOUT, sprintf("\r%d/%d", $current, $max));
+        return function (): void {
+            $this->progressBar->advance();
         };
     }
 }

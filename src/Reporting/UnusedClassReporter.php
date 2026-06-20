@@ -37,7 +37,7 @@ final readonly class UnusedClassReporter
         $this->outputPrinter->newline(2);
 
         if ($unusedClassesResult->getCount() === 0) {
-            $this->outputPrinter->greenBackground('All services are used. Great job!');
+            $this->outputPrinter->success('All services are used. Great job!');
             return ExitCode::SUCCESS;
         }
 
@@ -61,7 +61,7 @@ final readonly class UnusedClassReporter
         }
 
         $this->outputPrinter->newline();
-        $this->outputPrinter->redBackground(sprintf(
+        $this->outputPrinter->error(sprintf(
             'Found %d unused classes. Remove them or skip them using "--skip-type" option',
             $unusedClassesResult->getCount()
         ));
