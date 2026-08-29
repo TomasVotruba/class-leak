@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace TomasVotruba\UnusedPublic;
 
 use PHPStan\Reflection\ClassReflection;
+use PHPUnit\Framework\TestCase;
 
 final class ClassTypeDetector
 {
     public function isTestClass(ClassReflection $classReflection): bool
     {
-        if ($classReflection->isSubclassOf('PHPUnit\Framework\TestCase')) {
+        if ($classReflection->isSubclassOf(TestCase::class)) {
             return true;
         }
 

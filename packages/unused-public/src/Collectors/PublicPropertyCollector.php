@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\UnusedPublic\Collectors;
 
+use Livewire\Component;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Param;
@@ -24,7 +25,7 @@ final readonly class PublicPropertyCollector implements Collector
     /**
      * @var array<string>
      */
-    private const array CLASSES_TO_SKIP = ['Livewire\Component'];
+    private const array CLASSES_TO_SKIP = [Component::class];
 
     public function __construct(
         private ApiDocStmtAnalyzer $apiDocStmtAnalyzer,

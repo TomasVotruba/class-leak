@@ -38,7 +38,7 @@ final readonly class NodeCollectorExtractor
     }
 
     /**
-     * @return array<int, array<string, list<(non-empty-array<string> | null)>>>
+     * @return array<int, array<string, list<(non-empty-array<string>|null)>>>
      */
     private function extractCollectedDatas(CollectedDataNode $collectedDataNode): array
     {

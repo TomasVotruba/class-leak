@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace TomasVotruba\UnusedPublic\Collectors;
 
+use Doctrine\Common\EventSubscriber;
+use Illuminate\Console\Command;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
+use Livewire\Component;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use PHPStan\Reflection\ClassReflection;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use TomasVotruba\UnusedPublic\ApiDocStmtAnalyzer;
 use TomasVotruba\UnusedPublic\Configuration;
 use TomasVotruba\UnusedPublic\MethodTypeDetector;
 use TomasVotruba\UnusedPublic\PublicClassMethodMatcher;
+use Twig\Extension\ExtensionInterface;
 
 /**
  * @implements Collector<ClassMethod, array{class-string, string, int}>
@@ -26,13 +32,13 @@ final readonly class PublicClassMethodCollector implements Collector
         // symfony
         'Symfony\Component\EventDispatcher\EventSubscriberInterface',
         // doctrine
-        'Doctrine\Common\EventSubscriber',
-        'JMS\Serializer\Handler\SubscribingHandlerInterface',
-        'Twig\Extension\ExtensionInterface',
-        'Symfony\Bundle\FrameworkBundle\Controller\Controller',
+        EventSubscriber::class,
+        SubscribingHandlerInterface::class,
+        ExtensionInterface::class,
+        Controller::class,
         // laravel
-        'Illuminate\Console\Command',
-        'Livewire\Component',
+        Command::class,
+        Component::class,
         'Illuminate\Http\Request',
         'Illuminate\Contracts\Mail\Mailable',
         'Illuminate\Contracts\Queue\ShouldQueue',

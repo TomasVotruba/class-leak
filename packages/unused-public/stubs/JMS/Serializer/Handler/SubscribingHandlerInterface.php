@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JMS\Serializer\Handler;
 
-if (interface_exists('JMS\Serializer\Handler\SubscribingHandlerInterface')) {
+if (interface_exists(SubscribingHandlerInterface::class)) {
     return;
 }
 

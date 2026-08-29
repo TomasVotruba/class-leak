@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Twig\Extension;
 
-if (class_exists('Twig\Extension\AbstractExtension')) {
+if (class_exists(AbstractExtension::class)) {
     return;
 }
 
