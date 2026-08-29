@@ -52,4 +52,88 @@ vendor/bin/class-leak check src --skip-attribute="App\\Attribute\\AsController"
 
 <br>
 
+## Find Unused Public Elements
+
+It's easy to find unused private class elements, because they're not used in the class itself. But what about public methods, properties and constants?
+
+This package also ships a PHPStan extension that detects them:
+
+* find a public element
+* find all its uses in code and templates
+* if none is found, it's probably unused
+
+Include the extension in your `phpstan.neon`:
+
+```yaml
+# phpstan.neon
+includes:
+    - vendor/tomasvotruba/class-leak/packages/unused-public/config/extension.neon
+```
+
+Enable each check on its own:
+
+```yaml
+# phpstan.neon
+parameters:
+    unused_public:
+        methods: true
+        properties: true
+        constants: true
+```
+
+<br>
+
+Too many reported methods to handle at once? Set a maximum allowed % instead:
+
+```yaml
+# phpstan.neon
+parameters:
+    unused_public:
+        methods: 2.5
+```
+
+Maximum 2.5 % of all public methods is allowed as unused - above alerts, below is tolerated.
+
+<br>
+
+Want to detect local-only calls that should become `private`/`protected` instead of being removed?
+
+```yaml
+# phpstan.neon
+parameters:
+    unused_public:
+        local_methods: true
+```
+
+<br>
+
+Some methods are used only in TWIG or Blade templates. Add their directories to skip false positives:
+
+```yaml
+# phpstan.neon
+parameters:
+    unused_public:
+        template_paths:
+            - templates
+```
+
+<br>
+
+Is an element public on purpose, as designed API? Mark the class or element with `@api` to skip it:
+
+```php
+final class Book
+{
+    /**
+     * @api
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+}
+```
+
+<br>
+
 Happy coding!
