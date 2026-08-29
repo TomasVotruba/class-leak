@@ -67,7 +67,7 @@ Include the extension in your `phpstan.neon`:
 ```yaml
 # phpstan.neon
 includes:
-    - vendor/tomasvotruba/class-leak/packages/unused-public/config/extension.neon
+    - vendor/tomasvotruba/class-leak/config/unused-public-extension.neon
 ```
 
 Enable each check on its own:
