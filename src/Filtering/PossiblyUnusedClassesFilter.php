@@ -82,6 +82,7 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
+        'Symfony\Component\Messenger\Attribute\AsMessageHandler',
         // Doctrine
         'Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener',
         // Twig
