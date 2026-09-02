@@ -19,6 +19,7 @@ final readonly class PossiblyUnusedClassesFilter
         // http-kernel
         'Symfony\Component\Console\Application',
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
+        'Symfony\Component\DependencyInjection\Extension\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         'Livewire\Component',
