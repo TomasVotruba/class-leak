@@ -82,6 +82,8 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
+        // Doctrine
+        'Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener',
     ];
 
     /**
