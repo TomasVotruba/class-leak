@@ -81,7 +81,8 @@ final readonly class CheckCommand implements CommandInterface
             $progressCallback = $this->createProgressCallback(count($allFilePaths));
         }
 
-        $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressCallback);
+        $usedNameCounts = $this->resolveUsedClassNameCounts($allFilePaths, $progressCallback);
+        $usedNames = array_keys($usedNameCounts);
 
         if (! $json) {
             $this->progressBar->finish();
@@ -110,6 +111,7 @@ final readonly class CheckCommand implements CommandInterface
             $skipSuffix,
             $skipAttribute,
             $includeEntities,
+            $usedNameCounts,
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
@@ -120,23 +122,24 @@ final readonly class CheckCommand implements CommandInterface
 
     /**
      * @param string[] $phpFilePaths
-     * @return string[]
+     * @return array<string, int> class name to number of files that reference it
      */
-    private function resolveUsedClassNames(array $phpFilePaths, ?Closure $progressCallback): array
+    private function resolveUsedClassNameCounts(array $phpFilePaths, ?Closure $progressCallback): array
     {
-        $usedNames = [];
+        $usedNameCounts = [];
 
         foreach ($phpFilePaths as $phpFilePath) {
-            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
-            $usedNames = [...$usedNames, ...$currentUsedNames];
+            // names are unique per file, so each file adds at most one reference per name
+            foreach ($this->useImportsResolver->resolve($phpFilePath) as $usedName) {
+                $usedNameCounts[$usedName] = ($usedNameCounts[$usedName] ?? 0) + 1;
+            }
 
             $progressCallback?->__invoke();
         }
 
-        $usedNames = array_unique($usedNames);
-        sort($usedNames);
+        ksort($usedNameCounts);
 
-        return $usedNames;
+        return $usedNameCounts;
     }
 
     private function createProgressCallback(int $max): Closure

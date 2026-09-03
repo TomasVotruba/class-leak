@@ -99,6 +99,7 @@ final readonly class PossiblyUnusedClassesFilter
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
      * @param string[] $attributesToSkip
+     * @param array<string, int> $usedClassNameCounts class name to number of files that reference it
      *
      * @return FileWithClass[]
      */
@@ -109,6 +110,7 @@ final readonly class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
+        array $usedClassNameCounts = [],
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -137,6 +139,11 @@ final readonly class PossiblyUnusedClassesFilter
                 continue;
             }
 
+            // implemented interface is injected/used elsewhere, class is resolved through it
+            if ($this->isImplementedInterfaceUsedElsewhere($fileWithClass, $usedClassNameCounts)) {
+                continue;
+            }
+
             // is excluded suffix?
             foreach ($suffixesToSkip as $suffixToSkip) {
                 if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
@@ -155,6 +162,25 @@ final readonly class PossiblyUnusedClassesFilter
         }
 
         return $possiblyUnusedFilesWithClasses;
+    }
+
+    /**
+     * The implementing class's own file references the interface once via its implements clause.
+     * A count above one means another file references it, typically constructor injection by interface.
+     *
+     * @param array<string, int> $usedClassNameCounts
+     */
+    private function isImplementedInterfaceUsedElsewhere(
+        FileWithClass $fileWithClass,
+        array $usedClassNameCounts,
+    ): bool {
+        foreach ($fileWithClass->getInterfaceNames() as $interfaceName) {
+            if (($usedClassNameCounts[$interfaceName] ?? 0) >= 2) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

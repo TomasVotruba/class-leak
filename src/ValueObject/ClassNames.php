@@ -8,11 +8,13 @@ final readonly class ClassNames
 {
     /**
      * @param string[] $attributes
+     * @param string[] $interfaceNames
      */
     public function __construct(
         private string $className,
         private bool $hasParentClassOrInterface,
         private array $attributes,
+        private array $interfaceNames = [],
     ) {
     }
 
@@ -32,5 +34,13 @@ final readonly class ClassNames
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getInterfaceNames(): array
+    {
+        return $this->interfaceNames;
     }
 }
