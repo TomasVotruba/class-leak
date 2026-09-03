@@ -53,6 +53,7 @@ final readonly class PossiblyUnusedClassesFilter
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
         'Symfony\Component\HttpKernel\KernelInterface',
+        'Symfony\Component\HttpKernel\HttpKernelInterface',
         'Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator',
         // console
         'Symfony\Component\Console\Command\Command',
