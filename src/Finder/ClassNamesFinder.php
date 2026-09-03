@@ -36,6 +36,7 @@ final readonly class ClassNamesFinder
                 $classNames->getClassName(),
                 $classNames->hasParentClassOrInterface(),
                 $classNames->getAttributes(),
+                $classNames->getInterfaceNames(),
             );
         }
 

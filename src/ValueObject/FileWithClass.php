@@ -12,12 +12,14 @@ final readonly class FileWithClass implements JsonSerializable
 {
     /**
      * @param string[] $attributes
+     * @param string[] $interfaceNames
      */
     public function __construct(
         private string $filePath,
         private string $className,
         private bool $hasParentClassOrInterface,
         private array $attributes,
+        private array $interfaceNames = [],
     ) {
     }
 
@@ -42,6 +44,14 @@ final readonly class FileWithClass implements JsonSerializable
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getInterfaceNames(): array
+    {
+        return $this->interfaceNames;
     }
 
     /**

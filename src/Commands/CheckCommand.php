@@ -8,6 +8,7 @@ use Closure;
 use Entropy\Console\Contract\CommandInterface;
 use Entropy\Console\Output\OutputPrinter;
 use Entropy\Console\Output\ProgressBar;
+use TomasVotruba\ClassLeak\ConstructorParamTypeResolver;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
@@ -20,6 +21,7 @@ final readonly class CheckCommand implements CommandInterface
     public function __construct(
         private ClassNamesFinder $classNamesFinder,
         private UseImportsResolver $useImportsResolver,
+        private ConstructorParamTypeResolver $constructorParamTypeResolver,
         private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
         private UnusedClassReporter $unusedClassReporter,
         private OutputPrinter $outputPrinter,
@@ -82,6 +84,7 @@ final readonly class CheckCommand implements CommandInterface
         }
 
         $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressCallback);
+        $constructorInjectedNames = $this->resolveConstructorInjectedNames($allFilePaths);
 
         if (! $json) {
             $this->progressBar->finish();
@@ -110,6 +113,7 @@ final readonly class CheckCommand implements CommandInterface
             $skipSuffix,
             $skipAttribute,
             $includeEntities,
+            $constructorInjectedNames,
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
@@ -137,6 +141,22 @@ final readonly class CheckCommand implements CommandInterface
         sort($usedNames);
 
         return $usedNames;
+    }
+
+    /**
+     * @param string[] $phpFilePaths
+     * @return string[] types injected as constructor parameters, used to keep classes wired by their interface
+     */
+    private function resolveConstructorInjectedNames(array $phpFilePaths): array
+    {
+        $constructorInjectedNames = [];
+
+        foreach ($phpFilePaths as $phpFilePath) {
+            $currentNames = $this->constructorParamTypeResolver->resolve($phpFilePath);
+            $constructorInjectedNames = [...$constructorInjectedNames, ...$currentNames];
+        }
+
+        return array_unique($constructorInjectedNames);
     }
 
     private function createProgressCallback(int $max): Closure

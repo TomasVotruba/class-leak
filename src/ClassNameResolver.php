@@ -47,6 +47,7 @@ final readonly class ClassNameResolver
             $className,
             $classNameNodeVisitor->hasParentClassOrInterface(),
             $classNameNodeVisitor->getAttributes(),
+            $classNameNodeVisitor->getInterfaceNames(),
         );
     }
 }

@@ -99,6 +99,7 @@ final readonly class PossiblyUnusedClassesFilter
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
      * @param string[] $attributesToSkip
+     * @param string[] $constructorInjectedNames types injected as constructor parameters somewhere
      *
      * @return FileWithClass[]
      */
@@ -109,6 +110,7 @@ final readonly class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
+        array $constructorInjectedNames = [],
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -137,6 +139,11 @@ final readonly class PossiblyUnusedClassesFilter
                 continue;
             }
 
+            // implemented interface is injected via constructor, class is resolved through it
+            if ($this->isImplementedInterfaceConstructorInjected($fileWithClass, $constructorInjectedNames)) {
+                continue;
+            }
+
             // is excluded suffix?
             foreach ($suffixesToSkip as $suffixToSkip) {
                 if (str_ends_with($fileWithClass->getClassName(), $suffixToSkip)) {
@@ -155,6 +162,21 @@ final readonly class PossiblyUnusedClassesFilter
         }
 
         return $possiblyUnusedFilesWithClasses;
+    }
+
+    /**
+     * A class whose interface is type-hinted in some constructor is wired by the container through it.
+     *
+     * @param string[] $constructorInjectedNames
+     */
+    private function isImplementedInterfaceConstructorInjected(
+        FileWithClass $fileWithClass,
+        array $constructorInjectedNames,
+    ): bool {
+        return array_any(
+            $fileWithClass->getInterfaceNames(),
+            fn (string $interfaceName): bool => in_array($interfaceName, $constructorInjectedNames, true)
+        );
     }
 
     /**
