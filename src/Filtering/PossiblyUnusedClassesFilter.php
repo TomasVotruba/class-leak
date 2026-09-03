@@ -170,17 +170,12 @@ final readonly class PossiblyUnusedClassesFilter
      *
      * @param array<string, int> $usedClassNameCounts
      */
-    private function isImplementedInterfaceUsedElsewhere(
-        FileWithClass $fileWithClass,
-        array $usedClassNameCounts,
-    ): bool {
-        foreach ($fileWithClass->getInterfaceNames() as $interfaceName) {
-            if (($usedClassNameCounts[$interfaceName] ?? 0) >= 2) {
-                return true;
-            }
-        }
-
-        return false;
+    private function isImplementedInterfaceUsedElsewhere(FileWithClass $fileWithClass, array $usedClassNameCounts): bool
+    {
+        return array_any(
+            $fileWithClass->getInterfaceNames(),
+            fn (string $interfaceName): bool => ($usedClassNameCounts[$interfaceName] ?? 0) >= 2
+        );
     }
 
     /**
