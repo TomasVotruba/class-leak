@@ -11,3 +11,6 @@ storage/*
 
 # avoid commiting scoper phar file
 php-scoper.phar
+
+# Go port build output
+/bin/class-leak-go

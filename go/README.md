@@ -8,6 +8,14 @@ paths - the same job as the PHP `vendor/bin/class-leak check`.
 
 ## Build
 
+From the repository root:
+
+```bash
+make build
+```
+
+This builds `bin/class-leak-go`. Or build directly:
+
 ```bash
 cd go
 go build -o class-leak ./cmd/class-leak
@@ -16,7 +24,7 @@ go build -o class-leak ./cmd/class-leak
 ## Usage
 
 ```bash
-./class-leak check src
+bin/class-leak-go check src
 ```
 
 Options (matching the PHP tool):
