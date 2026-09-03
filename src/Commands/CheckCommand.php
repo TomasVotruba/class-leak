@@ -8,6 +8,7 @@ use Closure;
 use Entropy\Console\Contract\CommandInterface;
 use Entropy\Console\Output\OutputPrinter;
 use Entropy\Console\Output\ProgressBar;
+use TomasVotruba\ClassLeak\ConstructorParamTypeResolver;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Finder\ClassNamesFinder;
 use TomasVotruba\ClassLeak\Finder\PhpFilesFinder;
@@ -20,6 +21,7 @@ final readonly class CheckCommand implements CommandInterface
     public function __construct(
         private ClassNamesFinder $classNamesFinder,
         private UseImportsResolver $useImportsResolver,
+        private ConstructorParamTypeResolver $constructorParamTypeResolver,
         private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
         private UnusedClassReporter $unusedClassReporter,
         private OutputPrinter $outputPrinter,
@@ -81,8 +83,8 @@ final readonly class CheckCommand implements CommandInterface
             $progressCallback = $this->createProgressCallback(count($allFilePaths));
         }
 
-        $usedNameCounts = $this->resolveUsedClassNameCounts($allFilePaths, $progressCallback);
-        $usedNames = array_keys($usedNameCounts);
+        $usedNames = $this->resolveUsedClassNames($allFilePaths, $progressCallback);
+        $constructorInjectedNames = $this->resolveConstructorInjectedNames($allFilePaths);
 
         if (! $json) {
             $this->progressBar->finish();
@@ -111,7 +113,7 @@ final readonly class CheckCommand implements CommandInterface
             $skipSuffix,
             $skipAttribute,
             $includeEntities,
-            $usedNameCounts,
+            $constructorInjectedNames,
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
@@ -122,24 +124,39 @@ final readonly class CheckCommand implements CommandInterface
 
     /**
      * @param string[] $phpFilePaths
-     * @return array<string, int> class name to number of files that reference it
+     * @return string[]
      */
-    private function resolveUsedClassNameCounts(array $phpFilePaths, ?Closure $progressCallback): array
+    private function resolveUsedClassNames(array $phpFilePaths, ?Closure $progressCallback): array
     {
-        $usedNameCounts = [];
+        $usedNames = [];
 
         foreach ($phpFilePaths as $phpFilePath) {
-            // names are unique per file, so each file adds at most one reference per name
-            foreach ($this->useImportsResolver->resolve($phpFilePath) as $usedName) {
-                $usedNameCounts[$usedName] = ($usedNameCounts[$usedName] ?? 0) + 1;
-            }
+            $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
+            $usedNames = [...$usedNames, ...$currentUsedNames];
 
             $progressCallback?->__invoke();
         }
 
-        ksort($usedNameCounts);
+        $usedNames = array_unique($usedNames);
+        sort($usedNames);
 
-        return $usedNameCounts;
+        return $usedNames;
+    }
+
+    /**
+     * @param string[] $phpFilePaths
+     * @return string[] types injected as constructor parameters, used to keep classes wired by their interface
+     */
+    private function resolveConstructorInjectedNames(array $phpFilePaths): array
+    {
+        $constructorInjectedNames = [];
+
+        foreach ($phpFilePaths as $phpFilePath) {
+            $currentNames = $this->constructorParamTypeResolver->resolve($phpFilePath);
+            $constructorInjectedNames = [...$constructorInjectedNames, ...$currentNames];
+        }
+
+        return array_unique($constructorInjectedNames);
     }
 
     private function createProgressCallback(int $max): Closure

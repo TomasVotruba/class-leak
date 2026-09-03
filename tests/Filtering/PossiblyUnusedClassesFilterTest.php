@@ -19,14 +19,9 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         $this->possiblyUnusedClassesFilter = new PossiblyUnusedClassesFilter();
     }
 
-    public function testSkipsClassWhoseInterfaceIsUsedElsewhere(): void
+    public function testSkipsClassWhoseInterfaceIsConstructorInjected(): void
     {
         $fileWithClass = $this->createSyncJudgeFileWithClass();
-
-        // interface referenced in 2 files: the implementing class and one consumer
-        $usedNameCounts = [
-            SyncJudgeInterface::class => 2,
-        ];
 
         $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
             [$fileWithClass],
@@ -35,20 +30,15 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
             [],
             [],
             false,
-            $usedNameCounts,
+            [SyncJudgeInterface::class],
         );
 
         $this->assertSame([], $possiblyUnused);
     }
 
-    public function testKeepsClassWhoseInterfaceIsUsedOnlyByItself(): void
+    public function testKeepsClassWhoseInterfaceIsNotConstructorInjected(): void
     {
         $fileWithClass = $this->createSyncJudgeFileWithClass();
-
-        // interface referenced only in the implementing class file
-        $usedNameCounts = [
-            SyncJudgeInterface::class => 1,
-        ];
 
         $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
             [$fileWithClass],
@@ -57,7 +47,7 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
             [],
             [],
             false,
-            $usedNameCounts,
+            [],
         );
 
         $this->assertSame([$fileWithClass], $possiblyUnused);

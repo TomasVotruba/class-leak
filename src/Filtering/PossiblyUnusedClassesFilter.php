@@ -99,7 +99,7 @@ final readonly class PossiblyUnusedClassesFilter
      * @param string[] $typesToSkip
      * @param string[] $suffixesToSkip
      * @param string[] $attributesToSkip
-     * @param array<string, int> $usedClassNameCounts class name to number of files that reference it
+     * @param string[] $constructorInjectedNames types injected as constructor parameters somewhere
      *
      * @return FileWithClass[]
      */
@@ -110,7 +110,7 @@ final readonly class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
-        array $usedClassNameCounts = [],
+        array $constructorInjectedNames = [],
     ): array {
         Assert::allString($usedClassNames);
         Assert::allString($typesToSkip);
@@ -139,8 +139,8 @@ final readonly class PossiblyUnusedClassesFilter
                 continue;
             }
 
-            // implemented interface is injected/used elsewhere, class is resolved through it
-            if ($this->isImplementedInterfaceUsedElsewhere($fileWithClass, $usedClassNameCounts)) {
+            // implemented interface is injected via constructor, class is resolved through it
+            if ($this->isImplementedInterfaceConstructorInjected($fileWithClass, $constructorInjectedNames)) {
                 continue;
             }
 
@@ -165,16 +165,17 @@ final readonly class PossiblyUnusedClassesFilter
     }
 
     /**
-     * The implementing class's own file references the interface once via its implements clause.
-     * A count above one means another file references it, typically constructor injection by interface.
+     * A class whose interface is type-hinted in some constructor is wired by the container through it.
      *
-     * @param array<string, int> $usedClassNameCounts
+     * @param string[] $constructorInjectedNames
      */
-    private function isImplementedInterfaceUsedElsewhere(FileWithClass $fileWithClass, array $usedClassNameCounts): bool
-    {
+    private function isImplementedInterfaceConstructorInjected(
+        FileWithClass $fileWithClass,
+        array $constructorInjectedNames,
+    ): bool {
         return array_any(
             $fileWithClass->getInterfaceNames(),
-            fn (string $interfaceName): bool => ($usedClassNameCounts[$interfaceName] ?? 0) >= 2
+            fn (string $interfaceName): bool => in_array($interfaceName, $constructorInjectedNames, true)
         );
     }
 
