@@ -4,7 +4,8 @@
     "license": "MIT",
     "bin": [
         "bin/class-leak",
-        "bin/class-leak.php"
+        "bin/class-leak.php",
+        "bin/class-leak-go"
     ],
     "require": {
         "php": ">=8.4",

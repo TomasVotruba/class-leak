@@ -6,25 +6,27 @@ A Go reimplementation of the `class-leak check` command, built on
 It finds classes that are declared but never referenced anywhere in the scanned
 paths - the same job as the PHP `vendor/bin/class-leak check`.
 
-## Build
+## Usage
 
-From the repository root:
+`bin/class-leak-go` is a launcher that builds the binary on first use, then runs
+it:
+
+```bash
+bin/class-leak-go check src
+```
+
+Pre-build it (optional) from the repository root:
 
 ```bash
 make build
 ```
 
-This builds `bin/class-leak-go`. Or build directly:
+This compiles to `bin/.class-leak-go.bin`, which the launcher runs. Or build
+directly:
 
 ```bash
 cd go
 go build -o class-leak ./cmd/class-leak
-```
-
-## Usage
-
-```bash
-bin/class-leak-go check src
 ```
 
 Options (matching the PHP tool):
