@@ -19,6 +19,7 @@ final readonly class PossiblyUnusedClassesFilter
         // http-kernel
         'Symfony\Component\Console\Application',
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
+        'Symfony\Component\DependencyInjection\Extension\Extension',
         'Symfony\Bundle\FrameworkBundle\Controller\Controller',
         'Symfony\Bundle\FrameworkBundle\Controller\AbstractController',
         'Livewire\Component',
@@ -52,6 +53,7 @@ final readonly class PossiblyUnusedClassesFilter
         // kernel
         'Symfony\Component\HttpKernel\Bundle\BundleInterface',
         'Symfony\Component\HttpKernel\KernelInterface',
+        'Symfony\Component\HttpKernel\HttpKernelInterface',
         'Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator',
         // console
         'Symfony\Component\Console\Command\Command',
@@ -82,6 +84,7 @@ final readonly class PossiblyUnusedClassesFilter
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
         'Symfony\Component\EventDispatcher\Attribute\AsEventListener',
+        'Symfony\Component\Messenger\Attribute\AsMessageHandler',
         // Doctrine
         'Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener',
         // Twig
