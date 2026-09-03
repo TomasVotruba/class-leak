@@ -67,6 +67,7 @@ final readonly class PossiblyUnusedClassesFilter
         'Behat\Behat\Context\Context',
         // jms
         'JMS\Serializer\Handler\SubscribingHandlerInterface',
+        'JMS\Serializer\EventDispatcher\EventSubscriberInterface',
         // laravel
         'Illuminate\Support\ServiceProvider',
         'Illuminate\Foundation\Http\Kernel',
