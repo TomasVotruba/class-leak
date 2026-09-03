@@ -8,16 +8,6 @@ import (
 	"github.com/rectorphp/php-parser-in-go/pkg/visitor/traverser"
 )
 
-// builtinTypes are reserved type keywords that are not class references. The
-// upstream parser resolves them as names, unlike nikic where they are plain
-// identifiers, so they are filtered out to match the PHP tool.
-var builtinTypes = map[string]bool{
-	"int": true, "float": true, "string": true, "bool": true, "void": true,
-	"array": true, "iterable": true, "callable": true, "object": true,
-	"mixed": true, "never": true, "null": true, "false": true, "true": true,
-	"self": true, "static": true, "parent": true,
-}
-
 // ResolveUsedNames returns the FQN of every class-name reference in a file,
 // sorted and unique. Names under a namespace declaration, a function call, or a
 // method name are skipped, as are const-fetch subtrees, matching the PHP visitor.
@@ -25,7 +15,6 @@ func ResolveUsedNames(pf *ParsedFile) []string {
 	uv := &usedNamesVisitor{
 		Null:     &visitor.Null{},
 		resolved: pf.Resolved,
-		nr:       newNameResolver(pf.Root),
 		skip:     map[ast.Vertex]bool{},
 		used:     map[string]bool{},
 	}
@@ -42,19 +31,18 @@ func ResolveUsedNames(pf *ParsedFile) []string {
 type usedNamesVisitor struct {
 	*visitor.Null
 	resolved map[ast.Vertex]string
-	nr       *nameResolver
 	skip     map[ast.Vertex]bool
 	used     map[string]bool
 }
 
-// Attribute names are not resolved by the upstream namespace resolver, so they
-// are collected here via the local resolver to count attribute usage.
+// Attribute names are resolved into the resolved map by the upstream namespace
+// resolver, so they are picked up here to count attribute usage.
 func (v *usedNamesVisitor) Attribute(n *ast.Attribute) {
 	if n.Name == nil {
 		return
 	}
 	v.skip[n.Name] = true
-	if fqn := v.nr.resolve(n.Name); fqn != "" && !builtinTypes[fqn] {
+	if fqn, ok := v.resolved[n.Name]; ok && !ast.IsReservedType(fqn) {
 		v.used[fqn] = true
 	}
 }
@@ -82,7 +70,7 @@ func (v *usedNamesVisitor) record(n ast.Vertex) {
 		return
 	}
 	fqn, ok := v.resolved[n]
-	if !ok || builtinTypes[fqn] {
+	if !ok || ast.IsReservedType(fqn) {
 		return
 	}
 	v.used[fqn] = true

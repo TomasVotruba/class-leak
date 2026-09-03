@@ -62,7 +62,7 @@ func isConstructor(name ast.Vertex) bool {
 func typeNames(t ast.Vertex, resolved map[ast.Vertex]string) []string {
 	switch node := t.(type) {
 	case *ast.Name, *ast.NameFullyQualified, *ast.NameRelative:
-		if fqn, ok := resolved[t]; ok && !builtinTypes[fqn] {
+		if fqn, ok := resolved[t]; ok && !ast.IsReservedType(fqn) {
 			return []string{fqn}
 		}
 	case *ast.Nullable:

@@ -4,7 +4,7 @@ import (
 	"regexp"
 
 	"github.com/rectorphp/php-parser-in-go/pkg/ast"
-	"github.com/rectorphp/php-parser-in-go/pkg/token"
+	"github.com/rectorphp/php-parser-in-go/pkg/visitor"
 	"github.com/tomasvotruba/class-leak/go/internal/model"
 )
 
@@ -17,14 +17,13 @@ var apiTagRegex = regexp.MustCompile(`@api\b`)
 func ResolveClassInfo(pf *ParsedFile) (model.ClassNames, bool) {
 	var result model.ClassNames
 	found := false
-	nr := newNameResolver(pf.Root)
 
 	for _, stmt := range classLikeStmts(pf.Root) {
-		leading, name, ok := classLikeMeta(stmt, pf.Resolved)
+		name, ok := classLikeName(stmt, pf.Resolved)
 		if !ok {
 			continue
 		}
-		if hasApiTag(leading) {
+		if apiTagRegex.MatchString(visitor.GetDocCommentText(stmt)) {
 			continue
 		}
 
@@ -45,10 +44,10 @@ func ResolveClassInfo(pf *ParsedFile) (model.ClassNames, bool) {
 					}
 				}
 			}
-			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, nr)
+			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, pf.Resolved)
 			for _, s := range node.Stmts {
 				if method, ok := s.(*ast.StmtClassMethod); ok {
-					result.Attributes = appendAttrNames(result.Attributes, method.AttrGroups, nr)
+					result.Attributes = appendAttrNames(result.Attributes, method.AttrGroups, pf.Resolved)
 				}
 			}
 		case *ast.StmtInterface:
@@ -56,13 +55,13 @@ func ResolveClassInfo(pf *ParsedFile) (model.ClassNames, bool) {
 			if len(node.Extends) > 0 {
 				result.HasParentClassOrIface = true
 			}
-			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, nr)
+			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, pf.Resolved)
 		case *ast.StmtTrait:
 			result.Kind = model.KindTrait
-			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, nr)
+			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, pf.Resolved)
 		case *ast.StmtEnum:
 			result.Kind = model.KindEnum
-			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, nr)
+			result.Attributes = appendAttrNames(result.Attributes, node.AttrGroups, pf.Resolved)
 		}
 	}
 
@@ -86,72 +85,20 @@ func classLikeStmts(root ast.Vertex) []ast.Vertex {
 	return stmts
 }
 
-// classLikeMeta returns the leading tokens (for doc-comment lookup) and the
-// resolved FQN of a class-like node. ok is false for non-class-like or
-// anonymous (unresolved) declarations.
-func classLikeMeta(stmt ast.Vertex, resolved map[ast.Vertex]string) (leading []*token.Token, name string, ok bool) {
-	fqn, hasName := resolved[stmt]
-	if !hasName {
-		return nil, "", false
+// classLikeName returns the resolved FQN of a class-like node. ok is false for
+// a non-class-like or anonymous (unresolved) declaration.
+func classLikeName(stmt ast.Vertex, resolved map[ast.Vertex]string) (string, bool) {
+	switch stmt.(type) {
+	case *ast.StmtClass, *ast.StmtInterface, *ast.StmtTrait, *ast.StmtEnum:
+		fqn, ok := resolved[stmt]
+		return fqn, ok
 	}
-
-	switch node := stmt.(type) {
-	case *ast.StmtClass:
-		leading = append(leading, attrGroupTokens(node.AttrGroups)...)
-		leading = append(leading, modifierTokens(node.Modifiers)...)
-		leading = append(leading, node.ClassTkn)
-	case *ast.StmtInterface:
-		leading = append(leading, attrGroupTokens(node.AttrGroups)...)
-		leading = append(leading, node.InterfaceTkn)
-	case *ast.StmtTrait:
-		leading = append(leading, attrGroupTokens(node.AttrGroups)...)
-		leading = append(leading, node.TraitTkn)
-	case *ast.StmtEnum:
-		leading = append(leading, attrGroupTokens(node.AttrGroups)...)
-		leading = append(leading, node.EnumTkn)
-	default:
-		return nil, "", false
-	}
-	return leading, fqn, true
-}
-
-func attrGroupTokens(groups []ast.Vertex) []*token.Token {
-	var tokens []*token.Token
-	for _, g := range groups {
-		if ag, ok := g.(*ast.AttributeGroup); ok {
-			tokens = append(tokens, ag.OpenAttributeTkn)
-		}
-	}
-	return tokens
-}
-
-func modifierTokens(modifiers []ast.Vertex) []*token.Token {
-	var tokens []*token.Token
-	for _, m := range modifiers {
-		if id, ok := m.(*ast.Identifier); ok {
-			tokens = append(tokens, id.IdentifierTkn)
-		}
-	}
-	return tokens
-}
-
-func hasApiTag(leading []*token.Token) bool {
-	for _, t := range leading {
-		if t == nil {
-			continue
-		}
-		for _, ff := range t.FreeFloating {
-			if ff.ID == token.T_DOC_COMMENT && apiTagRegex.Match(ff.Value) {
-				return true
-			}
-		}
-	}
-	return false
+	return "", false
 }
 
 // appendAttrNames resolves attribute names of the given groups and appends the
 // unique ones, preserving order.
-func appendAttrNames(existing []string, groups []ast.Vertex, nr *nameResolver) []string {
+func appendAttrNames(existing []string, groups []ast.Vertex, resolved map[ast.Vertex]string) []string {
 	for _, g := range groups {
 		ag, ok := g.(*ast.AttributeGroup)
 		if !ok {
@@ -162,8 +109,8 @@ func appendAttrNames(existing []string, groups []ast.Vertex, nr *nameResolver) [
 			if !ok || attr.Name == nil {
 				continue
 			}
-			fqn := nr.resolve(attr.Name)
-			if fqn == "" {
+			fqn, ok := resolved[attr.Name]
+			if !ok || fqn == "" {
 				continue
 			}
 			if !contains(existing, fqn) {
