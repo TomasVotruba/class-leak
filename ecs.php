@@ -9,12 +9,9 @@ return ECSConfig::configure()
         __DIR__ . '/bin',
         __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/packages',
     ])
     ->withSkip([
         // invalid syntax test fixture
         __DIR__ . '/tests/UseImportsResolver/Fixture/ParseError.php',
-        '*/Fixture/*',
-        '*/Source/*',
     ])
     ->withPreparedSets(psr12: true, common: true, symplify: true);

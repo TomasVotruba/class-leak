@@ -10,7 +10,6 @@ return RectorConfig::configure()
         __DIR__ . '/bin',
         __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/packages',
     ])
     ->withPreparedSets(
         deadCode: true,
