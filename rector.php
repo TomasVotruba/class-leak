@@ -26,7 +26,6 @@ return RectorConfig::configure()
     ->withRootFiles()
     ->withImportNames()
     ->withSkip([
-        '*/scoper.php',
         '*/Source/*',
         '*/Fixture/*',
         StringClassNameToClassConstantRector::class => [
