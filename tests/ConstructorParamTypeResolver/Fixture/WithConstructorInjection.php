@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Fixture;
 
 use TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Source\FirstInjectedInterface;
-use TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Source\SecondInjectedInterface;
 use TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Source\NotInjectedInterface;
+use TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Source\SecondInjectedInterface;
 
 final class WithConstructorInjection
 {
