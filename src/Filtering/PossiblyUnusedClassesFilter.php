@@ -200,7 +200,7 @@ final readonly class PossiblyUnusedClassesFilter
     }
 
     /**
-     * @param mixed[] $values
+     * @param string[] $values
      */
     private function assertAllString(array $values): void
     {
