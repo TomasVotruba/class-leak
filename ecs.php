@@ -14,4 +14,4 @@ return ECSConfig::configure()
         // invalid syntax test fixture
         __DIR__ . '/tests/UseImportsResolver/Fixture/ParseError.php',
     ])
-    ->withPreparedSets(psr12: true, common: true, symplify: true);
+    ->withPreparedSets(psr12: true, common: true);
