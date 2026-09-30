@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Filtering;
 
+use InvalidArgumentException;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
 final readonly class PossiblyUnusedClassesFilter
@@ -113,6 +114,10 @@ final readonly class PossiblyUnusedClassesFilter
         bool $shouldIncludeEntities,
         array $constructorInjectedNames = [],
     ): array {
+        $this->assertAllString($usedClassNames);
+        $this->assertAllString($typesToSkip);
+        $this->assertAllString($suffixesToSkip);
+
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
@@ -192,5 +197,20 @@ final readonly class PossiblyUnusedClassesFilter
         }
 
         return false;
+    }
+
+    /**
+     * @param mixed[] $values
+     */
+    private function assertAllString(array $values): void
+    {
+        foreach ($values as $value) {
+            if (! is_string($value)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Expected an array of strings, "%s" given',
+                    get_debug_type($value)
+                ));
+            }
+        }
     }
 }
