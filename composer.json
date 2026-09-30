@@ -10,8 +10,7 @@
     "require": {
         "php": ">=8.4",
         "entropy/entropy": "^0.4.16",
-        "nikic/php-parser": "^5.7",
-        "symfony/finder": "^7.4|^8.0"
+        "nikic/php-parser": "^5.7"
     },
     "require-dev": {
         "symplify/easy-coding-standard": "^13.0",
