@@ -31,7 +31,10 @@ final class UsedClassNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
-    public function enterNode(Node $node): Node|null|int
+    /**
+     * @return Node|int|null
+     */
+    public function enterNode(Node $node)
     {
         if ($node instanceof ConstFetch) {
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;

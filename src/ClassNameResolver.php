@@ -13,12 +13,16 @@ use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\ClassNameResolver\ClassNameResolverTest
  */
-final readonly class ClassNameResolver
+final class ClassNameResolver
 {
-    public function __construct(
-        private Parser $parser,
-        private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator
-    ) {
+    private Parser $parser;
+
+    private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator;
+
+    public function __construct(Parser $parser, FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator)
+    {
+        $this->parser = $parser;
+        $this->fullyQualifiedNameNodeDecorator = $fullyQualifiedNameNodeDecorator;
     }
 
     public function resolveFromFilePath(string $filePath): ?ClassNames

@@ -8,19 +8,40 @@ use Entropy\Utils\FileSystem;
 use JsonSerializable;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
-final readonly class FileWithClass implements JsonSerializable
+final class FileWithClass implements JsonSerializable
 {
+    private string $filePath;
+
+    private string $className;
+
+    private bool $hasParentClassOrInterface;
+
+    /**
+     * @var string[]
+     */
+    private array $attributes;
+
+    /**
+     * @var string[]
+     */
+    private array $interfaceNames;
+
     /**
      * @param string[] $attributes
      * @param string[] $interfaceNames
      */
     public function __construct(
-        private string $filePath,
-        private string $className,
-        private bool $hasParentClassOrInterface,
-        private array $attributes,
-        private array $interfaceNames = [],
+        string $filePath,
+        string $className,
+        bool $hasParentClassOrInterface,
+        array $attributes,
+        array $interfaceNames = []
     ) {
+        $this->filePath = $filePath;
+        $this->className = $className;
+        $this->hasParentClassOrInterface = $hasParentClassOrInterface;
+        $this->attributes = $attributes;
+        $this->interfaceNames = $interfaceNames;
     }
 
     public function getClassName(): string

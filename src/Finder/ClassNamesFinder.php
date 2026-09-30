@@ -9,11 +9,13 @@ use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\ValueObject\ClassNames;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
-final readonly class ClassNamesFinder
+final class ClassNamesFinder
 {
-    public function __construct(
-        private ClassNameResolver $classNameResolver
-    ) {
+    private ClassNameResolver $classNameResolver;
+
+    public function __construct(ClassNameResolver $classNameResolver)
+    {
+        $this->classNameResolver = $classNameResolver;
     }
 
     /**
@@ -24,7 +26,9 @@ final readonly class ClassNamesFinder
     {
         $filesWithClasses = [];
         foreach ($filePaths as $filePath) {
-            $progressCallback?->__invoke();
+            if ($progressCallback instanceof Closure) {
+                $progressCallback->__invoke();
+            }
 
             $classNames = $this->classNameResolver->resolveFromFilePath($filePath);
             if (! $classNames instanceof ClassNames) {

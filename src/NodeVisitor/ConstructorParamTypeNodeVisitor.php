@@ -31,7 +31,7 @@ final class ConstructorParamTypeNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
-    public function enterNode(Node $node): null
+    public function enterNode(Node $node)
     {
         if (! $node instanceof ClassMethod) {
             return null;

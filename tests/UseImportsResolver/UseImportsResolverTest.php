@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\UseImportsResolver;
 
 use Iterator;
-use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Fixture\SomeFactory;
@@ -27,8 +26,9 @@ final class UseImportsResolverTest extends AbstractTestCase
 
     /**
      * @param string[] $expectedClassUsages
+     *
+     * @dataProvider provideData
      */
-    #[DataProvider('provideData')]
     public function test(string $filePath, array $expectedClassUsages): void
     {
         $resolvedClassUsages = $this->useImportsResolver->resolve($filePath);

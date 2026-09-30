@@ -4,18 +4,33 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\ValueObject;
 
-final readonly class UnusedClassesResult
+final class UnusedClassesResult
 {
     /**
-     * @param FileWithClass[] $withParentsFileWithClasses
+     * @var FileWithClass[]
+     */
+    private array $parentLessFileWithClasses;
+
+    /**
+     * @var FileWithClass[]
+     */
+    private array $withParentsFileWithClasses;
+
+    /**
+     * @var FileWithClass[]
+     */
+    private array $traits;
+
+    /**
      * @param FileWithClass[] $parentLessFileWithClasses
+     * @param FileWithClass[] $withParentsFileWithClasses
      * @param FileWithClass[] $traits
      */
-    public function __construct(
-        private array $parentLessFileWithClasses,
-        private array $withParentsFileWithClasses,
-        private array $traits,
-    ) {
+    public function __construct(array $parentLessFileWithClasses, array $withParentsFileWithClasses, array $traits)
+    {
+        $this->parentLessFileWithClasses = $parentLessFileWithClasses;
+        $this->withParentsFileWithClasses = $withParentsFileWithClasses;
+        $this->traits = $traits;
     }
 
     /**

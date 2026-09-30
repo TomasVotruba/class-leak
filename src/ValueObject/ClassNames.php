@@ -4,18 +4,36 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\ValueObject;
 
-final readonly class ClassNames
+final class ClassNames
 {
+    private string $className;
+
+    private bool $hasParentClassOrInterface;
+
+    /**
+     * @var string[]
+     */
+    private array $attributes;
+
+    /**
+     * @var string[]
+     */
+    private array $interfaceNames;
+
     /**
      * @param string[] $attributes
      * @param string[] $interfaceNames
      */
     public function __construct(
-        private string $className,
-        private bool $hasParentClassOrInterface,
-        private array $attributes,
-        private array $interfaceNames = [],
+        string $className,
+        bool $hasParentClassOrInterface,
+        array $attributes,
+        array $interfaceNames = []
     ) {
+        $this->className = $className;
+        $this->hasParentClassOrInterface = $hasParentClassOrInterface;
+        $this->attributes = $attributes;
+        $this->interfaceNames = $interfaceNames;
     }
 
     public function getClassName(): string

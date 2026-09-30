@@ -10,11 +10,8 @@ use TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\Source\SecondInjec
 
 final class WithConstructorInjection
 {
-    public function __construct(
-        private readonly FirstInjectedInterface $first,
-        private readonly ?SecondInjectedInterface $second,
-        private readonly string $name,
-    ) {
+    public function __construct(FirstInjectedInterface $first, ?SecondInjectedInterface $second, string $name)
+    {
     }
 
     public function doStuff(NotInjectedInterface $notInjected): void
