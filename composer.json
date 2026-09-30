@@ -36,11 +36,6 @@
             "TomasVotruba\\ClassLeak\\Tests\\": "tests"
         }
     },
-    "replace": {
-        "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-intl-normalizer": "*",
-        "symfony/polyfill-mbstring": "*"
-    },
     "config": {
         "sort-packages": true,
         "platform-check": false,
