@@ -22,9 +22,11 @@ final class ContainerFactory
 
         $container->autodiscover(__DIR__ . '/..');
 
+        // parse using the newest supported grammar, so the tool detects modern
+        // syntax even when it runs on an older PHP version (down to 7.4)
         $container->service(Parser::class, static function (): Parser {
             $parserFactory = new ParserFactory();
-            return $parserFactory->createForHostVersion();
+            return $parserFactory->createForNewestSupportedVersion();
         });
 
         return $container;

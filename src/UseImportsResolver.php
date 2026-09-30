@@ -14,12 +14,16 @@ use TomasVotruba\ClassLeak\NodeVisitor\UsedClassNodeVisitor;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\UseImportsResolver\UseImportsResolverTest
  */
-final readonly class UseImportsResolver
+final class UseImportsResolver
 {
-    public function __construct(
-        private Parser $parser,
-        private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
-    ) {
+    private Parser $parser;
+
+    private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator;
+
+    public function __construct(Parser $parser, FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator)
+    {
+        $this->parser = $parser;
+        $this->fullyQualifiedNameNodeDecorator = $fullyQualifiedNameNodeDecorator;
     }
 
     /**

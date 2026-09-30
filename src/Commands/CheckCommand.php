@@ -16,19 +16,46 @@ use TomasVotruba\ClassLeak\Reporting\UnusedClassesResultFactory;
 use TomasVotruba\ClassLeak\Reporting\UnusedClassReporter;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
-final readonly class CheckCommand implements CommandInterface
+final class CheckCommand implements CommandInterface
 {
+    private ClassNamesFinder $classNamesFinder;
+
+    private UseImportsResolver $useImportsResolver;
+
+    private ConstructorParamTypeResolver $constructorParamTypeResolver;
+
+    private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter;
+
+    private UnusedClassReporter $unusedClassReporter;
+
+    private OutputPrinter $outputPrinter;
+
+    private PhpFilesFinder $phpFilesFinder;
+
+    private UnusedClassesResultFactory $unusedClassesResultFactory;
+
+    private ProgressBar $progressBar;
+
     public function __construct(
-        private ClassNamesFinder $classNamesFinder,
-        private UseImportsResolver $useImportsResolver,
-        private ConstructorParamTypeResolver $constructorParamTypeResolver,
-        private PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
-        private UnusedClassReporter $unusedClassReporter,
-        private OutputPrinter $outputPrinter,
-        private PhpFilesFinder $phpFilesFinder,
-        private UnusedClassesResultFactory $unusedClassesResultFactory,
-        private ProgressBar $progressBar,
+        ClassNamesFinder $classNamesFinder,
+        UseImportsResolver $useImportsResolver,
+        ConstructorParamTypeResolver $constructorParamTypeResolver,
+        PossiblyUnusedClassesFilter $possiblyUnusedClassesFilter,
+        UnusedClassReporter $unusedClassReporter,
+        OutputPrinter $outputPrinter,
+        PhpFilesFinder $phpFilesFinder,
+        UnusedClassesResultFactory $unusedClassesResultFactory,
+        ProgressBar $progressBar
     ) {
+        $this->classNamesFinder = $classNamesFinder;
+        $this->useImportsResolver = $useImportsResolver;
+        $this->constructorParamTypeResolver = $constructorParamTypeResolver;
+        $this->possiblyUnusedClassesFilter = $possiblyUnusedClassesFilter;
+        $this->unusedClassReporter = $unusedClassReporter;
+        $this->outputPrinter = $outputPrinter;
+        $this->phpFilesFinder = $phpFilesFinder;
+        $this->unusedClassesResultFactory = $unusedClassesResultFactory;
+        $this->progressBar = $progressBar;
     }
 
     public function getName(): string
@@ -69,7 +96,7 @@ final readonly class CheckCommand implements CommandInterface
         bool $includeEntities = false,
         array $fileExtension = ['php'],
         bool $json = false,
-        bool $ansi = false,
+        bool $ansi = false
     ): int {
         // we have to look for usage in every path
         $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, []);
@@ -134,7 +161,9 @@ final readonly class CheckCommand implements CommandInterface
             $currentUsedNames = $this->useImportsResolver->resolve($phpFilePath);
             $usedNames = [...$usedNames, ...$currentUsedNames];
 
-            $progressCallback?->__invoke();
+            if ($progressCallback instanceof Closure) {
+                $progressCallback->__invoke();
+            }
         }
 
         $usedNames = array_unique($usedNames);

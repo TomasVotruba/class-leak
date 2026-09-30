@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Tests\ClassNameResolver;
 
 use Iterator;
-use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\ClassLeak\ClassNameResolver;
 use TomasVotruba\ClassLeak\Tests\AbstractTestCase;
 use TomasVotruba\ClassLeak\Tests\ClassNameResolver\Fixture\ClassWithAnyComment;
@@ -25,7 +24,9 @@ final class ClassNameResolverTest extends AbstractTestCase
         $this->classNameResolver = $this->make(ClassNameResolver::class);
     }
 
-    #[DataProvider('provideData')]
+    /**
+     * @dataProvider provideData
+     */
     public function test(string $filePath, ClassNames $expectedClassNames): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFilePath($filePath);
@@ -55,7 +56,9 @@ final class ClassNameResolverTest extends AbstractTestCase
         ];
     }
 
-    #[DataProvider('provideNoClassContainedData')]
+    /**
+     * @dataProvider provideNoClassContainedData
+     */
     public function testNoClassContained(string $filePath): void
     {
         $resolvedClassNames = $this->classNameResolver->resolveFromFilePath($filePath);

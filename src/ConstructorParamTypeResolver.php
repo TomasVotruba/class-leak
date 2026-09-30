@@ -12,12 +12,16 @@ use TomasVotruba\ClassLeak\NodeVisitor\ConstructorParamTypeNodeVisitor;
 /**
  * @see \TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\ConstructorParamTypeResolverTest
  */
-final readonly class ConstructorParamTypeResolver
+final class ConstructorParamTypeResolver
 {
-    public function __construct(
-        private Parser $parser,
-        private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator,
-    ) {
+    private Parser $parser;
+
+    private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator;
+
+    public function __construct(Parser $parser, FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator)
+    {
+        $this->parser = $parser;
+        $this->fullyQualifiedNameNodeDecorator = $fullyQualifiedNameNodeDecorator;
     }
 
     /**

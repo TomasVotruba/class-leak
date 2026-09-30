@@ -7,7 +7,7 @@ namespace TomasVotruba\ClassLeak\Filtering;
 use InvalidArgumentException;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 
-final readonly class PossiblyUnusedClassesFilter
+final class PossiblyUnusedClassesFilter
 {
     /**
      * These class types are used by some kind of collector pattern. Either loaded magically, registered only in config,
@@ -15,7 +15,7 @@ final readonly class PossiblyUnusedClassesFilter
      *
      * @var string[]
      */
-    private const array DEFAULT_TYPES_TO_SKIP = [
+    private const DEFAULT_TYPES_TO_SKIP = [
         // http-kernel
         'Symfony\Component\Console\Application',
         'Symfony\Component\HttpKernel\DependencyInjection\Extension',
@@ -80,7 +80,7 @@ final readonly class PossiblyUnusedClassesFilter
     /**
      * @var string[]
      */
-    private const array DEFAULT_ATTRIBUTES_TO_SKIP = [
+    private const DEFAULT_ATTRIBUTES_TO_SKIP = [
         // Symfony
         'Symfony\Component\Console\Attribute\AsCommand',
         'Symfony\Component\HttpKernel\Attribute\AsController',
@@ -112,7 +112,7 @@ final readonly class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
-        array $constructorInjectedNames = [],
+        array $constructorInjectedNames = []
     ): array {
         $this->assertAllString($usedClassNames);
         $this->assertAllString($typesToSkip);
@@ -173,12 +173,15 @@ final readonly class PossiblyUnusedClassesFilter
      */
     private function isImplementedInterfaceConstructorInjected(
         FileWithClass $fileWithClass,
-        array $constructorInjectedNames,
+        array $constructorInjectedNames
     ): bool {
-        return array_any(
-            $fileWithClass->getInterfaceNames(),
-            fn (string $interfaceName): bool => in_array($interfaceName, $constructorInjectedNames, true)
-        );
+        foreach ($fileWithClass->getInterfaceNames() as $interfaceName) {
+            if (in_array($interfaceName, $constructorInjectedNames, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

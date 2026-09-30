@@ -19,9 +19,9 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     /**
      * @see https://regex101.com/r/LXmPYG/1
      */
-    private const string API_TAG_REGEX = '#@api\b#';
+    private const API_TAG_REGEX = '#@api\b#';
 
-    private string|null $className = null;
+    private ?string $className = null;
 
     private bool $hasParentClassOrInterface = false;
 

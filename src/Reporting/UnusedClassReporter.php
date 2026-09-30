@@ -10,11 +10,13 @@ use Entropy\Utils\Json;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use TomasVotruba\ClassLeak\ValueObject\UnusedClassesResult;
 
-final readonly class UnusedClassReporter
+final class UnusedClassReporter
 {
-    public function __construct(
-        private OutputPrinter $outputPrinter
-    ) {
+    private OutputPrinter $outputPrinter;
+
+    public function __construct(OutputPrinter $outputPrinter)
+    {
+        $this->outputPrinter = $outputPrinter;
     }
 
     /**
