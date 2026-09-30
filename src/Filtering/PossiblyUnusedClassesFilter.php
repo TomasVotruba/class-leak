@@ -112,7 +112,7 @@ final class PossiblyUnusedClassesFilter
         array $suffixesToSkip,
         array $attributesToSkip,
         bool $shouldIncludeEntities,
-        array $constructorInjectedNames = [],
+        array $constructorInjectedNames = []
     ): array {
         $this->assertAllString($usedClassNames);
         $this->assertAllString($typesToSkip);
@@ -173,7 +173,7 @@ final class PossiblyUnusedClassesFilter
      */
     private function isImplementedInterfaceConstructorInjected(
         FileWithClass $fileWithClass,
-        array $constructorInjectedNames,
+        array $constructorInjectedNames
     ): bool {
         foreach ($fileWithClass->getInterfaceNames() as $interfaceName) {
             if (in_array($interfaceName, $constructorInjectedNames, true)) {

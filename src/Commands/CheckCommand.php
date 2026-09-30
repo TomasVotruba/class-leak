@@ -96,7 +96,7 @@ final class CheckCommand implements CommandInterface
         bool $includeEntities = false,
         array $fileExtension = ['php'],
         bool $json = false,
-        bool $ansi = false,
+        bool $ansi = false
     ): int {
         // we have to look for usage in every path
         $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, []);
