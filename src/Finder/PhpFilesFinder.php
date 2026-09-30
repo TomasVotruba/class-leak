@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Finder;
 
+use InvalidArgumentException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\Assert\Assert;
 
 /**
  * @see \TomasVotruba\ClassLeak\Tests\Finder\PhpFilesFinderTest
@@ -22,8 +22,11 @@ final class PhpFilesFinder
      */
     public function findPhpFiles(array $paths, array $fileExtensions, array $pathsToSkip): array
     {
-        Assert::allFileExists($paths);
-        Assert::allString($fileExtensions);
+        foreach ($paths as $path) {
+            if (! file_exists($path)) {
+                throw new InvalidArgumentException(sprintf('Path "%s" was not found', $path));
+            }
+        }
 
         // skip-path option supports both directory names (e.g. "vendor") and
         // real/relative paths (e.g. "lib/vendor"). Symfony Finder's exclude()

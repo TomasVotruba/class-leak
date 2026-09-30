@@ -6,7 +6,7 @@ namespace TomasVotruba\ClassLeak\Reporting;
 
 use Entropy\Console\Enum\ExitCode;
 use Entropy\Console\Output\OutputPrinter;
-use Nette\Utils\Json;
+use Entropy\Utils\Json;
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
 use TomasVotruba\ClassLeak\ValueObject\UnusedClassesResult;
 
@@ -29,7 +29,7 @@ final readonly class UnusedClassReporter
                 'unused_classes_with_parents' => $unusedClassesResult->getWithParentsFileWithClasses(),
                 'unused_traits' => $unusedClassesResult->getTraits(),
             ];
-            $this->outputPrinter->writeln(Json::encode($jsonResult, Json::PRETTY));
+            $this->outputPrinter->writeln(Json::encode($jsonResult));
 
             return ExitCode::SUCCESS;
         }
