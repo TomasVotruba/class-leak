@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak\Filtering;
 
 use TomasVotruba\ClassLeak\ValueObject\FileWithClass;
-use Webmozart\Assert\Assert;
 
 final readonly class PossiblyUnusedClassesFilter
 {
@@ -114,10 +113,6 @@ final readonly class PossiblyUnusedClassesFilter
         bool $shouldIncludeEntities,
         array $constructorInjectedNames = [],
     ): array {
-        Assert::allString($usedClassNames);
-        Assert::allString($typesToSkip);
-        Assert::allString($suffixesToSkip);
-
         $possiblyUnusedFilesWithClasses = [];
 
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];

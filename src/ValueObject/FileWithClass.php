@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\ValueObject;
 
+use Entropy\Utils\FileSystem;
 use JsonSerializable;
-use Nette\Utils\FileSystem;
 use TomasVotruba\ClassLeak\FileSystem\StaticRelativeFilePathHelper;
 
 final readonly class FileWithClass implements JsonSerializable

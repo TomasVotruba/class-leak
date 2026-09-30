@@ -10,10 +10,8 @@
     "require": {
         "php": ">=8.4",
         "entropy/entropy": "^0.4.16",
-        "nette/utils": "^4.1",
         "nikic/php-parser": "^5.7",
-        "symfony/finder": "^7.4|^8.0",
-        "webmozart/assert": "^2.0"
+        "symfony/finder": "^7.4|^8.0"
     },
     "require-dev": {
         "symplify/easy-coding-standard": "^13.0",
