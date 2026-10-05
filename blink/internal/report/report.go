@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tomasvotruba/class-leak/go/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
 )
 
 // Group splits unused classes into with-parent, parentless, and trait buckets,

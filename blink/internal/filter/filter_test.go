@@ -3,8 +3,8 @@ package filter
 import (
 	"testing"
 
-	"github.com/tomasvotruba/class-leak/go/internal/graph"
-	"github.com/tomasvotruba/class-leak/go/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/graph"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
 )
 
 const filterNS = "TomasVotruba\\ClassLeak\\Tests\\Filtering\\Fixture\\"

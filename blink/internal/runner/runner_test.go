@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/tomasvotruba/class-leak/go/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
 )
 
 func names(files []model.FileWithClass) []string {

@@ -1,4 +1,4 @@
-module github.com/tomasvotruba/class-leak/go
+module github.com/tomasvotruba/class-leak/blink
 
 go 1.26
 

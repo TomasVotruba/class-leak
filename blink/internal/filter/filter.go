@@ -3,8 +3,8 @@ package filter
 import (
 	"strings"
 
-	"github.com/tomasvotruba/class-leak/go/internal/graph"
-	"github.com/tomasvotruba/class-leak/go/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/graph"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
 )
 
 // Filter narrows declared classes down to the possibly-unused ones, applying

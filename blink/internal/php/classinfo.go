@@ -5,7 +5,7 @@ import (
 
 	"github.com/rectorphp/php-parser-in-go/pkg/ast"
 	"github.com/rectorphp/php-parser-in-go/pkg/visitor"
-	"github.com/tomasvotruba/class-leak/go/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
 )
 
 var apiTagRegex = regexp.MustCompile(`@api\b`)

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tomasvotruba/class-leak/go/internal/report"
-	"github.com/tomasvotruba/class-leak/go/internal/runner"
+	"github.com/tomasvotruba/class-leak/blink/internal/report"
+	"github.com/tomasvotruba/class-leak/blink/internal/runner"
 )
 
 // stringList is a repeatable string flag.

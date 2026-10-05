@@ -1,12 +1,12 @@
 package runner
 
 import (
-	"github.com/tomasvotruba/class-leak/go/internal/filter"
-	"github.com/tomasvotruba/class-leak/go/internal/finder"
-	"github.com/tomasvotruba/class-leak/go/internal/graph"
-	"github.com/tomasvotruba/class-leak/go/internal/model"
-	"github.com/tomasvotruba/class-leak/go/internal/php"
-	"github.com/tomasvotruba/class-leak/go/internal/report"
+	"github.com/tomasvotruba/class-leak/blink/internal/filter"
+	"github.com/tomasvotruba/class-leak/blink/internal/finder"
+	"github.com/tomasvotruba/class-leak/blink/internal/graph"
+	"github.com/tomasvotruba/class-leak/blink/internal/model"
+	"github.com/tomasvotruba/class-leak/blink/internal/php"
+	"github.com/tomasvotruba/class-leak/blink/internal/report"
 )
 
 // Options mirrors the check command flags.

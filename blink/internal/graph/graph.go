@@ -2,7 +2,7 @@ package graph
 
 import (
 	"github.com/rectorphp/php-parser-in-go/pkg/visitor/classresolver"
-	"github.com/tomasvotruba/class-leak/go/internal/php"
+	"github.com/tomasvotruba/class-leak/blink/internal/php"
 )
 
 // Graph resolves class inheritance across parsed files, backing the is_a style
