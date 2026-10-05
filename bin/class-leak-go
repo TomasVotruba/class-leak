@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Launcher for the Go port. Builds the binary on first use, then runs it.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BINARY="$ROOT/bin/.class-leak-go.bin"
+
+if [ ! -x "$BINARY" ]; then
+    if ! command -v go >/dev/null 2>&1; then
+        echo "class-leak-go: Go toolchain not found; cannot build the binary" >&2
+        exit 1
+    fi
+    (cd "$ROOT/go" && go build -o "$BINARY" ./cmd/class-leak)
+fi
+
+exec "$BINARY" "$@"

@@ -86,6 +86,7 @@ final class CheckCommand implements CommandInterface
      * @param string[] $fileExtension File extensions to check
      * @param bool $json Output as JSON
      * @param bool $ansi Kept for backward compatibility, colored output is always on
+     * @param bool $blink Run the fast Go port instead of the PHP engine
      */
     public function run(
         array $paths,
@@ -96,8 +97,22 @@ final class CheckCommand implements CommandInterface
         bool $includeEntities = false,
         array $fileExtension = ['php'],
         bool $json = false,
-        bool $ansi = false
+        bool $ansi = false,
+        bool $blink = false
     ): int {
+        if ($blink) {
+            return $this->delegateToGo(
+                $paths,
+                $skipType,
+                $skipSuffix,
+                $skipPath,
+                $skipAttribute,
+                $fileExtension,
+                $includeEntities,
+                $json
+            );
+        }
+
         // we have to look for usage in every path
         $allFilePaths = $this->phpFilesFinder->findPhpFiles($paths, $fileExtension, []);
 
@@ -195,5 +210,76 @@ final class CheckCommand implements CommandInterface
         return function (): void {
             $this->progressBar->advance();
         };
+    }
+
+    /**
+     * @param string[] $paths
+     * @param string[] $skipType
+     * @param string[] $skipSuffix
+     * @param string[] $skipPath
+     * @param string[] $skipAttribute
+     * @param string[] $fileExtension
+     */
+    private function delegateToGo(
+        array $paths,
+        array $skipType,
+        array $skipSuffix,
+        array $skipPath,
+        array $skipAttribute,
+        array $fileExtension,
+        bool $includeEntities,
+        bool $json
+    ): int {
+        $launcher = __DIR__ . '/../../bin/class-leak-go';
+        if (! is_file($launcher)) {
+            fwrite(STDERR, 'class-leak --blink: Go launcher not found at ' . $launcher . PHP_EOL);
+            return 1;
+        }
+
+        $arguments = ['check'];
+        $arguments = [...$arguments, ...$paths];
+
+        foreach ($skipType as $value) {
+            $arguments[] = '--skip-type';
+            $arguments[] = $value;
+        }
+
+        foreach ($skipSuffix as $value) {
+            $arguments[] = '--skip-suffix';
+            $arguments[] = $value;
+        }
+
+        foreach ($skipPath as $value) {
+            $arguments[] = '--skip-path';
+            $arguments[] = $value;
+        }
+
+        foreach ($skipAttribute as $value) {
+            $arguments[] = '--skip-attribute';
+            $arguments[] = $value;
+        }
+
+        foreach ($fileExtension as $value) {
+            $arguments[] = '--file-extension';
+            $arguments[] = $value;
+        }
+
+        if ($includeEntities) {
+            $arguments[] = '--include-entities';
+        }
+
+        if ($json) {
+            $arguments[] = '--json';
+        }
+
+        $command = escapeshellarg($launcher);
+        foreach ($arguments as $argument) {
+            $command .= ' ' . escapeshellarg($argument);
+        }
+
+        $exitCode = 0;
+        passthru($command, $exitCode);
+
+        return $exitCode;
     }
 }
