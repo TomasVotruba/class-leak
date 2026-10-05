@@ -52,4 +52,16 @@ vendor/bin/class-leak check src --skip-attribute="App\\Attribute\\AsController"
 
 <br>
 
+## Fast mode (Go port, experimental)
+
+A Go port of the same checks is included as a proof of concept. Enable it with `--blink`:
+
+```bash
+vendor/bin/class-leak check src --blink
+```
+
+It reuses the same options and output. The `bin/class-leak-go` launcher builds the binary on first run, so a Go toolchain is required.
+
+<br>
+
 Happy coding!

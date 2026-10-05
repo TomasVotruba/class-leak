@@ -1,0 +1,106 @@
+name: Blink Parity (mautic)
+
+on:
+    pull_request: null
+    push:
+        branches:
+            - main
+
+env:
+    # ratchet gate: max allowed divergence between PHP and Go reports, in percent
+    # POC baseline ~66.65% (Go port misses classes PHP flags, but never false-flags: only_go=0)
+    # tighten this as the Go port matures
+    MAX_DIFF_PERCENT: '67.0'
+    # directory of mautic to scan - bounded to keep CI fast; both engines see the same input
+    SCAN_PATH: '/tmp/mautic/app'
+
+jobs:
+    blink_parity_mautic:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            -
+                uses: actions/setup-go@v5
+                with:
+                    go-version: '1.26'
+                    cache-dependency-path: blink/go.sum
+
+            -   name: Build blink binary
+                run: make build
+
+            -
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.4
+                    coverage: none
+
+            -   run: composer install --no-progress --ansi
+
+            -   name: Clone mautic
+                run: git clone --depth=1 https://github.com/mautic/mautic.git /tmp/mautic
+
+            -   name: Run PHP engine
+                run: php bin/class-leak check "$SCAN_PATH" --json > /tmp/php.json || true
+
+            -   name: Run blink (Go)
+                run: php bin/class-leak check "$SCAN_PATH" --json --blink > /tmp/go.json || true
+
+            -   name: Compare reports
+                run: |
+                    extract='[.unused_parent_less_classes[], .unused_classes_with_parents[], .unused_traits[]] | map(.file_path) | unique'
+                    jq -S "$extract" /tmp/php.json > /tmp/php.list
+                    jq -S "$extract" /tmp/go.json > /tmp/go.list
+
+                    both=$(jq -s -r '(.[0] - (.[0] - .[1])) | length' /tmp/php.list /tmp/go.list)
+                    union=$(jq -s -r '(.[0] + .[1]) | unique | length' /tmp/php.list /tmp/go.list)
+                    only_php=$(jq -s -r '(.[0] - .[1]) | length' /tmp/php.list /tmp/go.list)
+                    only_go=$(jq -s -r '(.[1] - .[0]) | length' /tmp/php.list /tmp/go.list)
+
+                    echo "Unused classes found by both: $both"
+                    echo "Only PHP: $only_php"
+                    echo "Only Go (blink): $only_go"
+                    echo "Union: $union"
+
+                    if [ "$union" -eq 0 ]; then
+                        parity='100.0'
+                        diff_pct='0.0'
+                    else
+                        diff_count=$((only_php + only_go))
+                        parity=$(awk "BEGIN { printf \"%.2f\", (($union - $diff_count) / $union) * 100 }")
+                        diff_pct=$(awk "BEGIN { printf \"%.2f\", ($diff_count / $union) * 100 }")
+                    fi
+
+                    echo "Parity: ${parity}% (divergence ${diff_pct}%, threshold ${MAX_DIFF_PERCENT}%)"
+
+                    {
+                        echo "### Blink parity on mautic/mautic"
+                        echo ""
+                        echo "- Found by both: **$both**"
+                        echo "- Only PHP: **$only_php**"
+                        echo "- Only Go (blink): **$only_go**"
+                        echo "- Parity: **${parity}%** (divergence ${diff_pct}%, threshold ${MAX_DIFF_PERCENT}%)"
+                    } >> "$GITHUB_STEP_SUMMARY"
+
+                    if [ "$only_php" -gt 0 ] || [ "$only_go" -gt 0 ]; then
+                        {
+                            echo ""
+                            echo "<details><summary>Diverging files</summary>"
+                            echo ""
+                            echo '```'
+                            echo "Only PHP:"
+                            jq -s -r '(.[0] - .[1])[]' /tmp/php.list /tmp/go.list
+                            echo ""
+                            echo "Only Go (blink):"
+                            jq -s -r '(.[1] - .[0])[]' /tmp/php.list /tmp/go.list
+                            echo '```'
+                            echo "</details>"
+                        } >> "$GITHUB_STEP_SUMMARY"
+                    fi
+
+                    over=$(awk "BEGIN { print ($diff_pct > $MAX_DIFF_PERCENT) ? 1 : 0 }")
+                    if [ "$over" -eq 1 ]; then
+                        echo "::error::Divergence ${diff_pct}% exceeds threshold ${MAX_DIFF_PERCENT}%"
+                        exit 1
+                    fi
