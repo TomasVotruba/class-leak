@@ -130,9 +130,8 @@ final class CheckCommand implements CommandInterface
 
         if (! $json) {
             $this->progressBar->finish();
+            $this->outputPrinter->newline();
         }
-
-        $this->outputPrinter->newline();
 
         $progressCallback = null;
         if (! $json) {
@@ -144,9 +143,8 @@ final class CheckCommand implements CommandInterface
 
         if (! $json) {
             $this->progressBar->finish();
+            $this->outputPrinter->newline();
         }
-
-        $this->outputPrinter->newline();
 
         $possiblyUnusedFilesWithClasses = $this->possiblyUnusedClassesFilter->filter(
             $existingFilesWithClasses,
@@ -159,7 +157,9 @@ final class CheckCommand implements CommandInterface
         );
 
         $unusedClassesResult = $this->unusedClassesResultFactory->create($possiblyUnusedFilesWithClasses);
-        $this->outputPrinter->newline();
+        if (! $json) {
+            $this->outputPrinter->newline();
+        }
 
         return $this->unusedClassReporter->reportResult($unusedClassesResult, $json);
     }
