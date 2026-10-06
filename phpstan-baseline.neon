@@ -1,0 +1,37 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\ClassNameResolver\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/ClassNameResolver.php
+
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\Commands\\CheckCommand\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/Commands/CheckCommand.php
+
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\ConstructorParamTypeResolver\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/ConstructorParamTypeResolver.php
+
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\Finder\\ClassNamesFinder\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/Finder/ClassNamesFinder.php
+
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\Reporting\\UnusedClassReporter\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/Reporting/UnusedClassReporter.php
+
+		-
+			message: '#^Unused TomasVotruba\\ClassLeak\\UseImportsResolver\:\:__construct$#'
+			identifier: shipmonk.deadMethod
+			count: 1
+			path: src/UseImportsResolver.php

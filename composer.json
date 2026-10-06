@@ -14,14 +14,14 @@
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "symplify/easy-coding-standard": "^13.0",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^9.6",
         "rector/jack": "^1.0",
         "rector/rector": "^2.4",
+        "shipmonk/dead-code-detector": "^1.4",
+        "symplify/easy-coding-standard": "^13.0",
         "symplify/phpstan-extensions": "^12",
-        "tomasvotruba/unused-public": "^2.2",
         "tracy/tracy": "^2.12"
     },
     "autoload": {
