@@ -1,7 +1,3 @@
-# baseline covers DI-instantiated constructors flagged as dead
-includes:
-    - phpstan-baseline.neon
-
 parameters:
     level: 8
 
@@ -22,3 +18,9 @@ parameters:
     ignoreErrors:
         # enum error type
         - '#Method TomasVotruba\\ClassLeak\\Reporting\\UnusedClassReporter::reportResult\(\) never returns 2 so it can be removed from the return type#'
+
+services:
+    -
+        class: TomasVotruba\ClassLeak\Tests\PHPStan\DiConstructorUsageProvider
+        tags:
+            - shipmonk.deadCode.memberUsageProvider
