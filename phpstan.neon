@@ -19,8 +19,7 @@ parameters:
         # enum error type
         - '#Method TomasVotruba\\ClassLeak\\Reporting\\UnusedClassReporter::reportResult\(\) never returns 2 so it can be removed from the return type#'
 
-services:
-    -
-        class: TomasVotruba\ClassLeak\Tests\PHPStan\DiConstructorUsageProvider
-        tags:
-            - shipmonk.deadCode.memberUsageProvider
+        # services are instantiated via the entropy DI container through reflection
+        -
+            identifier: shipmonk.deadMethod
+            message: '#^Unused .*?::__construct$#'
