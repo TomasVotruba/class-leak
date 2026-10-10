@@ -11,6 +11,7 @@ use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Fixture\SomeFactory;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FirstUsedClass;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\FourthUsedClass;
 use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\SecondUsedClass;
+use TomasVotruba\ClassLeak\Tests\UseImportsResolver\Source\ThirdUsedClass;
 use TomasVotruba\ClassLeak\UseImportsResolver;
 
 final class UseImportsResolverTest extends AbstractTestCase
@@ -42,6 +43,7 @@ final class UseImportsResolverTest extends AbstractTestCase
     {
         yield [__DIR__ . '/Fixture/FileUsingOtherClasses.php', [FirstUsedClass::class, SecondUsedClass::class]];
         yield [__DIR__ . '/Fixture/FileUsesStaticCall.php', [SomeFactory::class, FourthUsedClass::class]];
+        yield [__DIR__ . '/Fixture/FileImportingForDocBlockOnly.php', [ThirdUsedClass::class]];
     }
 
     public function testParseError(): void

@@ -41,6 +41,7 @@ final class ClassNamesFinder
                 $classNames->hasParentClassOrInterface(),
                 $classNames->getAttributes(),
                 $classNames->getInterfaceNames(),
+                $classNames->getParentTypeNames(),
             );
         }
 

@@ -21,19 +21,27 @@ final class ClassNames
     private array $interfaceNames;
 
     /**
+     * @var string[]
+     */
+    private array $parentTypeNames;
+
+    /**
      * @param string[] $attributes
      * @param string[] $interfaceNames
+     * @param string[] $parentTypeNames
      */
     public function __construct(
         string $className,
         bool $hasParentClassOrInterface,
         array $attributes,
-        array $interfaceNames = []
+        array $interfaceNames = [],
+        array $parentTypeNames = []
     ) {
         $this->className = $className;
         $this->hasParentClassOrInterface = $hasParentClassOrInterface;
         $this->attributes = $attributes;
         $this->interfaceNames = $interfaceNames;
+        $this->parentTypeNames = $parentTypeNames;
     }
 
     public function getClassName(): string
@@ -60,5 +68,13 @@ final class ClassNames
     public function getInterfaceNames(): array
     {
         return $this->interfaceNames;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getParentTypeNames(): array
+    {
+        return $this->parentTypeNames;
     }
 }

@@ -16,6 +16,7 @@ func TestResolveUsedNames(t *testing.T) {
 	}{
 		{"FileUsingOtherClasses.php", []string{uiSourceNS + "FirstUsedClass", uiSourceNS + "SecondUsedClass"}},
 		{"FileUsesStaticCall.php", []string{uiFixtureNS + "SomeFactory", uiSourceNS + "FourthUsedClass"}},
+		{"FileImportingForDocBlockOnly.php", []string{uiSourceNS + "ThirdUsedClass"}},
 	}
 	for _, c := range cases {
 		pf, err := Parse(uiFixture + c.file)

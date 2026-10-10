@@ -38,6 +38,7 @@ final class ClassNameResolverTest extends AbstractTestCase
             $resolvedClassNames->hasParentClassOrInterface()
         );
         $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
+        $this->assertSame($expectedClassNames->getParentTypeNames(), $resolvedClassNames->getParentTypeNames());
     }
 
     /**
@@ -53,6 +54,19 @@ final class ClassNameResolverTest extends AbstractTestCase
         yield [
             __DIR__ . '/Fixture/ClassWithAnyComment.php',
             new ClassNames(ClassWithAnyComment::class, false, []),
+        ];
+
+        // last class-like wins, with its own parents only
+        $fixtureNamespace = 'TomasVotruba\\ClassLeak\\Tests\\ClassNameResolver\\Fixture\\';
+        yield [
+            __DIR__ . '/Fixture/TwoClassesInFile.php',
+            new ClassNames(
+                $fixtureNamespace . 'SecondClassInFile',
+                true,
+                [],
+                [$fixtureNamespace . 'SecondInterface'],
+                [$fixtureNamespace . 'SecondParent', $fixtureNamespace . 'SecondInterface']
+            ),
         ];
     }
 

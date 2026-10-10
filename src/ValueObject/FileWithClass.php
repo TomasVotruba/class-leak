@@ -27,21 +27,29 @@ final class FileWithClass implements JsonSerializable
     private array $interfaceNames;
 
     /**
+     * @var string[]
+     */
+    private array $parentTypeNames;
+
+    /**
      * @param string[] $attributes
      * @param string[] $interfaceNames
+     * @param string[] $parentTypeNames direct parent class, implemented and extended interfaces
      */
     public function __construct(
         string $filePath,
         string $className,
         bool $hasParentClassOrInterface,
         array $attributes,
-        array $interfaceNames = []
+        array $interfaceNames = [],
+        array $parentTypeNames = []
     ) {
         $this->filePath = $filePath;
         $this->className = $className;
         $this->hasParentClassOrInterface = $hasParentClassOrInterface;
         $this->attributes = $attributes;
         $this->interfaceNames = $interfaceNames;
+        $this->parentTypeNames = $parentTypeNames;
     }
 
     public function getClassName(): string
@@ -73,6 +81,14 @@ final class FileWithClass implements JsonSerializable
     public function getInterfaceNames(): array
     {
         return $this->interfaceNames;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getParentTypeNames(): array
+    {
+        return $this->parentTypeNames;
     }
 
     /**
