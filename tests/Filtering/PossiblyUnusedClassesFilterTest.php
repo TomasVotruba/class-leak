@@ -143,6 +143,54 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         $this->assertSame([$unrelatedFileWithClass], $possiblyUnused);
     }
 
+    public function testSkipsControllerAndTestByDefaultSuffix(): void
+    {
+        $testFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\SomeTest',
+            true,
+            [],
+            [],
+            ['App\NotAutoloaded\AbstractMysqlTestCase'],
+        );
+
+        $abstractTestCaseFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\AbstractMysqlTestCase',
+            true,
+            [],
+            [],
+            ['Vendor\NotAutoloaded\WebTestCase'],
+        );
+
+        $controllerFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\KeepAliveController',
+            false,
+            [],
+            [],
+        );
+
+        $serviceFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\ControllerResolver',
+            false,
+            [],
+            [],
+        );
+
+        $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
+            [$testFileWithClass, $abstractTestCaseFileWithClass, $controllerFileWithClass, $serviceFileWithClass],
+            [],
+            [],
+            [],
+            [],
+            false,
+        );
+
+        $this->assertSame([$serviceFileWithClass], $possiblyUnused);
+    }
+
     private function createSyncJudgeFileWithClass(): FileWithClass
     {
         return new FileWithClass(

@@ -35,6 +35,7 @@ func (f *Filter) Filter(
 
 	types := append(append([]string{}, typesToSkip...), defaultTypesToSkip...)
 	attributes := append(append([]string{}, attributesToSkip...), defaultAttributesToSkip...)
+	suffixes := append(append([]string{}, suffixesToSkip...), defaultSuffixesToSkip...)
 
 	var result []model.FileWithClass
 
@@ -58,7 +59,7 @@ func (f *Filter) Filter(
 		if isInterfaceConstructorInjected(fileWithClass, injected) {
 			continue
 		}
-		if hasSkippedSuffix(fileWithClass.ClassName, suffixesToSkip) {
+		if hasSkippedSuffix(fileWithClass.ClassName, suffixes) {
 			continue
 		}
 		if f.hasSkippedAttribute(fileWithClass.Attributes, attributes) {

@@ -36,10 +36,10 @@ vendor/bin/class-leak check src --skip-type="App\\Contract\\SomeInterface"
 
 <br>
 
-What if your classes do no implement any type?
+Classes ending with `Controller`, `Test` or `TestCase` are skipped by default, as they are called by the router or the test runner. What if your other classes do no implement any type?
 
 ```bash
-vendor/bin/class-leak check src --skip-suffix="Controller"
+vendor/bin/class-leak check src --skip-suffix="Handler"
 ```
 
 <br>

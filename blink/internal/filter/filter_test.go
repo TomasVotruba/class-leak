@@ -79,3 +79,15 @@ func TestSkipsByUsedName(t *testing.T) {
 		t.Fatalf("used name should be skipped, got %v", got)
 	}
 }
+
+func TestSkipsControllerAndTestByDefaultSuffix(t *testing.T) {
+	f := New(graph.New())
+	controller := model.FileWithClass{ClassName: "App\\Controller\\KeepAliveController"}
+	test := model.FileWithClass{ClassName: "App\\Tests\\SomeTest"}
+	abstractTestCase := model.FileWithClass{ClassName: "App\\Tests\\AbstractMysqlTestCase"}
+	service := model.FileWithClass{ClassName: "App\\Service\\ControllerResolver"}
+	got := f.Filter([]model.FileWithClass{controller, test, abstractTestCase, service}, nil, nil, nil, nil, false, nil)
+	if len(got) != 1 || got[0].ClassName != service.ClassName {
+		t.Fatalf("controllers and tests should be skipped by default, got %v", got)
+	}
+}
