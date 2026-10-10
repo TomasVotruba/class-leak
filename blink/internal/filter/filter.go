@@ -31,6 +31,7 @@ func (f *Filter) Filter(
 ) []model.FileWithClass {
 	used := toSet(usedClassNames)
 	injected := toSet(constructorInjectedNames)
+	implementedInterfaces := resolveImplementedInterfaceNames(filesWithClasses)
 
 	types := append(append([]string{}, typesToSkip...), defaultTypesToSkip...)
 	attributes := append(append([]string{}, attributesToSkip...), defaultAttributesToSkip...)
@@ -39,6 +40,10 @@ func (f *Filter) Filter(
 
 	for _, fileWithClass := range filesWithClasses {
 		if used[fileWithClass.ClassName] {
+			continue
+		}
+		// interface is implemented at least once, class is resolved through it
+		if implementedInterfaces[fileWithClass.ClassName] {
 			continue
 		}
 		if f.shouldSkip(fileWithClass.ClassName, types) {
@@ -90,6 +95,17 @@ func hasSkippedSuffix(className string, suffixes []string) bool {
 		}
 	}
 	return false
+}
+
+// resolveImplementedInterfaceNames collects interface names implemented by at least one scanned class.
+func resolveImplementedInterfaceNames(filesWithClasses []model.FileWithClass) map[string]bool {
+	implemented := make(map[string]bool)
+	for _, fileWithClass := range filesWithClasses {
+		for _, interfaceName := range fileWithClass.InterfaceNames {
+			implemented[interfaceName] = true
+		}
+	}
+	return implemented
 }
 
 func isInterfaceConstructorInjected(fileWithClass model.FileWithClass, injected map[string]bool) bool {

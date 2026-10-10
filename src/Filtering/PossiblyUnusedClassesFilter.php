@@ -123,8 +123,15 @@ final class PossiblyUnusedClassesFilter
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
+        $implementedInterfaceNames = $this->resolveImplementedInterfaceNames($filesWithClasses);
+
         foreach ($filesWithClasses as $fileWithClass) {
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
+                continue;
+            }
+
+            // interface is implemented at least once, class is resolved through it
+            if (in_array($fileWithClass->getClassName(), $implementedInterfaceNames, true)) {
                 continue;
             }
 
@@ -164,6 +171,20 @@ final class PossiblyUnusedClassesFilter
         }
 
         return $possiblyUnusedFilesWithClasses;
+    }
+
+    /**
+     * @param FileWithClass[] $filesWithClasses
+     * @return string[] interface names implemented by at least one scanned class
+     */
+    private function resolveImplementedInterfaceNames(array $filesWithClasses): array
+    {
+        $implementedInterfaceNames = [];
+        foreach ($filesWithClasses as $fileWithClass) {
+            $implementedInterfaceNames = [...$implementedInterfaceNames, ...$fileWithClass->getInterfaceNames()];
+        }
+
+        return array_unique($implementedInterfaceNames);
     }
 
     /**

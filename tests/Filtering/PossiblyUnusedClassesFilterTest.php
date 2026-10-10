@@ -53,6 +53,31 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         $this->assertSame([$fileWithClass], $possiblyUnused);
     }
 
+    public function testSkipsInterfaceImplementedAtLeastOnce(): void
+    {
+        $interfaceFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudgeInterface.php',
+            SyncJudgeInterface::class,
+            false,
+            [],
+            [],
+        );
+
+        $syncJudgeFileWithClass = $this->createSyncJudgeFileWithClass();
+
+        $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
+            [$interfaceFileWithClass, $syncJudgeFileWithClass],
+            [],
+            [],
+            [],
+            [],
+            false,
+            [],
+        );
+
+        $this->assertSame([$syncJudgeFileWithClass], $possiblyUnused);
+    }
+
     private function createSyncJudgeFileWithClass(): FileWithClass
     {
         return new FileWithClass(

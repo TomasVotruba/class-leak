@@ -41,6 +41,18 @@ func TestKeepsClassWhoseInterfaceIsNotConstructorInjected(t *testing.T) {
 	}
 }
 
+func TestSkipsInterfaceImplementedAtLeastOnce(t *testing.T) {
+	f := New(graph.New())
+	iface := model.FileWithClass{ClassName: filterNS + "SyncJudgeInterface"}
+	got := f.Filter(
+		[]model.FileWithClass{iface, syncJudge()},
+		nil, nil, nil, nil, false, nil,
+	)
+	if len(got) != 1 || got[0].ClassName != filterNS+"SyncJudge" {
+		t.Fatalf("implemented interface should be skipped, got %v", got)
+	}
+}
+
 func TestSkipsByDefaultType(t *testing.T) {
 	f := New(graph.New())
 	fwc := model.FileWithClass{ClassName: "Symfony\\Component\\Console\\Command\\Command"}
