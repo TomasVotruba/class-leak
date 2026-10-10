@@ -43,6 +43,7 @@ var defaultTypesToSkip = []string{
 	`Symfony\Component\Console\Command\Command`,
 	`Entropy\Console\Contract\CommandInterface`,
 	`Twig\Extension\ExtensionInterface`,
+	`Twig\Extension\AbstractExtension`,
 	`PhpCsFixer\Fixer\FixerInterface`,
 	`PHPUnit\Framework\TestCase`,
 	`Symfony\Bundle\FrameworkBundle\Test\KernelTestCase`,
