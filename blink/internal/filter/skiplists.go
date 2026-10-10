@@ -45,6 +45,11 @@ var defaultTypesToSkip = []string{
 	`Twig\Extension\ExtensionInterface`,
 	`PhpCsFixer\Fixer\FixerInterface`,
 	`PHPUnit\Framework\TestCase`,
+	`Symfony\Bundle\FrameworkBundle\Test\KernelTestCase`,
+	`Symfony\Bundle\FrameworkBundle\Test\WebTestCase`,
+	`Symfony\Component\Form\Test\FormIntegrationTestCase`,
+	`Symfony\Component\Validator\Test\ConstraintValidatorTestCase`,
+	`Twig\Test\IntegrationTestCase`,
 	`PHPStan\Rules\Rule`,
 	`PHPStan\Command\ErrorFormatter\ErrorFormatter`,
 	// tests
@@ -75,4 +80,11 @@ var defaultAttributesToSkip = []string{
 	`Twig\Attribute\AsTwigFunction`,
 	`Twig\Attribute\AsTwigFilter`,
 	`Twig\Attribute\AsTwigTest`,
+}
+
+// defaultSuffixesToSkip mark entry points, called by the router or the test runner, never by other code.
+var defaultSuffixesToSkip = []string{
+	`Controller`,
+	`Test`,
+	`TestCase`,
 }

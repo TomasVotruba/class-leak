@@ -61,6 +61,11 @@ final class PossiblyUnusedClassesFilter
         'Twig\Extension\ExtensionInterface',
         'PhpCsFixer\Fixer\FixerInterface',
         'PHPUnit\Framework\TestCase',
+        'Symfony\Bundle\FrameworkBundle\Test\KernelTestCase',
+        'Symfony\Bundle\FrameworkBundle\Test\WebTestCase',
+        'Symfony\Component\Form\Test\FormIntegrationTestCase',
+        'Symfony\Component\Validator\Test\ConstraintValidatorTestCase',
+        'Twig\Test\IntegrationTestCase',
         'PHPStan\Rules\Rule',
         'PHPStan\Command\ErrorFormatter\ErrorFormatter',
         // tests
@@ -96,6 +101,13 @@ final class PossiblyUnusedClassesFilter
     ];
 
     /**
+     * Entry points, called by the router or the test runner, never by other code.
+     *
+     * @var string[]
+     */
+    private const DEFAULT_SUFFIXES_TO_SKIP = ['Controller', 'Test', 'TestCase'];
+
+    /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
      * @param string[] $typesToSkip
@@ -122,6 +134,7 @@ final class PossiblyUnusedClassesFilter
 
         $typesToSkip = [...$typesToSkip, ...self::DEFAULT_TYPES_TO_SKIP];
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
+        $suffixesToSkip = [...$suffixesToSkip, ...self::DEFAULT_SUFFIXES_TO_SKIP];
 
         $implementedInterfaceNames = $this->resolveImplementedInterfaceNames($filesWithClasses);
         $parentTypeNamesByClass = $this->resolveParentTypeNamesByClass($filesWithClasses);
