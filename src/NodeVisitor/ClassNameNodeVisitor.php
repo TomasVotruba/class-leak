@@ -36,6 +36,13 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private array $interfaceNames = [];
 
     /**
+     * Direct parent class, implemented and extended interfaces
+     *
+     * @var string[]
+     */
+    private array $parentTypeNames = [];
+
+    /**
      * @param Node\Stmt[] $nodes
      * @return Node\Stmt[]
      */
@@ -45,6 +52,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         $this->hasParentClassOrInterface = false;
         $this->attributes = [];
         $this->interfaceNames = [];
+        $this->parentTypeNames = [];
 
         return $nodes;
     }
@@ -68,9 +76,13 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         }
 
         $this->className = $node->namespacedName->toString();
+
+        // last class-like in a file wins, so its parents must not mix with the previous one
+        $this->parentTypeNames = [];
         if ($node instanceof Class_) {
             if ($node->extends instanceof Name) {
                 $this->hasParentClassOrInterface = true;
+                $this->parentTypeNames[] = $node->extends->toString();
             }
 
             if ($node->implements !== []) {
@@ -78,12 +90,17 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
 
                 foreach ($node->implements as $implement) {
                     $this->interfaceNames[] = $implement->toString();
+                    $this->parentTypeNames[] = $implement->toString();
                 }
             }
         }
 
         if ($node instanceof Interface_ && $node->extends !== []) {
             $this->hasParentClassOrInterface = true;
+
+            foreach ($node->extends as $extend) {
+                $this->parentTypeNames[] = $extend->toString();
+            }
         }
 
         foreach ($node->attrGroups as $attrGroup) {
@@ -127,6 +144,14 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function getInterfaceNames(): array
     {
         return $this->interfaceNames;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getParentTypeNames(): array
+    {
+        return $this->parentTypeNames;
     }
 
     private function hasApiTag(ClassLike $classLike): bool

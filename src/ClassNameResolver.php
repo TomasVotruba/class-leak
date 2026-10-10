@@ -52,6 +52,7 @@ final class ClassNameResolver
             $classNameNodeVisitor->hasParentClassOrInterface(),
             $classNameNodeVisitor->getAttributes(),
             $classNameNodeVisitor->getInterfaceNames(),
+            $classNameNodeVisitor->getParentTypeNames(),
         );
     }
 }

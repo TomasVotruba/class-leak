@@ -124,6 +124,7 @@ final class PossiblyUnusedClassesFilter
         $attributesToSkip = [...$attributesToSkip, ...self::DEFAULT_ATTRIBUTES_TO_SKIP];
 
         $implementedInterfaceNames = $this->resolveImplementedInterfaceNames($filesWithClasses);
+        $parentTypeNamesByClass = $this->resolveParentTypeNamesByClass($filesWithClasses);
 
         foreach ($filesWithClasses as $fileWithClass) {
             if (in_array($fileWithClass->getClassName(), $usedClassNames, true)) {
@@ -137,6 +138,11 @@ final class PossiblyUnusedClassesFilter
 
             // is excluded interfaces?
             if ($this->shouldSkip($fileWithClass->getClassName(), $typesToSkip)) {
+                continue;
+            }
+
+            // declared ancestor is excluded, works without autoloading the analyzed project
+            if ($this->isDeclaredSubtypeOfAny($fileWithClass->getClassName(), $typesToSkip, $parentTypeNamesByClass)) {
                 continue;
             }
 
@@ -185,6 +191,51 @@ final class PossiblyUnusedClassesFilter
         }
 
         return array_unique($implementedInterfaceNames);
+    }
+
+    /**
+     * @param FileWithClass[] $filesWithClasses
+     * @return array<string, string[]>
+     */
+    private function resolveParentTypeNamesByClass(array $filesWithClasses): array
+    {
+        $parentTypeNamesByClass = [];
+        foreach ($filesWithClasses as $fileWithClass) {
+            $parentTypeNamesByClass[$fileWithClass->getClassName()] = $fileWithClass->getParentTypeNames();
+        }
+
+        return $parentTypeNamesByClass;
+    }
+
+    /**
+     * Walks declared parents and interfaces through scanned classes, the parent outside scanned paths is matched by name
+     *
+     * @param string[] $typesToSkip
+     * @param array<string, string[]> $parentTypeNamesByClass
+     */
+    private function isDeclaredSubtypeOfAny(string $className, array $typesToSkip, array $parentTypeNamesByClass): bool
+    {
+        $visitedNames = [
+            $className => true,
+        ];
+        $namesToVisit = $parentTypeNamesByClass[$className] ?? [];
+
+        while ($namesToVisit !== []) {
+            $name = array_pop($namesToVisit);
+            if (isset($visitedNames[$name])) {
+                continue;
+            }
+
+            $visitedNames[$name] = true;
+
+            if (in_array($name, $typesToSkip, true)) {
+                return true;
+            }
+
+            $namesToVisit = [...$namesToVisit, ...($parentTypeNamesByClass[$name] ?? [])];
+        }
+
+        return false;
     }
 
     /**

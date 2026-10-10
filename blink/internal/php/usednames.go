@@ -2,6 +2,7 @@ package php
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/rectorphp/php-parser-in-go/pkg/ast"
 	"github.com/rectorphp/php-parser-in-go/pkg/visitor"
@@ -63,6 +64,52 @@ func (v *usedNamesVisitor) ExprConstFetch(n *ast.ExprConstFetch) {
 	if n.Const != nil {
 		v.skip[n.Const] = true
 	}
+}
+
+// Imported names are not in the resolved map, so they are recorded here to
+// count a "use" import as usage, matching the PHP visitor.
+func (v *usedNamesVisitor) StmtUse(n *ast.StmtUseList) {
+	for _, use := range n.Uses {
+		v.recordImport(nil, use)
+	}
+}
+
+func (v *usedNamesVisitor) StmtGroupUse(n *ast.StmtGroupUseList) {
+	for _, use := range n.Uses {
+		v.recordImport(nameParts(n.Prefix), use)
+	}
+}
+
+func (v *usedNamesVisitor) recordImport(prefix []ast.Vertex, use ast.Vertex) {
+	stmtUse, ok := use.(*ast.StmtUse)
+	if !ok {
+		return
+	}
+
+	parts := append(append([]ast.Vertex{}, prefix...), nameParts(stmtUse.Use)...)
+	if len(parts) == 0 {
+		return
+	}
+
+	var segments []string
+	for _, part := range parts {
+		if namePart, ok := part.(*ast.NamePart); ok {
+			segments = append(segments, string(namePart.Value))
+		}
+	}
+	v.used[strings.Join(segments, "\\")] = true
+}
+
+func nameParts(node ast.Vertex) []ast.Vertex {
+	switch name := node.(type) {
+	case *ast.Name:
+		return name.Parts
+	case *ast.NameRelative:
+		return name.Parts
+	case *ast.NameFullyQualified:
+		return name.Parts
+	}
+	return nil
 }
 
 func (v *usedNamesVisitor) record(n ast.Vertex) {

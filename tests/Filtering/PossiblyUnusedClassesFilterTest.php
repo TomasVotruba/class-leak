@@ -78,6 +78,71 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         $this->assertSame([$syncJudgeFileWithClass], $possiblyUnused);
     }
 
+    public function testSkipsDeclaredSubtypeOfSkippedTypeWithoutAutoloading(): void
+    {
+        // neither class nor parent is autoloadable, as in a project scanned without its vendor
+        $fileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\SomeTest',
+            true,
+            [],
+            [],
+            ['Vendor\NotAutoloaded\TestCase'],
+        );
+
+        $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
+            [$fileWithClass],
+            [],
+            ['Vendor\NotAutoloaded\TestCase'],
+            [],
+            [],
+            false,
+        );
+
+        $this->assertSame([], $possiblyUnused);
+    }
+
+    public function testSkipsDeclaredSubtypeThroughScannedParent(): void
+    {
+        $abstractFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\AbstractTest',
+            true,
+            [],
+            [],
+            ['Vendor\NotAutoloaded\TestCase'],
+        );
+
+        $childFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\ChildTest',
+            true,
+            [],
+            [],
+            ['App\NotAutoloaded\AbstractTest'],
+        );
+
+        $unrelatedFileWithClass = new FileWithClass(
+            __DIR__ . '/Fixture/SyncJudge.php',
+            'App\NotAutoloaded\Unrelated',
+            true,
+            [],
+            [],
+            ['Vendor\NotAutoloaded\Other'],
+        );
+
+        $possiblyUnused = $this->possiblyUnusedClassesFilter->filter(
+            [$abstractFileWithClass, $childFileWithClass, $unrelatedFileWithClass],
+            ['App\NotAutoloaded\AbstractTest'],
+            ['Vendor\NotAutoloaded\TestCase'],
+            [],
+            [],
+            false,
+        );
+
+        $this->assertSame([$unrelatedFileWithClass], $possiblyUnused);
+    }
+
     private function createSyncJudgeFileWithClass(): FileWithClass
     {
         return new FileWithClass(
