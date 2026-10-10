@@ -57,6 +57,9 @@ func Run(opts Options) (model.UnusedClassesResult, error) {
 		for _, name := range php.ResolveConstructorParamTypes(pf) {
 			injectedNames[name] = true
 		}
+		for _, name := range php.ResolveConstructorDocBlockTypes(pf) {
+			injectedNames[name] = true
+		}
 	}
 
 	var filesWithClasses []model.FileWithClass

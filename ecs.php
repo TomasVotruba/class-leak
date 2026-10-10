@@ -13,5 +13,7 @@ return ECSConfig::configure()
     ->withSkip([
         // invalid syntax test fixture
         __DIR__ . '/tests/UseImportsResolver/Fixture/ParseError.php',
+        // keeps @param of a missing constructor param on purpose
+        __DIR__ . '/tests/ConstructorParamTypeResolver/Fixture/WithDocBlockCollectionInjection.php',
     ])
     ->withPreparedSets(psr12: true, common: true);

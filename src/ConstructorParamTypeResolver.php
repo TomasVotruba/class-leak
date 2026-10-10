@@ -5,23 +5,17 @@ declare(strict_types=1);
 namespace TomasVotruba\ClassLeak;
 
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
-use TomasVotruba\ClassLeak\NodeDecorator\FullyQualifiedNameNodeDecorator;
 use TomasVotruba\ClassLeak\NodeVisitor\ConstructorParamTypeNodeVisitor;
 
-/**
- * @see \TomasVotruba\ClassLeak\Tests\ConstructorParamTypeResolver\ConstructorParamTypeResolverTest
- */
 final class ConstructorParamTypeResolver
 {
     private Parser $parser;
 
-    private FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator;
-
-    public function __construct(Parser $parser, FullyQualifiedNameNodeDecorator $fullyQualifiedNameNodeDecorator)
+    public function __construct(Parser $parser)
     {
         $this->parser = $parser;
-        $this->fullyQualifiedNameNodeDecorator = $fullyQualifiedNameNodeDecorator;
     }
 
     /**
@@ -37,10 +31,12 @@ final class ConstructorParamTypeResolver
             return [];
         }
 
-        $this->fullyQualifiedNameNodeDecorator->decorate($stmts);
+        // same traverser, so the name context is current when the constructor docblock is read
+        $nameResolver = new NameResolver();
+        $constructorParamTypeNodeVisitor = new ConstructorParamTypeNodeVisitor($nameResolver->getNameContext());
 
-        $constructorParamTypeNodeVisitor = new ConstructorParamTypeNodeVisitor();
         $nodeTraverser = new NodeTraverser();
+        $nodeTraverser->addVisitor($nameResolver);
         $nodeTraverser->addVisitor($constructorParamTypeNodeVisitor);
         $nodeTraverser->traverse($stmts);
 
