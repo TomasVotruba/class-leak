@@ -78,7 +78,7 @@ final class PhpFilesFinder
             return false;
         }
 
-        $firstLine = (string) $fileInfo->openFile('r')
+        $firstLine = $fileInfo->openFile('r')
             ->fgets();
 
         return str_starts_with(trim($firstLine), '#!') && str_contains($firstLine, 'php');
