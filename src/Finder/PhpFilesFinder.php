@@ -50,7 +50,7 @@ final class PhpFilesFinder
             $excludedDirectoryNames,
             $excludedRealPaths
         ): bool {
-            if (! in_array($fileInfo->getExtension(), $fileExtensions, true)) {
+            if (! in_array($fileInfo->getExtension(), $fileExtensions, true) && ! $this->hasPhpShebang($fileInfo)) {
                 return false;
             }
 
@@ -69,6 +69,19 @@ final class PhpFilesFinder
         }
 
         return $filePaths;
+    }
+
+    // detects extensionless executables like "bin/console" via a PHP shebang
+    private function hasPhpShebang(FileInfo $fileInfo): bool
+    {
+        if ($fileInfo->getExtension() !== '') {
+            return false;
+        }
+
+        $firstLine = $fileInfo->openFile('r')
+            ->fgets();
+
+        return str_starts_with(trim($firstLine), '#!') && str_contains($firstLine, 'php');
     }
 
     /**

@@ -50,7 +50,7 @@ func FindPhpFiles(paths, extensions, pathsToSkip []string) ([]string, error) {
 				}
 				return nil
 			}
-			if !hasExtension(path, extensions) {
+			if !hasExtension(path, extensions) && !hasPhpShebang(path) {
 				return nil
 			}
 			abs, err := filepath.Abs(path)
@@ -87,6 +87,27 @@ func hasExtension(path string, extensions []string) bool {
 		}
 	}
 	return false
+}
+
+// hasPhpShebang detects extensionless executables like "bin/console" whose
+// first line is a PHP shebang (e.g. #!/usr/bin/env php).
+func hasPhpShebang(path string) bool {
+	if filepath.Ext(path) != "" {
+		return false
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	buf := make([]byte, 128)
+	n, _ := f.Read(buf)
+	firstLine := string(buf[:n])
+	if idx := strings.IndexByte(firstLine, '\n'); idx >= 0 {
+		firstLine = firstLine[:idx]
+	}
+	return strings.HasPrefix(strings.TrimSpace(firstLine), "#!") && strings.Contains(firstLine, "php")
 }
 
 func isWithinExcluded(realPath string, excludedRealPaths []string) bool {

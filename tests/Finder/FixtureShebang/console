@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+
+echo 'console-like entrypoint, no .php extension';

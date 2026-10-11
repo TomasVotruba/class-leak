@@ -1,8 +1,13 @@
 package finder
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 const fixtureDir = "../../../tests/Finder/Fixture"
+
+const fixtureShebangDir = "../../../tests/Finder/FixtureShebang"
 
 func TestFindPhpFiles(t *testing.T) {
 	files, err := FindPhpFiles([]string{fixtureDir}, []string{"php", "phtml"}, nil)
@@ -30,6 +35,16 @@ func TestSkipByRelativePath(t *testing.T) {
 	files, _ := FindPhpFiles([]string{fixtureDir}, []string{"php"}, []string{fixtureDir + "/some/more-nested"})
 	if len(files) != 2 {
 		t.Fatalf("want 2, got %d: %v", len(files), files)
+	}
+}
+
+func TestFindsExecutablePhpFileByShebang(t *testing.T) {
+	files, _ := FindPhpFiles([]string{fixtureShebangDir}, []string{"php"}, nil)
+	if len(files) != 1 {
+		t.Fatalf("want 1, got %d: %v", len(files), files)
+	}
+	if !strings.HasSuffix(files[0], "console") {
+		t.Fatalf("want console entrypoint, got %v", files[0])
 	}
 }
 
