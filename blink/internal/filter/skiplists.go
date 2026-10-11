@@ -8,6 +8,7 @@ var defaultTypesToSkip = []string{
 	`Symfony\Component\HttpKernel\DependencyInjection\Extension`,
 	`Symfony\Component\DependencyInjection\Extension\Extension`,
 	`Symfony\Component\DependencyInjection\EnvVarProcessorInterface`,
+	`Symfony\Component\Messenger\Transport\TransportFactoryInterface`,
 	`Symfony\Bundle\FrameworkBundle\Controller\Controller`,
 	`Symfony\Bundle\FrameworkBundle\Controller\AbstractController`,
 	`Livewire\Component`,
