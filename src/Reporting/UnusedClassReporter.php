@@ -39,7 +39,7 @@ final class UnusedClassReporter
             return ExitCode::SUCCESS;
         }
 
-        $this->outputPrinter->newline(2);
+        $this->outputPrinter->newline();
 
         if ($unusedClassesResult->getCount() === 0) {
             $this->outputPrinter->success('All services are used. Great job!');

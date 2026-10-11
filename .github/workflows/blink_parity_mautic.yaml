@@ -9,7 +9,7 @@ on:
 env:
     # ratchet gate: max allowed divergence between PHP and Go reports, in percent
     # Go port reaches 0% divergence on mautic/app; keep headroom for scan growth
-    MAX_DIFF_PERCENT: '10.0'
+    MAX_DIFF_PERCENT: '5.0'
     # directory of mautic to scan - bounded to keep CI fast; both engines see the same input
     SCAN_PATH: '/tmp/mautic/app'
 
