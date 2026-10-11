@@ -204,6 +204,7 @@ final class ConstructorParamTypeNodeVisitor extends NodeVisitorAbstract
 
         $nameNode = str_starts_with($name, '\\') ? new FullyQualified(ltrim($name, '\\')) : new Name($name);
 
-        return $nameContext->getResolvedClassName($nameNode)->toString();
+        return $nameContext->getResolvedClassName($nameNode)
+            ->toString();
     }
 }
