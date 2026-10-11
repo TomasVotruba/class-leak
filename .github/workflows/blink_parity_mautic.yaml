@@ -8,9 +8,8 @@ on:
 
 env:
     # ratchet gate: max allowed divergence between PHP and Go reports, in percent
-    # POC baseline ~66.65% (Go port misses classes PHP flags, but never false-flags: only_go=0)
-    # tighten this as the Go port matures
-    MAX_DIFF_PERCENT: '67.0'
+    # Go port reaches 0% divergence on mautic/app; keep headroom for scan growth
+    MAX_DIFF_PERCENT: '10.0'
     # directory of mautic to scan - bounded to keep CI fast; both engines see the same input
     SCAN_PATH: '/tmp/mautic/app'
 
