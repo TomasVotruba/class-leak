@@ -11,6 +11,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Trait_;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
@@ -24,6 +25,8 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     private ?string $className = null;
 
     private bool $hasParentClassOrInterface = false;
+
+    private bool $isTrait = false;
 
     /**
      * @var string[]
@@ -50,6 +53,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     {
         $this->className = null;
         $this->hasParentClassOrInterface = false;
+        $this->isTrait = false;
         $this->attributes = [];
         $this->interfaceNames = [];
         $this->parentTypeNames = [];
@@ -76,6 +80,7 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
         }
 
         $this->className = $node->namespacedName->toString();
+        $this->isTrait = $node instanceof Trait_;
 
         // last class-like in a file wins, so its parents must not mix with the previous one
         $this->parentTypeNames = [];
@@ -128,6 +133,11 @@ final class ClassNameNodeVisitor extends NodeVisitorAbstract
     public function hasParentClassOrInterface(): bool
     {
         return $this->hasParentClassOrInterface;
+    }
+
+    public function isTrait(): bool
+    {
+        return $this->isTrait;
     }
 
     /**
