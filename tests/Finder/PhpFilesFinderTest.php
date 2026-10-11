@@ -27,6 +27,14 @@ final class PhpFilesFinderTest extends AbstractTestCase
         $this->assertCount(3, $phpFiles);
     }
 
+    public function testFindsExecutablePhpFileByShebang(): void
+    {
+        $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/FixtureShebang'], ['php'], []);
+
+        $this->assertCount(1, $phpFiles);
+        $this->assertStringEndsWith('console', $phpFiles[0]);
+    }
+
     public function testSkipPathByDirectoryName(): void
     {
         $phpFiles = $this->phpFilesFinder->findPhpFiles([__DIR__ . '/Fixture'], ['php'], ['more-nested']);
