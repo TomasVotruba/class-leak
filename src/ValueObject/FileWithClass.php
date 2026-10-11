@@ -16,6 +16,8 @@ final class FileWithClass implements JsonSerializable
 
     private bool $hasParentClassOrInterface;
 
+    private bool $isTrait;
+
     /**
      * @var string[]
      */
@@ -40,6 +42,7 @@ final class FileWithClass implements JsonSerializable
         string $filePath,
         string $className,
         bool $hasParentClassOrInterface,
+        bool $isTrait,
         array $attributes,
         array $interfaceNames = [],
         array $parentTypeNames = []
@@ -47,6 +50,7 @@ final class FileWithClass implements JsonSerializable
         $this->filePath = $filePath;
         $this->className = $className;
         $this->hasParentClassOrInterface = $hasParentClassOrInterface;
+        $this->isTrait = $isTrait;
         $this->attributes = $attributes;
         $this->interfaceNames = $interfaceNames;
         $this->parentTypeNames = $parentTypeNames;
@@ -144,6 +148,6 @@ final class FileWithClass implements JsonSerializable
 
     public function isTrait(): bool
     {
-        return trait_exists($this->className);
+        return $this->isTrait;
     }
 }

@@ -39,6 +39,7 @@ final class ClassNamesFinder
                 $filePath,
                 $classNames->getClassName(),
                 $classNames->hasParentClassOrInterface(),
+                $classNames->isTrait(),
                 $classNames->getAttributes(),
                 $classNames->getInterfaceNames(),
                 $classNames->getParentTypeNames(),

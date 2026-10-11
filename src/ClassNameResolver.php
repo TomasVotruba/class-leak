@@ -50,6 +50,7 @@ final class ClassNameResolver
         return new ClassNames(
             $className,
             $classNameNodeVisitor->hasParentClassOrInterface(),
+            $classNameNodeVisitor->isTrait(),
             $classNameNodeVisitor->getAttributes(),
             $classNameNodeVisitor->getInterfaceNames(),
             $classNameNodeVisitor->getParentTypeNames(),

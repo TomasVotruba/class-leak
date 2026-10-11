@@ -37,6 +37,7 @@ final class ClassNameResolverTest extends AbstractTestCase
             $expectedClassNames->hasParentClassOrInterface(),
             $resolvedClassNames->hasParentClassOrInterface()
         );
+        $this->assertSame($expectedClassNames->isTrait(), $resolvedClassNames->isTrait());
         $this->assertSame($expectedClassNames->getAttributes(), $resolvedClassNames->getAttributes());
         $this->assertSame($expectedClassNames->getParentTypeNames(), $resolvedClassNames->getParentTypeNames());
     }
@@ -48,12 +49,12 @@ final class ClassNameResolverTest extends AbstractTestCase
     {
         yield [
             __DIR__ . '/Fixture/SomeClass.php',
-            new ClassNames(SomeClass::class, false, [SomeAttribute::class, SomeMethodAttribute::class]),
+            new ClassNames(SomeClass::class, false, false, [SomeAttribute::class, SomeMethodAttribute::class]),
         ];
 
         yield [
             __DIR__ . '/Fixture/ClassWithAnyComment.php',
-            new ClassNames(ClassWithAnyComment::class, false, []),
+            new ClassNames(ClassWithAnyComment::class, false, false, []),
         ];
 
         // last class-like wins, with its own parents only
@@ -63,10 +64,16 @@ final class ClassNameResolverTest extends AbstractTestCase
             new ClassNames(
                 $fixtureNamespace . 'SecondClassInFile',
                 true,
+                false,
                 [],
                 [$fixtureNamespace . 'SecondInterface'],
                 [$fixtureNamespace . 'SecondParent', $fixtureNamespace . 'SecondInterface']
             ),
+        ];
+
+        yield [
+            __DIR__ . '/Fixture/SomeTrait.php',
+            new ClassNames($fixtureNamespace . 'SomeTrait', false, true, []),
         ];
     }
 
