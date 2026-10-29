@@ -111,6 +111,20 @@ final class PossiblyUnusedClassesFilter
     private const DEFAULT_SUFFIXES_TO_SKIP = ['Controller', 'Test', 'TestCase'];
 
     /**
+     * Attributes that live in the global namespace, so a short name legitimately matches
+     *
+     * @var string[]
+     */
+    private const NATIVE_ATTRIBUTES = [
+        'Attribute',
+        'AllowDynamicProperties',
+        'Deprecated',
+        'Override',
+        'ReturnTypeWillChange',
+        'SensitiveParameter',
+    ];
+
+    /**
      * @param FileWithClass[] $filesWithClasses
      * @param string[] $usedClassNames
      * @param string[] $typesToSkip
@@ -132,6 +146,7 @@ final class PossiblyUnusedClassesFilter
         $this->assertAllString($usedClassNames);
         $this->assertAllString($typesToSkip);
         $this->assertAllString($suffixesToSkip);
+        $this->assertAttributesAreFullyQualified($attributesToSkip);
 
         $possiblyUnusedFilesWithClasses = [];
 
@@ -288,6 +303,30 @@ final class PossiblyUnusedClassesFilter
         }
 
         return false;
+    }
+
+    /**
+     * Attributes are compared as fully-qualified names, so a short name silently never matches
+     *
+     * @param string[] $attributesToSkip
+     */
+    private function assertAttributesAreFullyQualified(array $attributesToSkip): void
+    {
+        foreach ($attributesToSkip as $attributeToSkip) {
+            if (str_contains($attributeToSkip, '\\') || str_contains($attributeToSkip, '*')) {
+                continue;
+            }
+
+            if (in_array($attributeToSkip, self::NATIVE_ATTRIBUTES, true)) {
+                continue;
+            }
+
+            throw new InvalidArgumentException(sprintf(
+                'The "--skip-attribute" value "%s" is a short name that will never match, as attributes are compared as fully-qualified names. Use the full attribute class name, e.g. "Vendor\Namespace\%s".',
+                $attributeToSkip,
+                $attributeToSkip
+            ));
+        }
     }
 
     /**
