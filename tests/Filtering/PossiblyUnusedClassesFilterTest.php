@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\ClassLeak\Tests\Filtering;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\ClassLeak\Filtering\PossiblyUnusedClassesFilter;
 use TomasVotruba\ClassLeak\Tests\Filtering\Fixture\SyncJudge;
@@ -198,6 +199,20 @@ final class PossiblyUnusedClassesFilterTest extends TestCase
         );
 
         $this->assertSame([$serviceFileWithClass], $possiblyUnused);
+    }
+
+    public function testThrowsOnShortAttributeToSkip(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->possiblyUnusedClassesFilter->filter([], [], [], [], ['AsEventListener'], false);
+    }
+
+    public function testAllowsNativeShortAttributeToSkip(): void
+    {
+        $possiblyUnused = $this->possiblyUnusedClassesFilter->filter([], [], [], [], ['Deprecated'], false);
+
+        $this->assertSame([], $possiblyUnused);
     }
 
     private function createSyncJudgeFileWithClass(): FileWithClass
